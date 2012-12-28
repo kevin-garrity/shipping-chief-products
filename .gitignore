@@ -72,3 +72,4 @@ pickle-email-*.html
 
 # vim artifacts
 **.swp
+config/app_config_local.yaml
