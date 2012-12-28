@@ -1,4 +1,19 @@
-RECIPES
+World Shipping Calculator
+========================
+
+This application was generated with the rails_apps_composer gem:
+https://github.com/RailsApps/rails_apps_composer
+provided by the RailsApps Project:
+http://railsapps.github.com/
+
+________________________
+
+Recipes:
 ["config", "controllers", "devcloudcoder_core", "email", "extras", "frontend", "gems", "git", "init", "models", "readme", "routes", "run_generators", "setup", "testing", "views"]
-PREFERENCES
+
+Preferences:
 {:authentication=>"shopify", :authorization=>"none", :ban_spiders=>true, :database=>"postgres", :deploy=>"heroku", :dev_webserver=>"thin", :email=>"gmail", :fixtures=>"factory_girl", :form_builder=>"simple_form", :frontend=>"foundation", :run_generators=>["css_canon:install", "devcloudcoder:shopify:create"], :git=>true, :github=>true, :integration=>"cucumber", :private_repo=>true, :prod_webserver=>nil, :quiet_assets=>true, :rvmrc=>true, :starter_app=>"shopify_app", :templates=>"haml", :unit_test=>"rspec"}
+
+________________________
+
+License
