@@ -1,0 +1,2 @@
+Include files here that override styles in vendored css, with a file or directory with a name matching the name of the directory in vendor/assets/stylesheets that contains the 3rd-party css
+These files are imported after base.css.scss and foundation_overrides.css.scss, so they can use sass variables/mixins defined there

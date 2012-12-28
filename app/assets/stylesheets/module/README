@@ -1,0 +1,2 @@
+Include files here that define modules for your app (see http://smacss.com)
+These files are imported after base.css.scss and foundation_overrides.css.scss, so they can use sass variables/mixins defined there
