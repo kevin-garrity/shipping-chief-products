@@ -1,0 +1,3 @@
+# AppConfig settings for test
+dbg:
+  env: test
