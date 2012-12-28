@@ -15,9 +15,9 @@
 
 // override foundation variables with variables defined in base.css.scss,
 // so that branding can easily be changed in a single place
-// $mainColor: $brandOne;"
+$mainColor: $brand_light;
 
-// $secondaryColor: #e9e9e9;
+// $secondaryColor: $brand_light;
 // $alertColor: #c60f13;
 // $successColor: #5da423;
 // $txtColor: #222;
@@ -30,11 +30,11 @@
 // Font Settings
 
 // $fontSmoothing: antialiased;
-// $headerFontFamily: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$headerFontFamily: $sanserif_font;
 // $headerFontWeight: bold;
 // $headerFontStyle: normal;
 // $headerFontColor: #222;
-// $bodyFontFamily: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$bodyFontFamily: $serif_font;
 // $bodyFontWeight: normal;
 // $bodyFontStyle: normal;
 // $bodyFontColor: $txtColor;
@@ -99,7 +99,7 @@
 
 // Top Bar Settings
 
-// $topBarBgColor: #222;
+$topBarBgColor: $brand_dark;
 // $topBarHeight: 45px;
 // $topBarHeightMobile: 45px;
 // $topBarBtmMargin: 30px;

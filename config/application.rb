@@ -11,6 +11,11 @@ end
 
 module WorldShippingCalculator
   class Application < Rails::Application
+    
+          # Shopify API connection credentials:
+          config.shopify.api_key = ENV['SHOPIFY_API_KEY']
+          config.shopify.secret = ENV['SHOPIFY_API_SECRET']
+    
 
     # don't generate RSpec tests for views and helpers
     config.generators do |g|

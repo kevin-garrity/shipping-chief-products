@@ -1,0 +1,38 @@
+-content_for :sidebar do
+  .panel.rounded-corners
+    %h3 Instruction
+    %p Instructions for using the app
+    %hr
+    %h4 Disclaimer of Warranty
+    %p.muted THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+%h2 Main App
+%p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+
+%ul.accordion
+  - if @products.blank?
+
+  - else
+    - @products.each_with_index do |product, index|
+      - item_class = (index == 0) ? "active" : ""
+      %li(class=item_class)
+        .title
+          %h5= product.title
+        .content
+          %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+- count = 1
+- if @total_page > 1
+  %ul.pagination
+    - while count <= @total_page
+      - item_class = (count.to_s == @page.to_s) ? "current" : ""
+      %li(class=item_class)
+      = link_to("#{count}", url_for(page: count, search_collect: @selected_collection))
+      - count = count + 1

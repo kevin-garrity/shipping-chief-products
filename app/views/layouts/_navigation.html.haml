@@ -1,1 +1,16 @@
-= link_to "World Shipping Calculator", root_path, :class => 'brand'
+%nav.top-bar
+  %ul
+    %li.name
+      = link_to 'Shopify Demo App', '/', :class => 'brand'
+    %li.toggle-topbar
+      %a{:href => "#"}
+  %section
+    - if shop_session
+      %ul.right
+        %li.has-dropdown
+          = link_to raw(shop_session.url+' <b class="caret"></b>'), "https://#{shop_session.url}", :class => 'shop_name dropdown-toggle', :'data-toggle' => 'dropdown', :'data-target' => '#'
+          %ul.dropdown
+            %li= link_to raw('Storefront'), "http://"+shop_session.url, :target => 'blank'
+            %li= link_to raw('Shopify Admin'), "http://"+shop_session.url+"/admin", :target => 'blank'
+            %li.divider
+            %li= link_to raw('Logout'), logout_path, :method => :delete

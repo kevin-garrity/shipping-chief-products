@@ -1,0 +1,116 @@
+%h3
+  Check out the
+  %code home_controller
+%hr{:style => "margin:2px 0 7px"}/
+%p
+  The controller in this demo application fetches the newest 5 orders and products and makes them available as instance variables
+  %code @orders
+  and
+  %code @products
+%br/
+%h3
+  Take a look at
+  %code index.html.erb
+%hr{:style => "margin:2px 0 7px"}/
+%p
+  Index is the Ruby template you are currently viewing. Have a look at the markup and Ruby code to see how the Shopify API is being used. It's located at
+  %code views/home/index.html.erb
+%h3 Additional Docs
+%p You can become an expert pretty quickly by reading up on these docs:
+%ul
+%li
+  = link_to 'API documentation', 'http://www.shopify.com/developers/api/'
+  %span.note Learn what you can do with the Shopify API
+%br/
+%li
+  = link_to 'Bootstrap documentation', 'http://twitter.github.com/bootstrap/'
+  %span.note Find out what you can do with Twitter Bootstrap
+%br/
+%li
+  = link_to 'Wiki', 'http://wiki.shopify.com/'
+  %span.note Get more information and share your knowledge
+%br/
+%li
+  = link_to 'Forum', 'http://forums.shopify.com/community'
+  %span.note Ask questions and see what others already wanted to know
+%hr/
+%h3 Once you're ready
+%p
+We'd love to see what you create using the Shopify API. You can keep up to date on the latest and greatest via the #{link_to 'Shopify API Twitter Account', 'http://www.twitter.com/shopifyapi'}. You can also read the latest information on the #{link_to 'API Publishing Page', 'http://www.shopify.com/developers/publishing/'}.
+%br/
+%a.twitter-follow-button{"data-show-count" => "false", "data-size" => "large", :href => "https://twitter.com/shopifyapi"} Follow @shopifyapi
+:javascript
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");  / span3 / left-column
+.span8.offset1
+%h2 Recent orders
+- if @orders.blank?
+%table.table.table-striped
+  %tr
+    %td
+      %em There are no orders in your store.
+- else
+%table.table.table-striped
+  %thead
+    %tr
+      %th Order
+      %th Placed by
+      %th Paid
+      %th Fulfillment
+      %th Total
+  - @orders.each do |order|
+    %tr
+      %td= link_to order.name, "https://#{shop_session.url}/admin/orders/#{order.id}", :target => 'blank'
+      %td= order.billing_address.name
+      %td
+        %span.label.if.if.if{:class => "<haml:silent> order.financial_status == 'paid' </haml:silent><haml:block>label-success</haml:block> <haml:silent> order.financial_status == 'pending' </haml:silent><haml:block>label-warning</haml:block> <haml:silent> order.financial_status == 'refunded' </haml:silent><haml:block>label-important</haml:block>"}
+          = order.financial_status
+      %td
+        - if !order.fulfillment_status
+          %span.label Not Fulfilled
+        - else
+          %span.label.label-success Fulfilled
+      %td
+        = order.total_price
+        = order.currency
+%br/
+%h2 New Products
+#accordion.accordion
+- if @products.blank?
+  .accordion-group
+    .accordion-heading
+      %em There are no products in your store.
+- else
+  - @products.each_with_index do |product, index|
+    .accordion-group
+      .accordion-heading
+        %a.accordion-toggle{"data-parent" => "#accordion", "data-toggle" => "collapse", :href => "##{product.id}"}
+          = product.title
+          %span.pull-right.muted
+            = product.price_range
+            = shop_session.shop.currency
+      .accordion-body.collapse.if.index.1{:class => "<haml:silent> == </haml:silent><haml:block>in</haml:block>", :id => product.id}
+        .accordion-inner
+          - if !product.images.empty?
+            .polaroid
+              = link_to image_tag(product.images.first.medium), '#modal-'+product.id.to_s, :'data-toggle' => 'modal'
+          %p
+            %strong Type:
+            = product.product_type
+          %p
+            %strong Vendor:
+            = product.vendor
+          %p= raw(product.body_html)
+          %br/
+          - if product.published_at != nil
+            %p.muted
+              Published at #{Time.parse(product.published_at).strftime("%H:%M on %m/%d/%Y")}
+          %p= link_to raw('View in your Shopify Admin <i class="icon-chevron-right" style="opacity:.25"></i>'), "https://#{shop_session.url}/admin/products/#{product.id}", :target => 'blank', :class => 'btn btn-primary'
+    .modal.hide.fade{:id => "modal-#{product.id}", :style => "display:none;"}
+      .modal-header
+        %a.close{"data-dismiss" => "modal"} ×
+        %h3= product.title
+      .modal-body
+        - if !product.images.empty?
+          = image_tag product.images.first.large
+/ accordion
+/ span8 / right-column

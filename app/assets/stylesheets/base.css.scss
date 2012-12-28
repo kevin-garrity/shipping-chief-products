@@ -1,6 +1,11 @@
-// Place sass variable here, and then refer to those variables in other sass files.
-// This makes branding easier and in one place.
+// background body elements
+$background_color_light: #eee;
+$text_color_light: #555;
 
-// $brandOne: orange;
-// $brandTwo: green;
-// $brandThree: pink;
+// Typography
+$sanserif_font: "PT Sans", "Helvetica", Helvetica, Arial, sans-serif;
+$serif_font: "PT Serif", "Georgia", serif;
+
+// brand colors
+$brand_dark: #082d49;
+$brand_light: #87c229;
