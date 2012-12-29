@@ -31,3 +31,4 @@ gem "rvm"
 gem "sqlite3"
 gem "config_spartan"
 gem "quiet_assets", ">= 1.0.1", :group => :development
+gem "pry"

@@ -8,4 +8,6 @@ WorldShippingCalculator::Application.routes.draw do
     delete 'logout' => :destroy
   end
   root :to => 'home#index'
+
+  resource 'preferences'
 end
