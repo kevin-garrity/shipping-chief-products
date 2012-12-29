@@ -6,6 +6,8 @@
       %a{:href => "#"}
   %section
     - if shop_session
+      %ul.left 
+        %li= link_to("Preferences", preferences_url)
       %ul.right
         %li.has-dropdown
           = link_to raw(shop_session.url+' <b class="caret"></b>'), "https://#{shop_session.url}", :class => 'shop_name dropdown-toggle', :'data-toggle' => 'dropdown', :'data-target' => '#'

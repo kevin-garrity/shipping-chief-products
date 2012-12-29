@@ -9,5 +9,5 @@ WorldShippingCalculator::Application.routes.draw do
   end
   root :to => 'home#index'
 
-  resource 'preferences'
+  resource 'preferences', only: [:show, :edit, :update]
 end
