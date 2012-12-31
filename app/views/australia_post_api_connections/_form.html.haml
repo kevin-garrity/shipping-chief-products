@@ -1,0 +1,46 @@
+= form_for @australia_post_api_connection do |f|
+  - if @australia_post_api_connection.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@australia_post_api_connection.errors.count, "error")} prohibited this australia_post_api_connection from being saved:"
+      %ul
+        - @australia_post_api_connection.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :domestic
+    = f.check_box :domestic
+  .field
+    = f.label :height
+    = f.number_field :height
+  .field
+    = f.label :weight
+    = f.number_field :weight
+  .field
+    = f.label :length
+    = f.number_field :length
+  .field
+    = f.label :width
+    = f.number_field :width
+  .field
+    = f.label :country_code
+    = f.text_field :country_code
+  .field
+    = f.label :postcode
+    = f.number_field :postcode
+  .field
+    = f.label :air_mail_price
+    = f.text_field :air_mail_price
+  .field
+    = f.label :sea_mail_price
+    = f.text_field :sea_mail_price
+  .field
+    = f.label :regular_price
+    = f.text_field :regular_price
+  .field
+    = f.label :priority_price
+    = f.text_field :priority_price
+  .field
+    = f.label :express_price
+    = f.text_field :express_price
+  .actions
+    = f.submit 'Save'

@@ -1,0 +1,2 @@
+module AustraliaPostApiConnectionsHelper
+end

@@ -1,0 +1,41 @@
+%h1 Listing australia_post_api_connections
+
+%table
+  %tr
+    %th Domestic
+    %th Height
+    %th Weight
+    %th Length
+    %th Width
+    %th Country code
+    %th Postcode
+    %th Air mail price
+    %th Sea mail price
+    %th Regular price
+    %th Priority price
+    %th Express price
+    %th
+    %th
+    %th
+
+  - @australia_post_api_connections.each do |australia_post_api_connection|
+    %tr
+      %td= australia_post_api_connection.domestic
+      %td= australia_post_api_connection.height
+      %td= australia_post_api_connection.weight
+      %td= australia_post_api_connection.length
+      %td= australia_post_api_connection.width
+      %td= australia_post_api_connection.country_code
+      %td= australia_post_api_connection.postcode
+      %td= australia_post_api_connection.air_mail_price
+      %td= australia_post_api_connection.sea_mail_price
+      %td= australia_post_api_connection.regular_price
+      %td= australia_post_api_connection.priority_price
+      %td= australia_post_api_connection.express_price
+      %td= link_to 'Show', australia_post_api_connection
+      %td= link_to 'Edit', edit_australia_post_api_connection_path(australia_post_api_connection)
+      %td= link_to 'Destroy', australia_post_api_connection, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Australia post api connection', new_australia_post_api_connection_path

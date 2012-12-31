@@ -1,0 +1,42 @@
+%p#notice= notice
+
+%p
+  %b Domestic:
+  = @australia_post_api_connection.domestic
+%p
+  %b Height:
+  = @australia_post_api_connection.height
+%p
+  %b Weight:
+  = @australia_post_api_connection.weight
+%p
+  %b Length:
+  = @australia_post_api_connection.length
+%p
+  %b Width:
+  = @australia_post_api_connection.width
+%p
+  %b Country code:
+  = @australia_post_api_connection.country_code
+%p
+  %b Postcode:
+  = @australia_post_api_connection.postcode
+%p
+  %b Air mail price:
+  = @australia_post_api_connection.air_mail_price
+%p
+  %b Sea mail price:
+  = @australia_post_api_connection.sea_mail_price
+%p
+  %b Regular price:
+  = @australia_post_api_connection.regular_price
+%p
+  %b Priority price:
+  = @australia_post_api_connection.priority_price
+%p
+  %b Express price:
+  = @australia_post_api_connection.express_price
+
+= link_to 'Edit', edit_australia_post_api_connection_path(@australia_post_api_connection)
+\|
+= link_to 'Back', australia_post_api_connections_path

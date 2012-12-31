@@ -1,4 +1,5 @@
 WorldShippingCalculator::Application.routes.draw do
+
   match 'util/welcome' => 'util#welcome'
   match 'util' => 'util#index'
   controller :sessions do
@@ -10,4 +11,5 @@ WorldShippingCalculator::Application.routes.draw do
   root :to => 'home#index'
 
   resource 'preferences', only: [:show, :edit, :update]
+  resources :australia_post_api_connections
 end
