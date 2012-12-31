@@ -40,6 +40,8 @@ GEM
       activesupport (= 3.2.9)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
+    activerecord-postgresql-adapter (0.0.1)
+      pg
     activeresource (3.2.9)
       activemodel (= 3.2.9)
       activesupport (= 3.2.9)
@@ -167,6 +169,7 @@ GEM
       omniauth (~> 1.0)
     omniauth-shopify-oauth2 (1.0.0)
       omniauth-oauth2 (~> 1.0.0)
+    pg (0.14.1)
     polyglot (0.3.3)
     pry (0.9.10)
       coderay (~> 1.0.5)
@@ -274,6 +277,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-postgresql-adapter
   capybara (>= 1.1.2)
   coffee-rails (~> 3.2.1)
   compass-rails (>= 1.0.3)
@@ -291,6 +295,7 @@ DEPENDENCIES
   kaminari
   launchy (>= 2.1.2)
   nokogiri
+  pg
   pry-rails
   quiet_assets (>= 1.0.1)
   rails (= 3.2.9)
