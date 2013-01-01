@@ -6,41 +6,30 @@
         - @australia_post_api_connection.errors.full_messages.each do |msg|
           %li= msg
 
-  .field
-    = f.label :domestic
-    = f.check_box :domestic
-  .field
-    = f.label :height
-    = f.number_field :height
-  .field
+  .field.hidden
+    / this is calculated in yaml and returned to us
+    / so this field can remain hidden
     = f.label :weight
     = f.number_field :weight
-  .field
-    = f.label :length
-    = f.number_field :length
-  .field
-    = f.label :width
-    = f.number_field :width
-  .field
-    = f.label :country_code
-    = f.select :country_code, @countries
-  .field
-    = f.label :postcode
-    = f.number_field :postcode
-  .field
-    = f.label :air_mail_price
-    = f.text_field :air_mail_price
-  .field
-    = f.label :sea_mail_price
-    = f.text_field :sea_mail_price
-  .field
-    = f.label :regular_price
-    = f.text_field :regular_price
-  .field
-    = f.label :priority_price
-    = f.text_field :priority_price
-  .field
-    = f.label :express_price
-    = f.text_field :express_price
+
+  %dl.tabs
+    %dd.active
+      %a{ :href => '#simple1' }
+        Simple Tab
+    %dd
+      %a{ :href => '#simple2' }
+        Simple Tab 2
+
+  %ul.tabs-content
+    %li.active#simple1Tab
+      .field
+        = f.label :country_code
+        = f.select :country_code, @countries
+    %li#simple2Tab
+      .field
+        = f.label :postcode
+        = f.number_field :postcode
+
+
   .actions
     = f.submit 'Save'

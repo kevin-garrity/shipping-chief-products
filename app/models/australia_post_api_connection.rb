@@ -54,9 +54,10 @@ class AustraliaPostApiConnection
 
   def country_list
     @countries = HTTParty.get('https://auspost.com.au/api/postage/country.json', :headers => { 'auth-key' => credentials['api-key']}).flatten
-    @logger.debug @countries[1]['country']
-
-    @countries
+    @countries = @countries[1]['country'].inject([]) do |list, country| 
+      list.append([country['name'], country['code']])
+      list
+    end
   end
 
   def credentials
