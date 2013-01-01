@@ -33,8 +33,9 @@ gem "config_spartan"
 gem "quiet_assets", ">= 1.0.1", :group => :development
 gem 'pry-rails', :group => :development
 
-# local
- gem "pg"
- gem "activerecord-postgresql-adapter"
+# aus_controller_development branch added these
+gem "pg"
+gem "activerecord-postgresql-adapter"
+gem "httparty"
 
 
