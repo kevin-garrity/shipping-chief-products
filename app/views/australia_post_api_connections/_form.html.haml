@@ -23,7 +23,7 @@
     = f.number_field :width
   .field
     = f.label :country_code
-    = f.text_field :country_code
+    = f.select :country_code, @countries
   .field
     = f.label :postcode
     = f.number_field :postcode

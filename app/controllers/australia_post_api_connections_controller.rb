@@ -23,8 +23,19 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
   # GET /australia_post_api_connections/new
   # GET /australia_post_api_connections/new.json
+  #
+  # Initialize the API connection with dimensions
+  #   weight -- should have been received as a param
+  #   heigh, length, width -- should be supplied by prefs
+  # Perform an API call to get a list of country codes
+  # The form we present should contain a list of countries, as well as an option
+  #   to enter the postcode instead (for domestic).
   def new
-    @australia_post_api_connection = AustraliaPostApiConnection.new
+    @weight = params[:weight]
+    @australia_post_api_connection = AustraliaPostApiConnection.new(dimensions_supplied_by_preferences)
+    @australia_post_api_connection.weight = @weight
+
+    @countries = @australia_post_api_connection.data_oriented_methods(:country)
 
     respond_to do |format|
       format.html # new.html.erb
@@ -79,5 +90,16 @@ class AustraliaPostApiConnectionsController < ApplicationController
       format.html { redirect_to australia_post_api_connections_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+
+  def dimensions_supplied_by_preferences
+
+    {
+      height: 16,
+      width: 16,
+      length: 16
+    }
   end
 end
