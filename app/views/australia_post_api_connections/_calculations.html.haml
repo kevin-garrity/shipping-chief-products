@@ -1,0 +1,9 @@
+= form_tag "/shipping_calculations", :method => "get" do
+
+  = label_tag :shipping_type
+  = label_tag(:shipping_type_regular, "regular")
+  = radio_button_tag(:shipping_type, "regular")
+  = @australia_post_api_connection.weight
+  = label_tag(:shipping_type_priority, "priority")
+  = radio_button_tag(:shipping_type, "priority")
+  = @australia_post_api_connection.height

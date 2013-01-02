@@ -35,7 +35,16 @@ class AustraliaPostApiConnectionsController < ApplicationController
     @australia_post_api_connection = AustraliaPostApiConnection.new(dimensions_supplied_by_preferences)
     @australia_post_api_connection.weight = @weight
 
+    # get country list from the API
     @countries = @australia_post_api_connection.data_oriented_methods(:country)
+
+    # format the response how we like it
+    @countries = @countries[1]['country'].inject([]) do |list, country|
+      list.append([country['name'].capitalize, country['code'].capitalize])
+      list
+    end
+
+    @calculated = false
 
     respond_to do |format|
       format.html # new.html.erb
@@ -53,9 +62,24 @@ class AustraliaPostApiConnectionsController < ApplicationController
   def create
     @australia_post_api_connection = AustraliaPostApiConnection.new(params[:australia_post_api_connection])
 
+    # TODO we are repeating this code here (and making an expensive API call) because the countries
+    # list won't fit in the flash (CookieOVERFLOW).
+
+    # get country list from the API
+    @countries = @australia_post_api_connection.data_oriented_methods(:country)
+
+    # format the response how we like it
+    @countries = @countries[1]['country'].inject([]) do |list, country|
+      list.append([country['name'].capitalize, country['code'].capitalize])
+      list
+    end
+
+    @calculated = true
+
     respond_to do |format|
       if @australia_post_api_connection.save
-        format.html { redirect_to @australia_post_api_connection, notice: 'Australia post api connection was successfully created.' }
+        format.html { flash.now[:notice] = "WHOA"; render action: "new" }
+        # format.html { redirect_to @australia_post_api_connection, notice: 'Australia post api connection was successfully created.' }
         format.json { render json: @australia_post_api_connection, status: :created, location: @australia_post_api_connection }
       else
         format.html { render action: "new" }

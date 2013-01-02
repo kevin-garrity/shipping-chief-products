@@ -6,30 +6,60 @@
         - @australia_post_api_connection.errors.full_messages.each do |msg|
           %li= msg
 
-  .field.hidden
-    / this is calculated in yaml and returned to us
-    / so this field can remain hidden
-    = f.label :weight
-    = f.number_field :weight
+  - flash.each do |key, msg|
+    %div{:id => key}
+      %p{:style => "float:right;"}= link_to_function 'X', "Effect.Fade('#{key}')"
+      %p= msg
+      .clear
 
-  %dl.tabs
-    %dd.active
-      %a{ :href => '#simple1' }
-        Simple Tab
-    %dd
-      %a{ :href => '#simple2' }
-        Simple Tab 2
+  .row
+    .six.columns
+      %dl.tabs
+        %dd.active
+          %a{ :href => '#country-code-select' }
+            International
+        %dd
+          %a{ :href => '#post-code-field' }
+            Domestic
 
-  %ul.tabs-content
-    %li.active#simple1Tab
-      .field
-        = f.label :country_code
-        = f.select :country_code, @countries
-    %li#simple2Tab
-      .field
-        = f.label :postcode
-        = f.number_field :postcode
+      %ul.tabs-content
+        %li.active#country-code-selectTab
+          .field
+            = f.label :country_code
+            = f.select :country_code, @countries
+        %li#post-code-fieldTab
+          .field
+            = f.label :postcode
+            = f.number_field :postcode
 
+      - if @calculated
+        / Now it should render the calculated values as a set of radio buttons
+        = render :partial => "calculations", :object => @australia_post_api_connection
 
-  .actions
-    = f.submit 'Save'
+      - else
+        .actions
+          = f.submit 'Calculate'
+
+      .field.hidden
+        / this is calculated in yaml and returned to us
+        / so this field can remain hidden
+        = f.label :weight
+        = f.number_field :weight
+
+      .field.hidden
+        / this is calculated in preferences and returned to us
+        / so this field can remain hidden
+        = f.label :height
+        = f.number_field :height
+
+      .field.hidden
+        / this is calculated in preferences and returned to us
+        / so this field can remain hidden
+        = f.label :width
+        = f.number_field :width
+
+      .field.hidden
+        / this is calculated in preferences and returned to us
+        / so this field can remain hidden
+        = f.label :length
+        = f.number_field :length
