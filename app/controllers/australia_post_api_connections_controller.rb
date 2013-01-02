@@ -77,7 +77,17 @@ class AustraliaPostApiConnectionsController < ApplicationController
       list
     end
 
-    puts @australia_post_api_connection.data_oriented_methods(:service) # get the service list
+    @service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
+
+    # TODO right now we are not including the suboptions for each shipping type
+    @service_list = @service_list[1]['service'].inject([]) do |list, service|
+      list.append({ name: service['name'],
+                    code: service['code'],
+                    price: service['price'] })
+      list
+    end
+
+    puts @service_list
 
     @calculated = true
 

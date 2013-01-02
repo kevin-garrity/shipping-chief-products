@@ -6,6 +6,8 @@ class AustraliaPostApiConnection
   include ActiveModel::Conversion
   extend ActiveModel::Naming
 
+  attr_accessor :attributes
+
   attr_accessor :height, :length, :weight, :width
   attr_accessor :country_code, :air_mail_price, :sea_mail_price
   attr_accessor :domestic, :from_postcode, :to_postcode, :regular_price, :priority_price, :express_price
@@ -31,16 +33,6 @@ class AustraliaPostApiConnection
   validates :weight, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 20 }
 
   class << self
-    def attr_accessor(*vars)
-      @attributes ||= []
-      @attributes.concat( vars )
-      super
-    end
-
-    def attributes
-      @attributes
-    end
-
     def find(id)
       self.new(height: 1, weight: 1)
     end
@@ -58,6 +50,8 @@ class AustraliaPostApiConnection
     attributes && attributes.each do |name, value|
       send("#{name}=", value) if respond_to? name.to_sym 
     end
+
+    self.attributes = attributes
   end
 
   def persisted?
@@ -76,42 +70,20 @@ class AustraliaPostApiConnection
     # routing for data oriented API
 
     case method
-    when :country then self.country_list
+    when :country then api_call "country.json"
     when :service then
       if self.domestic
-        self.domestic_service_list
+        api_call "parcel/domestic/service.json"
       else
-        self.international_service_list
+        api_call "parcel/international/service.json"
       end
     else raise "unknown data_oriented_method"
     end
   end
 
-  def country_list
-    @countries = HTTParty.get("#{self.api_root}/country.json",
-                              :query => { }, # no params
-                              :headers => { 'auth-key' => credentials['api-key']}).flatten
-  end
-
-  def domestic_service_list
-    @service_list = HTTParty.get("#{self.api_root}/parcel/domestic/service.json", 
-                                 :query => { from_postcode: self.from_postcode,
-                                             to_postcode: self.to_postcode,
-                                             length: self.length,
-                                             width: self.width,
-                                             height: self.height,
-                                             weight: self.weight },
-                                 :headers => { 'auth-key' => credentials['api-key']}).flatten
-  end
-
-  def international_service_list
-    @service_list = HTTParty.get("#{self.api_root}/parcel/international/service.json", 
-                                 :query => { from_postcode: self.from_postcode,
-                                             to_postcode: self.to_postcode,
-                                             length: self.length,
-                                             width: self.width,
-                                             height: self.height,
-                                             weight: self.weight },
+  def api_call(method)
+    @service_list = HTTParty.get("#{self.api_root}/#{method}",
+                                 :query => self.attributes,
                                  :headers => { 'auth-key' => credentials['api-key']}).flatten
   end
 

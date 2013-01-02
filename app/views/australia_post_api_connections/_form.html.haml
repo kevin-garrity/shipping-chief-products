@@ -18,8 +18,8 @@
         = f.label :country_code
         = f.select :country_code, @countries, selected: "Australia"
       .field
-        = f.label :postcode
-        = f.number_field :postcode
+        = f.label :to_postcode
+        = f.number_field :to_postcode
 
       - if @calculated
         / Now it should render the calculated values as a set of radio buttons
@@ -52,3 +52,9 @@
         / so this field can remain hidden
         = f.label :length
         = f.number_field :length
+
+      .field.hidden
+        / this is calculated in preferences and returned to us
+        / so this field can remain hidden
+        = f.label :from_postcode
+        = f.number_field :from_postcode
