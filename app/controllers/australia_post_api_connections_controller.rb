@@ -44,10 +44,12 @@ class AustraliaPostApiConnectionsController < ApplicationController
       list
     end
 
+    @countries.prepend([ "Australia", "AUS" ])
+
     @calculated = false
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html { render layout: false } # new.html.erb 
       format.json { render json: @australia_post_api_connection }
     end
   end
@@ -61,6 +63,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
   # POST /australia_post_api_connections.json
   def create
     @australia_post_api_connection = AustraliaPostApiConnection.new(params[:australia_post_api_connection])
+    @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
 
     # TODO we are repeating this code here (and making an expensive API call) because the countries
     # list won't fit in the flash (CookieOVERFLOW).
@@ -78,7 +81,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
     respond_to do |format|
       if @australia_post_api_connection.save
-        format.html { flash.now[:notice] = "WHOA"; render action: "new" }
+        format.html { flash.now[:notice] = @australia_post_api_connection.domestic.to_s; render action: "new", layout: false }
         # format.html { redirect_to @australia_post_api_connection, notice: 'Australia post api connection was successfully created.' }
         format.json { render json: @australia_post_api_connection, status: :created, location: @australia_post_api_connection }
       else

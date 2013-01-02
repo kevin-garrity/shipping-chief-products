@@ -24,7 +24,7 @@ class AustraliaPostApiConnection
   # the user has selected on the form, rather than on the values
   # I'm not sure how to make rails aware of which form is active,
   # without adding some JS
-  validates :postcode, presence: true
+  validates :postcode, presence: true, :if => Proc.new {|record| record.domestic }
 
   validates :length, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 16, less_than_or_equal_to: 105 }
   validates :height, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 16 }

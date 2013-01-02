@@ -14,23 +14,12 @@
 
   .row
     .six.columns
-      %dl.tabs
-        %dd.active
-          %a{ :href => '#country-code-select' }
-            International
-        %dd
-          %a{ :href => '#post-code-field' }
-            Domestic
-
-      %ul.tabs-content
-        %li.active#country-code-selectTab
-          .field
-            = f.label :country_code
-            = f.select :country_code, @countries
-        %li#post-code-fieldTab
-          .field
-            = f.label :postcode
-            = f.number_field :postcode
+      .field
+        = f.label :country_code
+        = f.select :country_code, @countries, selected: "Australia"
+      .field
+        = f.label :postcode
+        = f.number_field :postcode
 
       - if @calculated
         / Now it should render the calculated values as a set of radio buttons
