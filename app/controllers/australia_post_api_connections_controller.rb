@@ -68,35 +68,33 @@ class AustraliaPostApiConnectionsController < ApplicationController
     # TODO we are repeating this code here (and making an expensive API call) because the countries
     # list won't fit in the flash (CookieOVERFLOW).
 
-    # get country list from the API
+    # get country list from the API -- we'll format these if there were no errors
     @countries = @australia_post_api_connection.data_oriented_methods(:country)
-
-    # format the response how we like it
-    @countries = @countries[1]['country'].inject([]) do |list, country|
-      list.append([country['name'].capitalize, country['code'].capitalize])
-      list
-    end
-
     @service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
-
-    # TODO right now we are not including the suboptions for each shipping type
-    @service_list = @service_list[1]['service'].inject([]) do |list, service|
-      list.append({ name: service['name'],
-                    code: service['code'],
-                    price: service['price'] })
-      list
-    end
-
-    puts @service_list
-
-    @calculated = true
 
     respond_to do |format|
       if @australia_post_api_connection.save
-        format.html { flash.now[:notice] = @australia_post_api_connection.domestic.to_s; render action: "new", layout: false }
-        # format.html { redirect_to @australia_post_api_connection, notice: 'Australia post api connection was successfully created.' }
+
+        # format the response how we like it
+        @countries = @countries[1]['country'].inject([]) do |list, country|
+          list.append([country['name'].capitalize, country['code'].capitalize])
+          list
+        end
+
+        # TODO right now we are not including the suboptions for each shipping type
+        @service_list = @service_list[1]['service'].inject([]) do |list, service|
+          list.append({ name: service['name'],
+                        code: service['code'],
+                        price: service['price'] })
+          list
+        end
+
+        @calculated = true
+        format.html { render action: "new", layout: false }
         format.json { render json: @australia_post_api_connection, status: :created, location: @australia_post_api_connection }
       else
+
+        @calculated = false
         format.html { render action: "new" }
         format.json { render json: @australia_post_api_connection.errors, status: :unprocessable_entity }
       end

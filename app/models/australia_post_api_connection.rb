@@ -6,7 +6,7 @@ class AustraliaPostApiConnection
   include ActiveModel::Conversion
   extend ActiveModel::Naming
 
-  attr_accessor :attributes
+  attr_accessor :attributes, :api_errors
 
   attr_accessor :height, :length, :weight, :width
   attr_accessor :country_code, :air_mail_price, :sea_mail_price
@@ -21,13 +21,27 @@ class AustraliaPostApiConnection
     end
   end
 
+  class ResponseErrors < ActiveModel::Validator
+    # implement the method where the validation logic must reside
+    def validate(record)
+      if record.api_errors.length > 0
+        record.errors[:base] << "The following errors were returned by the Australia Post API"
+
+        record.api_errors.each do |error|
+          record.errors[:base] << error
+        end
+      end
+    end
+  end
+
   validates :from_postcode, presence: true
   validates :to_postcode, presence: true, :if => Proc.new {|record| record.domestic }
+
+  validates_with ResponseErrors
 
   validates :length, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 16, less_than_or_equal_to: 105 }
   validates :height, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 16 }
   validates :width, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 16 }
-
   validates_with Girth, { less_than_or_equal_to: 140 }
 
   validates :weight, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 20 }
@@ -51,6 +65,7 @@ class AustraliaPostApiConnection
       send("#{name}=", value) if respond_to? name.to_sym 
     end
 
+    self.api_errors = []
     self.attributes = attributes
   end
 
@@ -85,6 +100,11 @@ class AustraliaPostApiConnection
     @service_list = HTTParty.get("#{self.api_root}/#{method}",
                                  :query => self.attributes,
                                  :headers => { 'auth-key' => credentials['api-key']}).flatten
+    if @service_list[0] == "error"
+      self.api_errors.append(@service_list[1]['errorMessage'])
+    end
+
+    @service_list
   end
 
   def credentials
