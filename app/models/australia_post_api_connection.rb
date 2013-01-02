@@ -8,7 +8,7 @@ class AustraliaPostApiConnection
 
   attr_accessor :height, :length, :weight, :width
   attr_accessor :country_code, :air_mail_price, :sea_mail_price
-  attr_accessor :domestic, :postcode, :regular_price, :priority_price, :express_price
+  attr_accessor :domestic, :from_postcode, :to_postcode, :regular_price, :priority_price, :express_price
 
   class Girth < ActiveModel::Validator
     # implement the method where the validation logic must reside
@@ -19,12 +19,8 @@ class AustraliaPostApiConnection
     end
   end
 
-  # TODO AUS needs to have either a postcode or a country_code
-  # this should optimally be based on which tab (international or domestic)
-  # the user has selected on the form, rather than on the values
-  # I'm not sure how to make rails aware of which form is active,
-  # without adding some JS
-  validates :postcode, presence: true, :if => Proc.new {|record| record.domestic }
+  validates :from_postcode, presence: true
+  validates :to_postcode, presence: true, :if => Proc.new {|record| record.domestic }
 
   validates :length, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 16, less_than_or_equal_to: 105 }
   validates :height, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 16 }
@@ -81,16 +77,50 @@ class AustraliaPostApiConnection
 
     case method
     when :country then self.country_list
+    when :service then
+      if self.domestic
+        self.domestic_service_list
+      else
+        self.international_service_list
+      end
     else raise "unknown data_oriented_method"
     end
   end
 
   def country_list
-    @countries = HTTParty.get('https://auspost.com.au/api/postage/country.json', :headers => { 'auth-key' => credentials['api-key']}).flatten
+    @countries = HTTParty.get("#{self.api_root}/country.json",
+                              :query => { }, # no params
+                              :headers => { 'auth-key' => credentials['api-key']}).flatten
+  end
+
+  def domestic_service_list
+    @service_list = HTTParty.get("#{self.api_root}/parcel/domestic/service.json", 
+                                 :query => { from_postcode: self.from_postcode,
+                                             to_postcode: self.to_postcode,
+                                             length: self.length,
+                                             width: self.width,
+                                             height: self.height,
+                                             weight: self.weight },
+                                 :headers => { 'auth-key' => credentials['api-key']}).flatten
+  end
+
+  def international_service_list
+    @service_list = HTTParty.get("#{self.api_root}/parcel/international/service.json", 
+                                 :query => { from_postcode: self.from_postcode,
+                                             to_postcode: self.to_postcode,
+                                             length: self.length,
+                                             width: self.width,
+                                             height: self.height,
+                                             weight: self.weight },
+                                 :headers => { 'auth-key' => credentials['api-key']}).flatten
   end
 
   def credentials
     @credentials ||= YAML.load_file("#{Rails.root}/config/australia_post_api.yaml")
+  end
+
+  def api_root
+    "https://auspost.com.au/api/postage"
   end
 
 end

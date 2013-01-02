@@ -32,7 +32,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
   #   to enter the postcode instead (for domestic).
   def new
     @weight = params[:weight]
-    @australia_post_api_connection = AustraliaPostApiConnection.new(dimensions_supplied_by_preferences)
+    @australia_post_api_connection = AustraliaPostApiConnection.new(parameters_supplied_by_preferences)
     @australia_post_api_connection.weight = @weight
 
     # get country list from the API
@@ -76,6 +76,8 @@ class AustraliaPostApiConnectionsController < ApplicationController
       list.append([country['name'].capitalize, country['code'].capitalize])
       list
     end
+
+    puts @australia_post_api_connection.data_oriented_methods(:service) # get the service list
 
     @calculated = true
 
@@ -121,9 +123,10 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
   private
 
-  def dimensions_supplied_by_preferences
+  def parameters_supplied_by_preferences
 
     {
+      from_postcode: 3000,
       height: 16,
       width: 16,
       length: 16

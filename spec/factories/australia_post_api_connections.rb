@@ -8,7 +8,8 @@ FactoryGirl.define do
     length 1
     width 1
     country_code "MyString"
-    postcode 1
+    from_postcode 1
+    to_postcode 1
     air_mail_price 1.5
     sea_mail_price 1.5
     regular_price 1.5
