@@ -47,8 +47,6 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
     @countries.prepend([ "Australia", "AUS" ])
 
-    @calculated = false
-
     respond_to do |format|
     puts "---------------About to format--------------------"
       format.html { render layout: false } # new.html.erb 
@@ -69,6 +67,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
     # TODO we are repeating this code here (and making an expensive API call) because the countries
     # list won't fit in the flash (CookieOVERFLOW).
+    # We should cache the list on the server
 
     # get country list from the API -- we'll format these if there were no errors
     @countries = @australia_post_api_connection.data_oriented_methods(:country)
@@ -91,14 +90,17 @@ class AustraliaPostApiConnectionsController < ApplicationController
           list
         end
 
-        @calculated = true
-        format.html { render action: "new", layout: false }
-        format.json { render json: @australia_post_api_connection, status: :created, location: @australia_post_api_connection }
+        # we won't do this stuff since we are doing ajax instead?
+        # format.html { render action: "new", layout: false }
+        # format.json { render json: @australia_post_api_connection, status: :created, location: @australia_post_api_connection }
+
+        # we'll render create.haml
+        format.js { render layout: false }
       else
 
-        @calculated = false
-        format.html { render action: "new" }
-        format.json { render json: @australia_post_api_connection.errors, status: :unprocessable_entity }
+        # format.html { render action: "new" }
+        # format.json { render json: @australia_post_api_connection.errors, status: :unprocessable_entity }
+        format.js { render layout: false }
       end
     end
   end

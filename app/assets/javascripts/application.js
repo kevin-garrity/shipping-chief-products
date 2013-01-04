@@ -14,3 +14,18 @@
 //= require jquery_ujs
 //= require foundation
 //= require_tree .
+
+$('#country-select').live('change', function() {
+
+  var selected_text = $('#country-select :selected').text()
+
+  if ( selected_text !== 'Australia' ) {
+    $('#postcode').hide()
+  } else {
+    $('#postcode').show()
+  }
+
+  $(this).parents('form:first').submit();
+  console.log("yes");
+
+});

@@ -1,4 +1,4 @@
-= form_for @australia_post_api_connection do |f|
+= form_for @australia_post_api_connection, remote: true do |f|
   - if @australia_post_api_connection.errors.any?
     #error_explanation
       %h2= "#{pluralize(@australia_post_api_connection.errors.count, "error")} prohibited this australia_post_api_connection from being saved:"
@@ -14,47 +14,37 @@
 
   .row
     .six.columns
-      .field
+      .field#country-select
         = f.label :country_code
         = f.select :country_code, @countries, selected: "Australia"
-      .field
+      .field#postcode
         = f.label :to_postcode
         = f.number_field :to_postcode
 
-      - if @calculated
-        / Now it should render the calculated values as a set of radio buttons
-        = render :partial => "calculations", :object => @australia_post_api_connection
+      .actions
+        = f.submit 'Calculate'
 
-      - else
-        .actions
-          = f.submit 'Calculate'
+      / this is the container for the ajax results
+      #shipping-prices
 
+      / these are calculated in yaml and returned to us
+      / so these fields can remain hidden
       .field.hidden
-        / this is calculated in yaml and returned to us
-        / so this field can remain hidden
         = f.label :weight
         = f.number_field :weight
 
       .field.hidden
-        / this is calculated in preferences and returned to us
-        / so this field can remain hidden
         = f.label :height
         = f.number_field :height
 
       .field.hidden
-        / this is calculated in preferences and returned to us
-        / so this field can remain hidden
         = f.label :width
         = f.number_field :width
 
       .field.hidden
-        / this is calculated in preferences and returned to us
-        / so this field can remain hidden
         = f.label :length
         = f.number_field :length
 
       .field.hidden
-        / this is calculated in preferences and returned to us
-        / so this field can remain hidden
         = f.label :from_postcode
         = f.number_field :from_postcode
