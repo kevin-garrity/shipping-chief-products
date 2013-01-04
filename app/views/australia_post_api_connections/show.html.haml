@@ -1,42 +1,20 @@
-%p#notice= notice
+%h2
+  Testing the APP
+  .small
+    by calling australia_post_api_connections/new from a different page
 
-%p
-  %b Domestic:
-  = @australia_post_api_connection.domestic
-%p
-  %b Height:
-  = @australia_post_api_connection.height
-%p
-  %b Weight:
-  = @australia_post_api_connection.weight
-%p
-  %b Length:
-  = @australia_post_api_connection.length
-%p
-  %b Width:
-  = @australia_post_api_connection.width
-%p
-  %b Country code:
-  = @australia_post_api_connection.country_code
-%p
-  %b Postcode:
-  = @australia_post_api_connection.postcode
-%p
-  %b Air mail price:
-  = @australia_post_api_connection.air_mail_price
-%p
-  %b Sea mail price:
-  = @australia_post_api_connection.sea_mail_price
-%p
-  %b Regular price:
-  = @australia_post_api_connection.regular_price
-%p
-  %b Priority price:
-  = @australia_post_api_connection.priority_price
-%p
-  %b Express price:
-  = @australia_post_api_connection.express_price
+#results
 
-= link_to 'Edit', edit_australia_post_api_connection_path(@australia_post_api_connection)
-\|
+:javascript
+  $.ajax({
+    url: "http://localhost:3000/australia_post_api_connections/new",
+    datatype: "html",
+    data: { weight: 20 },
+    success: function( data ) {
+      $('#results').append(data);
+    }
+  }).done(function() { console.log("success"); })
+    .fail(function() { console.log("error"); })
+    .always(function() { console.log("complete"); });
+
 = link_to 'Back', australia_post_api_connections_path

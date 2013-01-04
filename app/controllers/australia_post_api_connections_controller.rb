@@ -13,7 +13,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
   # GET /australia_post_api_connections/1
   # GET /australia_post_api_connections/1.json
   def show
-    @australia_post_api_connection = AustraliaPostApiConnection.find(params[:id])
+    # @australia_post_api_connection = AustraliaPostApiConnection.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -31,6 +31,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
   # The form we present should contain a list of countries, as well as an option
   #   to enter the postcode instead (for domestic).
   def new
+    puts "---------------IN NEW--------------------"
     @weight = params[:weight]
     @australia_post_api_connection = AustraliaPostApiConnection.new(parameters_supplied_by_preferences)
     @australia_post_api_connection.weight = @weight
@@ -49,6 +50,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
     @calculated = false
 
     respond_to do |format|
+    puts "---------------About to format--------------------"
       format.html { render layout: false } # new.html.erb 
       format.json { render json: @australia_post_api_connection }
     end
