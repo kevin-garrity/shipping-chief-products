@@ -186,6 +186,8 @@ GEM
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
+    rack-cors (0.2.7)
+      rack
     rack-ssl (1.3.2)
       rack
     rack-test (0.6.2)
@@ -303,6 +305,7 @@ DEPENDENCIES
   pg
   pry-rails
   quiet_assets (>= 1.0.1)
+  rack-cors
   rails (= 3.2.9)
   rails_apps_composer!
   rspec-rails (>= 2.11.0)

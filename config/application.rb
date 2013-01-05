@@ -28,6 +28,17 @@ module WorldShippingCalculator
       g.helper_specs false
     end
 
+    # configuration for allowing some servers to access the aus api connection
+    config.middleware.use Rack::Cors do
+      puts "hey"
+      allow do
+        origins 'denesik-raynor-and-frami2407.myshopify.com'
+        resource '/australia_post_api_connections',
+          :headers => ['Origin', 'Accept', 'Content-Type', 'weight'],
+          :methods => [:get, :post]
+      end
+    end
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

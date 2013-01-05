@@ -37,5 +37,6 @@ gem 'pry-rails', :group => :development
 gem "pg"
 gem "activerecord-postgresql-adapter"
 gem "httparty"
+gem "rack-cors", :require => 'rack/cors'
 
 

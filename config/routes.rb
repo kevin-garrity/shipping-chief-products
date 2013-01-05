@@ -11,5 +11,7 @@ WorldShippingCalculator::Application.routes.draw do
   root :to => 'home#index'
 
   resource 'preferences', only: [:show, :edit, :update]
-  resources :australia_post_api_connections
+  match '/australia_post_api_connections' => 'australia_post_api_connections#new', :via => :get
+  resources 'australia_post_api_connections'
+  # match '/australia_post_api_connections', :controller => 'australia_post_api_connections', :action => 'options', :constraints => {:method => 'OPTIONS'}
 end
