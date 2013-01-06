@@ -18,6 +18,7 @@
         = f.label :country_code
         = f.select :country_code, @countries, selected: "Australia"
       .field#postcode
+        = f.label :"Please enter a postcode for shipping to", { :class => "error" }
         = f.label :to_postcode
         = f.number_field :to_postcode
 
@@ -48,3 +49,6 @@
       .field.hidden
         = f.label :from_postcode
         = f.number_field :from_postcode
+
+      .field.hidden
+        %input#tokentag{:name => "authenticity_token", :type => "hidden", :value => form_authenticity_token}
