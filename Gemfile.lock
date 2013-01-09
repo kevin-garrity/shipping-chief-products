@@ -10,6 +10,16 @@ GIT
       thor
 
 GIT
+  remote: git://github.com/variousauthors/shopifydev.git
+  revision: 39153a38267467301a24179cbee7a9ed9d859e36
+  branch: GLI_commandline_suite
+  specs:
+    shopifydev (0.0.1)
+      gli (>= 2.5.2)
+      ruby-filemagic (>= 0.4.2)
+      shopify_api (>= 3.0.0)
+
+GIT
   remote: https://github.com/lastobelus/css_canon
   revision: c510342834a29d4a0573634becc29161f1f63acd
   specs:
@@ -108,6 +118,7 @@ GEM
     fssm (0.2.9)
     gherkin (2.11.5)
       json (>= 1.4.6)
+    gli (2.5.3)
     haml (3.1.7)
     haml-rails (0.3.5)
       actionpack (>= 3.1, < 4.1)
@@ -223,6 +234,7 @@ GEM
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
       rspec-mocks (~> 2.12.0)
+    ruby-filemagic (0.4.2)
     ruby_parser (3.1.1)
       sexp_processor (~> 4.1)
     rubyzip (0.9.9)
@@ -313,6 +325,7 @@ DEPENDENCIES
   rvm
   sass-rails (~> 3.2.3)
   shopify_app
+  shopifydev!
   simple_form (>= 2.0.4)
   sqlite3
   thin (>= 1.5.0)

@@ -33,6 +33,8 @@ class AustraliaPostApiConnectionsController < ApplicationController
   def new
     puts "---------------IN NEW--------------------"
     puts params.inspect
+    puts request.headers.inspect
+
     @weight = params[:weight]
     @australia_post_api_connection = AustraliaPostApiConnection.new(parameters_supplied_by_preferences)
     @australia_post_api_connection.weight = @weight
@@ -49,7 +51,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
     @countries.prepend([ "Australia", "AUS" ])
 
     respond_to do |format|
-    puts "---------------About to format--------------------"
+      puts "---------------About to format--------------------"
       format.html { render layout: false } # new.html.erb 
       format.json { render json: @australia_post_api_connection }
     end
@@ -63,47 +65,50 @@ class AustraliaPostApiConnectionsController < ApplicationController
   # POST /australia_post_api_connections
   # POST /australia_post_api_connections.json
   def create
+    puts "---------------IN CREATE------------"
+    puts params.inspect
+    puts request.headers.inspect
 
-      @australia_post_api_connection = AustraliaPostApiConnection.new(params[:australia_post_api_connection])
-      @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
+    @australia_post_api_connection = AustraliaPostApiConnection.new(params[:australia_post_api_connection])
+    @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
 
-      # TODO we are repeating this code here (and making an expensive API call) because the countries
-      # list won't fit in the flash (CookieOVERFLOW).
-      # We should cache the list on the server
+    # TODO we are repeating this code here (and making an expensive API call) because the countries
+    # list won't fit in the flash (CookieOVERFLOW).
+    # We should cache the list on the server
 
-      # get country list from the API -- we'll format these if there were no errors
-      @countries = @australia_post_api_connection.data_oriented_methods(:country)
-      @service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
+    # get country list from the API -- we'll format these if there were no errors
+    @countries = @australia_post_api_connection.data_oriented_methods(:country)
+    @service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
 
-      respond_to do |format|
-        if @australia_post_api_connection.save
+    respond_to do |format|
+      if @australia_post_api_connection.save
 
-          # format the response how we like it
-          @countries = @countries[1]['country'].inject([]) do |list, country|
-            list.append([country['name'].capitalize, country['code'].capitalize])
-            list
-          end
-
-          # TODO right now we are not including the suboptions for each shipping type
-          @service_list = @service_list[1]['service'].inject([]) do |list, service|
-            list.append({ name: service['name'],
-                        code: service['code'],
-                        price: service['price'] })
-            list
-          end
-
-          # we won't do this stuff since we are doing ajax instead?
-          # format.html { render action: "new", layout: false }
-          # format.json { render json: @australia_post_api_connection, status: :created, location: @australia_post_api_connection }
-
-          # we'll render create.haml
-          format.js { render layout: false }
-        else
-
-          # format.html { render action: "new" }
-          # format.json { render json: @australia_post_api_connection.errors, status: :unprocessable_entity }
-          format.js { render layout: false }
+        # format the response how we like it
+        @countries = @countries[1]['country'].inject([]) do |list, country|
+          list.append([country['name'].capitalize, country['code'].capitalize])
+          list
         end
+
+        # TODO right now we are not including the suboptions for each shipping type
+        @service_list = @service_list[1]['service'].inject([]) do |list, service|
+          list.append({ name: service['name'],
+                      code: service['code'],
+                      price: service['price'] })
+          list
+        end
+
+        # we won't do this stuff since we are doing ajax instead?
+        # format.html { render action: "new", layout: false }
+        # format.json { render json: @australia_post_api_connection, status: :created, location: @australia_post_api_connection }
+
+        # we'll render create.haml
+        format.js { render layout: false }
+      else
+
+        # format.html { render action: "new" }
+        # format.json { render json: @australia_post_api_connection.errors, status: :unprocessable_entity }
+        format.js { render layout: false }
+      end
     end
   end
 

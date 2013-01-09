@@ -1,0 +1,6 @@
+---
+api_key: api_key
+password: password
+url: store
+project_root: '.'
+project_root_variable: PATCHIFY_DIR
