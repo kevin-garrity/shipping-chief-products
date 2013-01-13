@@ -79,12 +79,16 @@
       });
 
       //alert (dataString);return false;
+      $("#indicator").html("<img src='{{ 'ajax-loader.gif' | asset_url }}' alt='' />").show();
+      $("#results").empty();
+
       $.ajax({
         type: "POST",
         url: host + action,
         data: params,
         success: function(data) {
-          $('#shipping-prices').html(data);
+          $("#indicator").empty().hide();
+          $('#results').append(data);
         }
       }).fail(function() { console.log("fail") })
         .always(function() { console.log("always") })
