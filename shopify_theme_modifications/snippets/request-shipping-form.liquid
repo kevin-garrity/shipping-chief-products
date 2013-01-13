@@ -6,6 +6,7 @@
   var action = "australia_post_api_connections"
 
   console.log("start")
+  console.log($.version);
   $.ajax({
     url: host + action,
     type: "GET",
@@ -60,15 +61,28 @@
         height: height,
         width: width,
         length: length,
-        authenticity_token: tokentag
+      }
+
+      var params = {
+        authenticity_token: tokentag,
+        australia_post_api_connection: dataHash
       }
 
       console.log("ajaxing...")
+      console.log(dataHash);
+      console.log(tokentag);
+
+      $.ajaxSetup({
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRF-TOKEN', tokentag);
+        }
+      });
+
       //alert (dataString);return false;
       $.ajax({
         type: "POST",
         url: host + action,
-        data: dataHash,
+        data: params,
         success: function(data) {
           $('#shipping-prices').html(data);
         }
