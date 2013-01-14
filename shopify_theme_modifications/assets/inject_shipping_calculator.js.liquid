@@ -50,7 +50,20 @@ submit_calculation_request = function(dataHash) {
   });
 
   $("#results").empty();
-  update_loader_and_submit("POST", params, function(data) { $('#results').append(data); });
+  update_loader_and_submit("POST", params, function(data) { 
+    $('#results').append(data); 
+    $('input:radio').change(function() {
+      var price = $(this).siblings('.option-price').text();
+      var dollars = parseFloat(price);
+      var cents = parseFloat(price);
+
+      console.log(dollars);
+      console.log(cents);
+
+
+    });
+  });
+
 }
 
 validate_and_process_form = function(dataHash) {
