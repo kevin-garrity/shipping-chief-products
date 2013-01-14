@@ -2,8 +2,8 @@
 This is just a regular add product form.
 You should be able to add any valid input fields to it
 -->
-<form method="post" action="/cart/add">
   {% for product in collections['shipping'].products %}
+<form method="post" action="/cart/add">
     <!-- We can leave this in, since the select comes later,
     so it will override if user picks something different. -->
     {% for variant in product.variants limit:1 %}
@@ -37,5 +37,5 @@ You should be able to add any valid input fields to it
       {% endif %}
     </div>
     <!-- END BUY -->
-  {% endfor %}
 </form>
+  {% endfor %}

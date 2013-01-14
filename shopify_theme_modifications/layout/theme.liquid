@@ -138,7 +138,9 @@
               <span class="icon">
                 {% assign sum = 0 %}
                 {% for item in cart.items %}
-                  {% if item.title != 'Shipping'%}
+                  {% if item.title contains 'Shipping' %}
+
+                  {% else %}
                     {% assign sum = sum | plus: item.quantity %}
                   {% endif %}
                 {% endfor %}
