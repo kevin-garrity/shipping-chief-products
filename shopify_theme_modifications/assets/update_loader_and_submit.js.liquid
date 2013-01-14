@@ -1,0 +1,63 @@
+
+// Code to fetch the request form
+// TODO this info should live somewhere
+var host = "http://localhost:3000/"
+var action = "australia_post_api_connections"
+var xhr; // global request object for the calculation request
+
+// When we submit the form we should disable the submit button
+// but when we change the country select, it should abort the current
+// request and resubmit
+update_loader_and_submit = function(method, dataHash, callback) {
+  // Got the loader from http://www.ajaxload.info/
+  $(".actions > input").attr('disabled', 'disabled');
+  $("#indicator").html("<img src='{{ 'ajax-loader.gif' | asset_url }}' alt='' />").show();
+
+  if (xhr && xhr.readyState != 4) {
+    xhr.abort();
+  }
+
+  xhr = $.ajax({
+    url: host + action, // globally defined
+    type: method,
+    data: dataHash,
+    crossDomain: true,
+    xhrFields: {
+      withCredentials: true
+    },
+    success: function(data) {
+      $("#indicator").empty().hide();
+      callback(data);
+    }
+  }).fail(function() { console.log("fail") })
+  .always(function() { console.log("always") })
+  .complete(function() {
+    $(".actions > input").removeAttr('disabled');
+    console.log("complete");
+  });
+}
+
+$('#country-select').live('change', function() {
+
+  var selected_text = $('#country-select :selected').text()
+
+  $("#indicator").empty().hide();
+  $("#results").empty();
+
+  // we need to cancel the current request, since this action
+  // is not guaranteed to fire a new request.
+  if (xhr && xhr.readyState != 4) {
+    xhr.abort();
+  }
+
+  if ( selected_text !== 'Australia' ) {
+    $('#postcode').hide()
+  } else {
+    $('#postcode').show()
+  }
+
+  $(".actions > input").click();
+  console.log("yes");
+
+});
+
