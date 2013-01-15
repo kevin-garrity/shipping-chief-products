@@ -26,14 +26,13 @@ update_loader_and_submit = function(method, dataHash, callback) {
       withCredentials: true
     },
     success: function(data) {
-      $("#indicator").empty().hide();
       callback(data);
     }
   }).fail(function() { console.log("fail") })
   .always(function() { console.log("always") })
   .complete(function() {
     $(".actions > input").removeAttr('disabled');
-    console.log("complete");
+    $("#indicator").empty().hide();
   });
 }
 
