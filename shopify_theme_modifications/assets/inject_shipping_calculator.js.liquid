@@ -1,5 +1,6 @@
 
 inject_shipping_calculator = function(data) {
+  remove_shipping_item();
   $('#shipping-calculator').html(data);
   $('#new_australia_post_api_connection').attr("action", host + action);
   $('.error').hide();
@@ -53,23 +54,26 @@ submit_calculation_request = function(dataHash) {
   update_loader_and_submit("POST", params, function(data) { 
     $('#results').append(data); 
     $('input:radio').change(function() {
-
-      var shipping_line_item = $('input#quantity');
-      var variant_id = $('input[name=id]').attr('value');
-
-      // clear the old shipping item
-      Shopify.removeItem(variant_id);
+      remove_shipping_item();
 
       var price = $(this).siblings('.option-price').text();
-
       var shipping_quantity = Number(price.replace(/[^0-9\.]+/g,"")) * 100;
 
-      shipping_line_item.attr('value', shipping_quantity);
+      $('input#quantity').attr('value', shipping_quantity);
       $('input#Shipping').click();
 
     });
-  });
 
+    $('input:radio').eq(0).change();
+  });
+}
+
+remove_shipping_item = function() {
+  var shipping_line_item = $('input#quantity');
+  var variant_id = $('input[name=id]').attr('value');
+
+  // clear the old shipping item
+  Shopify.removeItem(variant_id);
 }
 
 validate_and_process_form = function(dataHash) {
