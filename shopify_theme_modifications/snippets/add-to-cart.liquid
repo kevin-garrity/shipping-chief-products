@@ -8,6 +8,7 @@ You should be able to add any valid input fields to it
     so it will override if user picks something different. -->
     {% for variant in product.variants limit:1 %}
       <input type="hidden" name="id" value="{{ variant.id }}" />
+      <input type="hidden" id="quantity" name="quantity" value="0" />
     {% endfor %}
 
     <!-- If you don't want the variants dropdown, just comment this out. -->

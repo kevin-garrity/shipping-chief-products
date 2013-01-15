@@ -53,15 +53,19 @@ submit_calculation_request = function(dataHash) {
   update_loader_and_submit("POST", params, function(data) { 
     $('#results').append(data); 
     $('input:radio').change(function() {
+
+      var shipping_line_item = $('input#quantity');
+      var variant_id = $('input[name=id]').attr('value');
+
+      // clear the old shipping item
+      Shopify.removeItem(variant_id);
+
       var price = $(this).siblings('.option-price').text();
-      var dollars = parseFloat(price);
-      var cents = parseFloat(price);
 
-      console.log(dollars);
-      console.log(cents);
+      var shipping_quantity = Number(price.replace(/[^0-9\.]+/g,"")) * 100;
 
-      $('input#Shipping-dollar').click();
-      $('input#Shipping-cent').click();
+      shipping_line_item.attr('value', shipping_quantity);
+      $('input#Shipping').click();
 
     });
   });
@@ -70,8 +74,6 @@ submit_calculation_request = function(dataHash) {
 
 validate_and_process_form = function(dataHash) {
   // validate and process form here
-  console.log(dataHash)
-  console.log(dataHash['to_postcode'])
   $('.error').hide();
 
   // TODO
