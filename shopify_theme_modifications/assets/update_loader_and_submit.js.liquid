@@ -16,6 +16,7 @@ update_loader_and_submit = function(method, dataHash, callback) {
   if (xhr && xhr.readyState != 4) {
     xhr.abort();
   }
+  alert("Ajaxing")
 
   $.support.cors = true;
   xhr = $.ajax({
@@ -30,6 +31,7 @@ update_loader_and_submit = function(method, dataHash, callback) {
       callback(data);
     },
     error: function(data, text_status, error_thrown) {
+      $("#shipping-calculator").append("GELLO")
       alert("error")
       alert(text_status)
       alert(error_thrown)
