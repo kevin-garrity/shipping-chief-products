@@ -26,6 +26,5 @@ $('#country-select').live('change', function() {
   }
 
   $(this).parents('form:first').submit();
-  console.log("yes");
 
 });
