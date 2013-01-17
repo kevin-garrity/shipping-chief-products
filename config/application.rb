@@ -16,7 +16,6 @@ module WorldShippingCalculator
           config.shopify.api_key = ENV['SHOPIFY_API_KEY']
           config.shopify.secret = ENV['SHOPIFY_API_SECRET']
     
-
     # don't generate RSpec tests for views and helpers
     config.generators do |g|
       
@@ -31,7 +30,7 @@ module WorldShippingCalculator
     # configuration for allowing some servers to access the aus api connection
     config.middleware.use Rack::Cors do
       allow do
-        origins 'http://denesik-raynor-and-frami2407.myshopify.com'
+        origins 'http://denesik-raynor-and-frami2407.myshopify.com', 'https://denesik-raynor-and-frami2407.myshopify.com'
         resource '/australia_post_api_connections',
           :headers => ['Origin', 'Accept', 'Content-Type', 'X-CSRF-Token'],
           :methods => [:get, :post]

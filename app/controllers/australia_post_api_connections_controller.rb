@@ -99,7 +99,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
         # format.json { render json: @australia_post_api_connection, status: :created, location: @australia_post_api_connection }
 
         # we'll render create.haml
-        format.js { render layout: false }
+        format.js { render content_type: 'text/html', layout: false }
       else
 
         # format.html { render action: "new" }
