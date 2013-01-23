@@ -27,6 +27,8 @@ module WorldShippingCalculator
       g.helper_specs false
     end
 
+    # TODO does this mean we have to restart the app every time someone installs it?
+    #
     # configuration for allowing some servers to access the aus api connection
     config.middleware.use Rack::Cors do
       allow do

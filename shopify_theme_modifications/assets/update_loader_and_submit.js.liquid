@@ -16,8 +16,11 @@ update_loader_and_submit = function(method, dataHash, callback) {
   if (xhr && xhr.readyState != 4) {
     xhr.abort();
   }
-  alert("Ajaxing")
 
+  // TODO find out more about making CORS requests, whether and when we need to
+  // set support.cors = true, and whether interlieving might occur
+  // so we need to wrap the .ajax method with our .CORSajax method, and keep all
+  // the nice arguments we had
   $.support.cors = true;
   xhr = $.ajax({
     url: host + action, // globally defined
