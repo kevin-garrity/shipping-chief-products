@@ -5,7 +5,7 @@
 *
 */
 
-// console.log("start")
+// //console.log("start")
 
 jQuery(document).ready(function() {
   //Begin Wrapper
@@ -29,6 +29,7 @@ jQuery(document).ready(function() {
     FORM_ADD_TO_CART: 'form[action*=/cart/add]',
 
     FORM_UPDATE_CART: 'form[name=cartform]',
+
     //The actual Update Button
     FORM_UPDATE_CART_BUTTON: 'form[name=cartform] input[name=update]',
     //All the buttons on the form
@@ -39,6 +40,7 @@ jQuery(document).ready(function() {
     LINE_ITEM_PRICE_PREFIX: '.cart-line-item-price-',
 
     LINE_ITEM_REMOVE: '.remove a',
+    LINE_ITEM_CHANGE_QUANTITY: '.change-quantity a',
 
     EMPTY_CART_MESSAGE: '#empty'
   };
@@ -62,7 +64,7 @@ jQuery(document).ready(function() {
 
 //Attach Submit Handler to all forms with the /cart/add action.
 jQ('form[action*=\\/cart\\/add]').submit(function(e) {
-  // console.log("in FORM_ADD_TO_CART")
+  //console.log("in FORM_ADD_TO_CART")
   e.preventDefault();
   //Disable the Add To Cart button, add a disabled class.
   jQ(e.target).find(selectors.SUBMIT_ADD_TO_CART).attr('disabled', true).addClass('disabled');
@@ -70,24 +72,39 @@ jQ('form[action*=\\/cart\\/add]').submit(function(e) {
   //Can't use updateCartFromForm since you need the item added before you can update (otherwise, would have been more convenient)
   //So, in onItemAdded, we Shopify.getCart() to force the repaint of items in cart.
   Shopify.addItemFromForm(e.target);
-  // console.log("out FORM_ADD_TO_CART")
+  //console.log("out FORM_ADD_TO_CART")
 });
 
 
 //We only want to interrupt the UPDATE, not the CHECKOUT process
 jQ(selectors.FORM_UPDATE_CART_BUTTON).click(function(e) {
+  //console.log("in FORM_UPDATE_CART_BUTTON")
   e.preventDefault();
   jQ(e.target.form).find(selectors.FORM_UPDATE_CART_BUTTONS).attr('disabled', true).addClass('disabled');
   Shopify.updateCartFromForm(e.target.form);
+  //console.log("out FORM_UPDATE_CART_BUTTON")
 });
 
 //Delegate the Remove Link functionality on the cart page.
 jQ(selectors.FORM_UPDATE_CART).delegate(selectors.LINE_ITEM_REMOVE, 'click', function(e) {
+  //console.log("in LINE_ITEM_REMOVE")
   e.preventDefault();
   //Get the variant ID from the URL
   var vid = this.href.split('/').pop().split('?').shift();
   Shopify.removeItem(vid);
   jQ(this).parents(selectors.LINE_ITEM_ROW).remove();
+  //console.log("out LINE_ITEM_REMOVE")
+});
+
+jQ(selectors.FORM_UPDATE_CART).delegate(selectors.LINE_ITEM_CHANGE_QUANTITY, 'click', function(e) {
+  //console.log("in LINE_ITEM_CHANGE_QUANTITY")
+  e.preventDefault();
+  //Get the variant ID from the URL
+  var vid = jQ(selectors.FORM_UPDATE_CART + " > input[name=id]").attr("value");
+  var quantity = jQ(selectors.FORM_UPDATE_CART + " > input[name=quantity]").attr("value");
+  Shopify.changeItem(vid, quantity);
+  jQ(this).parents(selectors.LINE_ITEM_ROW).remove();
+  //console.log("out LINE_ITEM_CHANGE_QUANTITY")
 });
 
 /**
@@ -100,7 +117,7 @@ jQ(selectors.FORM_UPDATE_CART).delegate(selectors.LINE_ITEM_REMOVE, 'click', fun
 * @param HTMLelement/String Form HTMLElement, or selector
 */
 Shopify.onItemAdded = function(line_item, form) {
-  // // console.log("in onItemAdded")
+  //console.log("in onItemAdded")
   //Default behaviour for this modification:
   //When a Add To Cart form is clicked, we disable the button and apply a class of disabled.
   //Here is where we remove the disabled class, and reactivate the button.
@@ -110,7 +127,7 @@ Shopify.onItemAdded = function(line_item, form) {
 
   //Get the state of the cart, which will trigger onCartUpdate
   Shopify.getCart();
-  // console.log("out onItemAdded")
+  //console.log("out onItemAdded")
 };
 
 /**
@@ -124,7 +141,7 @@ Shopify.onItemAdded = function(line_item, form) {
 * @param HTMLElement form. If included, we know its an Update of the CART FORM, which will trigger additional behaviour.
 */
 Shopify.onCartUpdate = function(cart, form) {
-  // console.log("in onCartUpdate")
+  //console.log("in onCartUpdate")
 
   // Total Items Update
   var message = '<span class="count">'+cart.item_count+'</span> ' +
@@ -163,20 +180,20 @@ Shopify.onCartUpdate = function(cart, form) {
     //You can add any extra messaging you would want here.
     //successMessage('Cart Updated.');
   }
-  // console.log("out onCartUpdate")
+  //console.log("out onCartUpdate")
 };
 
 
 //What to display when there is an error. You tell me?! I've left in a commented out example.
 // You can tie this in to any sort of flash messages, or lightbox, or whatnot you want.
 Shopify.onError = function(XMLHttpRequest, textStatus) {
-  // console.log("in onError")
+  //console.log("in onError")
   // Shopify returns a description of the error in XMLHttpRequest.responseText.
   // It is JSON.
   // Example: {"description":"The product 'Amelia - Small' is already sold out.","status":500,"message":"Cart Error"}
   // var data = eval('(' + XMLHttpRequest.responseText + ')');
-  // console.log(data.message + '(' + data.status + '): ' + data.description);
-  // console.log("out onError")
+  // //console.log(data.message + '(' + data.status + '): ' + data.description);
+  //console.log("out onError")
 };
 
 //End Wrapper

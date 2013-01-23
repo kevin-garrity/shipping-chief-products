@@ -27,6 +27,8 @@ You should be able to add any valid input fields to it
 
     <!-- START BUY -->
     <div class="clear">
+      <div class="cart-total-items"></div>
+      <div class="cart-total-price"></div>
       {% if product.available %}
         <h2><span>{{ product.price | money }}</span>
           {% if product.compare_at_price_max > product.price %} <del>{{ product.compare_at_price_max | money }}</del>
@@ -34,6 +36,9 @@ You should be able to add any valid input fields to it
         </h2>
         <input id="{{ product.title }}" class="submit-add-to-cart" type="submit" value="Add To Cart" />
         <input id="update-{{ product.title }}" type="submit" name="update" value="Update" />
+        <div class="change-quantity">
+          <a href="#" id="change-quantity">CHANGE QUANTITY</a>
+        </div>
       {% else %}
         <h6>Sold Out</h6>
       {% endif %}

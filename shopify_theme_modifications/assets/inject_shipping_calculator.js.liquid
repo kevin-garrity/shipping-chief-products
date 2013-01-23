@@ -54,14 +54,20 @@ submit_calculation_request = function(dataHash) {
   update_loader_and_submit("POST", params, function(data) { 
     $('#results').append(data); 
     $('input:radio').change(function() {
-      remove_shipping_item();
+      // remove_shipping_item();
 
       var price = $(this).siblings('.option-price').text();
       var shipping_quantity = Number(price.replace(/[^0-9\.]+/g,"")) * 100;
 
-      $('input#quantity').attr('value', shipping_quantity);
-      $('input#Shipping').click();
-
+      if ( $('input#quantity').attr('value') === '0' ) {
+        $('input#quantity').attr('value', shipping_quantity);
+        //console.log("  about to click #Shipping")
+        $('input#Shipping').click();
+      } else {
+        $('input#quantity').attr('value', shipping_quantity);
+        //console.log("  about to click #change-quantity")
+        $('.change-quantity a').click();
+      }
     });
 
     $('input:radio').eq(0).change();
@@ -69,6 +75,7 @@ submit_calculation_request = function(dataHash) {
 }
 
 remove_shipping_item = function() {
+  //console.log("  remove_shipping_item")
   var shipping_line_item = $('input#quantity');
   var variant_id = $('input[name=id]').attr('value');
 
