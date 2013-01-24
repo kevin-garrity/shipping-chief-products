@@ -16,7 +16,6 @@ module WorldShippingCalculator
           config.shopify.api_key = ENV['SHOPIFY_API_KEY']
           config.shopify.secret = ENV['SHOPIFY_API_SECRET']
     
-
     # don't generate RSpec tests for views and helpers
     config.generators do |g|
       
@@ -28,6 +27,8 @@ module WorldShippingCalculator
       g.helper_specs false
     end
 
+    # TODO does this mean we have to restart the app every time someone installs it?
+    #
     # configuration for allowing some servers to access the aus api connection
     config.middleware.use Rack::Cors do
       allow do

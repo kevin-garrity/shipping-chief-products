@@ -1,3 +1,2 @@
-/ this is rendered when someone hits "calculate" and whenever the country select changes
 :plain
-  $("#shipping-prices").html("#{escape_javascript(render(:partial => 'calculations', :object => @australia_post_api_connection))}")
+  #{render(:partial => 'calculations', :object => @australia_post_api_connection)}

@@ -32,8 +32,6 @@ class AustraliaPostApiConnectionsController < ApplicationController
   #   to enter the postcode instead (for domestic).
   def new
     puts "---------------IN NEW--------------------"
-    puts params.inspect
-    puts request.headers.inspect
 
     @weight = params[:weight]
     @australia_post_api_connection = AustraliaPostApiConnection.new(parameters_supplied_by_preferences)
@@ -66,8 +64,6 @@ class AustraliaPostApiConnectionsController < ApplicationController
   # POST /australia_post_api_connections.json
   def create
     puts "---------------IN CREATE------------"
-    puts params.inspect
-    puts request.headers.inspect
 
     @australia_post_api_connection = AustraliaPostApiConnection.new(params[:australia_post_api_connection])
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
@@ -90,7 +86,8 @@ class AustraliaPostApiConnectionsController < ApplicationController
         end
 
         # TODO right now we are not including the suboptions for each shipping type
-        @service_list = @service_list[1]['service'].inject([]) do |list, service|
+        @service_list = Array.wrap( @service_list[1]['service'] ).inject([]) do |list, service|
+
           list.append({ name: service['name'],
                       code: service['code'],
                       price: service['price'] })
@@ -102,7 +99,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
         # format.json { render json: @australia_post_api_connection, status: :created, location: @australia_post_api_connection }
 
         # we'll render create.haml
-        format.js { render layout: false }
+        format.js { render content_type: 'text/html', layout: false }
       else
 
         # format.html { render action: "new" }

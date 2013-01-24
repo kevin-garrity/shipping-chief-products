@@ -1,0 +1,103 @@
+
+inject_shipping_calculator = function(data) {
+  remove_shipping_item();
+  $('#shipping-calculator').html(data);
+  $('#new_australia_post_api_connection').attr("action", host + action);
+  $('.error').hide();
+
+  $(".actions > input").click(ajax_request_calculation);
+};
+
+ajax_request_calculation = function(data) {
+  var country_code = $("select#australia_post_api_connection_country_code option:selected").attr("value");
+  var to_postcode = $("input#australia_post_api_connection_to_postcode").val();
+  var from_postcode = $("input#australia_post_api_connection_from_postcode").val();
+  var weight = $("input#australia_post_api_connection_weight").val();
+
+  var height = $("input#australia_post_api_connection_height").val();
+  var width = $("input#australia_post_api_connection_width").val();
+  var length = $("input#australia_post_api_connection_length").val();
+
+  var dataHash = {
+    weight: weight,
+    to_postcode: to_postcode,
+    from_postcode: from_postcode,
+    country_code: country_code,
+    height: height,
+    width: width,
+    length: length,
+  }
+
+
+  if (validate_and_process_form(dataHash)) {
+    submit_calculation_request(dataHash);
+  }
+
+  return false;
+}
+
+submit_calculation_request = function(dataHash) {
+  tokentag = $('#tokentag').val()
+
+  var params = {
+    authenticity_token: tokentag,
+    australia_post_api_connection: dataHash
+  }
+
+  $.ajaxSetup({
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('X-CSRF-TOKEN', tokentag);
+    }
+  });
+
+  $("#results").empty();
+  update_loader_and_submit("POST", params, function(data) { 
+    $('#results').append(data); 
+    $('input:radio').change(function() {
+      // remove_shipping_item();
+
+      var price = $(this).siblings('.option-price').text();
+      var shipping_quantity = Number(price.replace(/[^0-9\.]+/g,"")) * 100;
+
+      if ( $('input#quantity').attr('value') === '0' ) {
+        $('input#quantity').attr('value', shipping_quantity);
+        //console.log("  about to click #Shipping")
+        $('input#Shipping').click();
+      } else {
+        $('input#quantity').attr('value', shipping_quantity);
+        //console.log("  about to click #change-quantity")
+        $('.change-quantity a').click();
+      }
+    });
+
+    $('input:radio').eq(0).change();
+  });
+}
+
+remove_shipping_item = function() {
+  //console.log("  remove_shipping_item")
+  var shipping_line_item = $('input#quantity');
+  var variant_id = $('input[name=id]').attr('value');
+
+  // clear the old shipping item
+  Shopify.removeItem(variant_id);
+}
+
+validate_and_process_form = function(dataHash) {
+  // validate and process form here
+  $('.error').hide();
+
+  // TODO
+    //   So this seems weird: the heigh, width, and length are all calculated
+  //   server side, then sent here to the client, and then returned to the
+  //   server... this could be a risk I think, and it is surely inefficient
+
+  // client side validation example
+  if (dataHash['country_code'] === "AUS" && dataHash['to_postcode'] === "") {
+    $("#postcode > .error").show();
+    $("input#australia_post_api_connection_to_postcode").focus();
+    return false;
+  }
+
+  return true;
+}

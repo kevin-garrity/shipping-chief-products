@@ -4,7 +4,8 @@
   %br
   - @service_list.each_with_index do |service, index|
     - checked = true if index == 0
-    = radio_button_tag(:shipping_type, service[:code], checked)
-    = label_tag(:"shipping_type_#{service[:code]}", service[:name])
-    = " -- $#{service[:price]}"
-    %br
+    .option-price-radio
+      = radio_button_tag(:shipping_type, service[:code], checked)
+      = label_tag(:"shipping_type_#{service[:code]}", service[:name])
+      %span.option-price= " -- $#{service[:price]}"
+      %br
