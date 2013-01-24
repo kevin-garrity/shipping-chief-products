@@ -100,13 +100,11 @@ class AustraliaPostApiConnection
     command = Thread.new do
       Thread.current["httparty_response"] = HTTParty.get("#{self.api_root}/#{method}",
                                                            :query => self.attributes,
+                                                           :timeout => 5, # sec
                                                            :headers => { 'auth-key' => credentials['api-key']})
     end
 
     command.join                 # main programm waiting for thread
-    puts "command complete"
-
-    puts "class " + command["httparty_response"].class.to_s
 
     @service_list = command["httparty_response"].flatten
 
