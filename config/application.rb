@@ -31,7 +31,7 @@ module WorldShippingCalculator
     # configuration for allowing some servers to access the aus api connection
     config.middleware.use Rack::Cors do
       allow do
-        origins 'http://denesik-raynor-and-frami2407.myshopify.com'
+        origins '*'
         resource '/australia_post_api_connections',
           :headers => ['Origin', 'Accept', 'Content-Type', 'X-CSRF-Token'],
           :methods => [:get, :post]
