@@ -25,11 +25,10 @@ update_loader_and_submit = function(method, dataHash, callback) {
   xhr = $.ajax({
     url: host + action, // globally defined
     type: method,
+    dataType: 'text',
+    contentType: 'text/plain',
     data: dataHash,
     crossDomain: true,
-    xhrFields: {
-      withCredentials: true
-    },
     success: function(data) {
       callback(data);
     },
@@ -47,7 +46,7 @@ update_loader_and_submit = function(method, dataHash, callback) {
   });
 }
 
-$('#country-select').live('change', function() {
+$(document).on('#country-select', 'change', function() {
 
   var selected_text = $('#country-select :selected').text()
 
