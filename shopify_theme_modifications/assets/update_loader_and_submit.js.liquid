@@ -25,7 +25,7 @@ update_loader_and_submit = function(method, dataHash, callback) {
   xhr = $.ajax({
     url: host + action, // globally defined
     type: method,
-    dataType: 'text',
+    dataType: 'html',
     contentType: 'text/plain',
     data: dataHash,
     crossDomain: true,
@@ -34,9 +34,6 @@ update_loader_and_submit = function(method, dataHash, callback) {
     },
     error: function(data, text_status, error_thrown) {
       $("#shipping-calculator").append("GELLO")
-      alert("error")
-      alert(text_status)
-      alert(error_thrown)
     }
   }).fail(function() { })
   .always(function() { })
@@ -46,7 +43,7 @@ update_loader_and_submit = function(method, dataHash, callback) {
   });
 }
 
-$(document).on('#country-select', 'change', function() {
+$(document).on('change', '#country-select', function() {
 
   var selected_text = $('#country-select :selected').text()
 
