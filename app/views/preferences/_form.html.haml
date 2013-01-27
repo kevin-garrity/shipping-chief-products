@@ -5,15 +5,33 @@
       %ul
         - @preference.errors.full_messages.each do |msg|
           %li= msg
-  = f.label :origin_postal_code, "Enter the Postal Code your items would be shipping from:"
-  = f.text_field :origin_postal_code
-  = f.label :default_weight, "Enter the default product weight to used in calculation if not specified in Shopify:"
-  = f.text_field :default_weight
-  %span(class="postfix") kg
+  %fieldset          
+    = f.label :origin_postal_code, "Enter the Postal Code your items would be shipping from"
+    = f.text_field :origin_postal_code
+    = f.label :default_weight, "Enter the default product weight to used in calculation<br/> if not specified in Shopify".html_safe
+    = f.text_field :default_weight
+    %span(class="postfix") kg
   %br
-  = f.label :surchange_percentage, "Enter the surchange percentage to add on top of shipping:"
-  = f.text_field :surchange_percentage
-  %span(class="postfix") %
+  %fieldset
+    = f.label :height, "Enter the default size of your shipping containers <br/>(Height, Width, Depth)<br/> You can specify container size for products individually. This size is only used when none is specified.".html_safe
+    %span(class="prefix") H
+    = f.text_field :height
+    %span(class="postfix") cm
+    %br 
+    = f.label :width, "", :class=>"hidden-prefix"
+    %span(class="prefix") W
+    = f.text_field :width
+    %span(class="postfix") cm
+    %br
+    = f.label :depth, " ", :class=>"hidden-prefix"
+    %span(class="prefix") D  
+    = f.text_field :depth
+    %span(class="postfix") cm
+  %br  
+  %fieldset
+    = f.label :surchange_percentage, "Enter the surchange percentage<br/> to add on top of shipping".html_safe
+    = f.text_field :surchange_percentage
+    %span(class="postfix") %
   .actions
     = f.submit 'Save', :class=>"button"
     = link_to 'Cancel', preferences_path

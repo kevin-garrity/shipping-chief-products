@@ -11,13 +11,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130124191921) do
+ActiveRecord::Schema.define(:version => 20130127042344) do
 
   create_table "preference", :force => true do |t|
-    t.string "shop_url"
-    t.string "origin_postal_code"
-    t.string "default_weight"
-    t.string "surchange_percentage"
+    t.string  "shop_url"
+    t.string  "origin_postal_code"
+    t.string  "default_weight"
+    t.string  "surchange_percentage"
+    t.decimal "height",               :precision => 10, :scale => 0
+    t.decimal "width",                :precision => 10, :scale => 0
+    t.decimal "depth",                :precision => 10, :scale => 0
   end
 
 end

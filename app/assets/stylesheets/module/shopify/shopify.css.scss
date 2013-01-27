@@ -1,6 +1,7 @@
 body{ 
   color: $text_color_light;
   background-color: $background_color_light;
+  font-family:$serif_font;
 }
 
 @media only screen and (min-device-width: 481px){
@@ -29,6 +30,10 @@ body{
   font-family: $sanserif_font;
 }
 
+body {
+
+}
+
 .row {
   background-color: #FEFEFE;
 }
@@ -36,5 +41,95 @@ body{
 footer.row {
   background-color: $background_color_light;
   margin-top: 20px;
+}
+
+
+
+
+h1 {
+ font-size:24px;
+}
+
+h2 {
+  font-size:18px;
+}
+
+form fieldset {
+  margin-top:0px;
+}
+
+form label {
+  display:inline;
+  float:left;
+  width:450px;
+  line-height:20px;
+  margin-right:20px;
+  font-weight:400;
+}
+form input[type=text] {
+  width:190px;
+}
+
+.panel {
+  height:600px;
+}
+
+.actions {
+  margin-top:70px;
+  margin-left:450px;
+}
+
+.actions input[type=submit]{
+  margin-right:15px;
+}
+
+#error_explanation h2 {
+  font-size:18px;
+}
+
+#error_explanation ul {
+  margin-left:30px;
+}
+
+#preference_origin_postal_code {
+  width:70px;
+}
+
+#preference_height, #preference_width, #preference_depth {
+  width:50px;
+  display:inline;
+}
+
+
+
+#preference_surchange_percentage, #preference_default_weight {
+  display:inline;
+  width:70px;
+}
+
+form .postfix {
+  display:inline;
+  background:#fff;
+  border:0px;
+  margin-left:3px;
+}
+
+.hidden-prefix {
+  visibility:hidden;
+}
+
+form .prefix {
+  display:inline;
+  background:#fff;
+  border:0px;
+  margin-right:3px;
+}
+
+.edit_preference .prefix {
+  width:15px;
+}
+
+.edit_preference form .field_with_errors{
+  display:inline;
 }
 
