@@ -54,18 +54,21 @@ submit_calculation_request = function(dataHash) {
   update_loader_and_submit("POST", params, function(data) { 
     $('#results').append(data); 
     $('input:radio').change(function() {
-      // remove_shipping_item();
-
       var price = $(this).siblings('.option-price').text();
       var shipping_quantity = Number(price.replace(/[^0-9\.]+/g,"")) * 100;
+      var shipping_type = $(this).attr('value');
 
+      // create or modify the Shipping line item
+      // further, add the relevant shipping into to the line item properties
       if ( $('input#quantity').attr('value') === '0' ) {
         $('input#quantity').attr('value', shipping_quantity);
         //console.log("  about to click #Shipping")
+        $('input#shipping-type').val(shipping_type);
         $('input#Shipping').click();
       } else {
         $('input#quantity').attr('value', shipping_quantity);
         //console.log("  about to click #change-quantity")
+        $('input#shipping-type').val(shipping_type);
         $('.change-quantity a').click();
       }
     });
@@ -78,6 +81,7 @@ remove_shipping_item = function() {
   //console.log("  remove_shipping_item")
   var shipping_line_item = $('input#quantity');
   var variant_id = $('input[name=id]').attr('value');
+  $('input#shipping-type').val("");
 
   // clear the old shipping item
   Shopify.removeItem(variant_id);
@@ -101,3 +105,26 @@ validate_and_process_form = function(dataHash) {
 
   return true;
 }
+
+$(document).on('change', '#country-select', function() {
+
+  var selected_text = $('#country-select :selected').text()
+
+  $("#indicator").empty().hide();
+  $("#results").empty();
+
+  // we need to cancel the current request, since this action
+  // is not guaranteed to fire a new request.
+  if (xhr && xhr.readyState != 4) {
+    xhr.abort();
+  }
+
+  if ( selected_text !== 'Australia' ) {
+    $('#postcode').hide()
+  } else {
+    $('#postcode').show()
+  }
+
+  $(".actions > input").click();
+
+});

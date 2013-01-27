@@ -9,9 +9,7 @@ if (!jQuery.support.cors && window.XDomainRequest) {
   var xmlRegEx = /\/xml/i;
   
   // ajaxTransport exists in jQuery 1.5+
-  alert("about to ajaxTransport")
   jQuery.ajaxTransport('text html xml json', function(options, userOptions, jqXHR){
-    alert("in ajaxTransport")
     // XDomainRequests must be: asynchronous, GET or POST methods, HTTP or HTTPS protocol, and same scheme as calling page
     if (options.crossDomain && options.async && getOrPostRegEx.test(options.type) && httpRegEx.test(options.url) && sameSchemeRegEx.test(options.url)) {
       var xdr = null;
@@ -71,8 +69,7 @@ responses.html = xdr.responseText;
           };
           
           //set an empty handler for 'onprogress' so requests don't get aborted
-          xdr.onprogress = function () {
-          };
+          xdr.onprogress = function () { };
 
           xdr.onerror = function(){
             complete(500, 'error', {

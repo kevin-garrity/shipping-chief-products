@@ -65,6 +65,9 @@ class AustraliaPostApiConnectionsController < ApplicationController
   def create
     puts "---------------IN CREATE------------"
 
+    # merge the raw post data into the params
+    params.merge!(Rack::Utils.parse_nested_query(request.raw_post))
+
     @australia_post_api_connection = AustraliaPostApiConnection.new(params[:australia_post_api_connection])
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
 
@@ -100,6 +103,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
         # we'll render create.haml
         format.js { render content_type: 'text/html', layout: false }
+        format.html { render content_type: 'text/html', layout: false }
       else
 
         # format.html { render action: "new" }

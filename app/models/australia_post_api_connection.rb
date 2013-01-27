@@ -97,9 +97,17 @@ class AustraliaPostApiConnection
   end
 
   def api_call(method)
-    @service_list = HTTParty.get("#{self.api_root}/#{method}",
-                                 :query => self.attributes,
-                                 :headers => { 'auth-key' => credentials['api-key']}).flatten
+    command = Thread.new do
+      Thread.current["httparty_response"] = HTTParty.get("#{self.api_root}/#{method}",
+                                                           :query => self.attributes,
+                                                           :timeout => 5, # sec
+                                                           :headers => { 'auth-key' => credentials['api-key']})
+    end
+
+    command.join                 # main programm waiting for thread
+
+    @service_list = command["httparty_response"].flatten
+
     if @service_list[0] == "error"
       self.api_errors.append(@service_list[1]['errorMessage'])
     end
