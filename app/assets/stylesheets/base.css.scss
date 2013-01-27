@@ -9,3 +9,57 @@ $serif_font: "PT Serif", "Georgia", serif;
 // brand colors
 $brand_dark: #082d49;
 $brand_light: #87c229;
+
+h1 {
+ font-size:20px;
+}
+
+h2 {
+  font-size:16px;
+}
+
+form label {
+  display:inline;
+  float:left;
+  width:450px;
+  margin-top:8px;
+}
+form input[type=text] {
+  width:190px!important;
+}
+
+.panel {
+  height:600px;
+}
+
+.actions {
+  margin-top:70px;
+  margin-left:450px;
+}
+
+.actions input[type=submit]{
+  margin-right:15px;
+}
+
+#error_explanation h2 {
+  font-size:18px;
+}
+
+#error_explanation ul {
+  margin-left:30px;
+}
+
+#preference_origin_postal_code {
+  width:60px!important;
+}
+#preference_surchange_percentage, #preference_default_weight {
+  display:inline;
+  width:60px!important;
+}
+
+form .postfix {
+  display:inline;
+  background:#fff!important;
+  border:0px!important;
+  margin-left:3px;
+}

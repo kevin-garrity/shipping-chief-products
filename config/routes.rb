@@ -9,6 +9,9 @@ WorldShippingCalculator::Application.routes.draw do
     delete 'logout' => :destroy
   end
   root :to => 'home#index'
+  
+  match "help" => 'help#index'
+  
 
   resource 'preferences', only: [:show, :edit, :update]
   match '/australia_post_api_connections' => 'australia_post_api_connections#new', :via => :get
