@@ -1,11 +1,14 @@
 = form_for @preference, :url=>preferences_path(), :method => :put do |f|
+  - unless (flash[:notice].nil?)
+    %div(class="alert-box") 
+      = flash[:notice]
   - if @preference.errors.any?
     #error_explanation
       %h3= "#{pluralize(@preference.errors.count, "error")} prohibited this preference from being saved:"
       %ul
         - @preference.errors.full_messages.each do |msg|
           %li= msg
-  %fieldset          
+  %fieldset
     = f.label :origin_postal_code, "Enter the Postal Code your items would be shipping from"
     = f.text_field :origin_postal_code
     = f.label :default_weight, "Enter the default product weight to used in calculation<br/> if not specified in Shopify".html_safe
