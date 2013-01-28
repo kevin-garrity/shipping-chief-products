@@ -17,7 +17,7 @@ ajax_request_calculation = function(data) {
   var height = $("input#australia_post_api_connection_height").val();
   var width = $("input#australia_post_api_connection_width").val();
   var length = $("input#australia_post_api_connection_length").val();
-
+  var shop_url = window.location.hostname;
   var dataHash = {
     weight: weight,
     to_postcode: to_postcode,
@@ -26,8 +26,8 @@ ajax_request_calculation = function(data) {
     height: height,
     width: width,
     length: length,
+    shop: shop_url
   }
-
 
   if (validate_and_process_form(dataHash)) {
     submit_calculation_request(dataHash);
@@ -41,7 +41,7 @@ submit_calculation_request = function(dataHash) {
 
   var params = {
     authenticity_token: tokentag,
-    australia_post_api_connection: dataHash
+    australia_post_api_connection: dataHash,
   }
 
   $.ajaxSetup({
