@@ -1,6 +1,7 @@
 class PreferencesController < ApplicationController
   around_filter :shopify_session
-
+  before_filter :check_payment
+  
   def show
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
     @preference = Preference.new if @preference.nil?
