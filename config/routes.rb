@@ -11,6 +11,7 @@ WorldShippingCalculator::Application.routes.draw do
   root :to => 'home#index'
   
   match "help" => 'help#index'
+  match "confirm_charge" => "home#confirm_charge"
   
 
   resource 'preferences', only: [:show, :edit, :update]
