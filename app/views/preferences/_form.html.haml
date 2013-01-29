@@ -4,14 +4,14 @@
       = flash[:notice]
   - if @preference.errors.any?
     #error_explanation
-      %h3= "#{pluralize(@preference.errors.count, "error")} prohibited this preference from being saved:"
+      %h3= "There are #{pluralize(@preference.errors.count, "error")}. Your change is not saved."
       %ul
         - @preference.errors.full_messages.each do |msg|
-          %li= msg
+          %li= msg          
   %fieldset
-    = f.label :origin_postal_code, "Enter the Postal Code your items would be shipping from"
+    = f.label :origin_postal_code, "Enter the Postal Code your items would be shipping from", :title=>"This will be used to calculate the cost of shipping"
     = f.text_field :origin_postal_code
-    = f.label :default_weight, "Enter the default product weight to used in calculation<br/> if not specified in Shopify".html_safe
+    = f.label :default_weight, "Enter the default product weight to used in calculation<br/> if not specified in Shopify".html_safe, :title=>"If a product does not have a weight entered in Shopify, the default weight entered here will be used to determine the shipping cost."
     = f.text_field :default_weight
     %span(class="postfix") kg
   %br

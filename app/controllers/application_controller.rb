@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   
   private
     def check_payment
-      url = session[:shopify].url
 
       unless ShopifyAPI::RecurringApplicationCharge.current
           #place a recurring charge
