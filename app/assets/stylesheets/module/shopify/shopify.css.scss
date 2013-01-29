@@ -54,6 +54,11 @@ h2 {
   font-size:18px;
 }
 
+h3 {
+  font-size:16px;
+}
+
+
 form fieldset {
   margin-top:0px;
 }
@@ -102,7 +107,7 @@ form input[type=text] {
 
 
 
-#preference_surchange_percentage, #preference_default_weight {
+#preference_surchange_percentage, #preference_default_weight, #preference_items_per_box {
   display:inline;
   width:70px;
 }

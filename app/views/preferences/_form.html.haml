@@ -4,7 +4,7 @@
       = flash[:notice]
   - if @preference.errors.any?
     #error_explanation
-      %h3= "There are #{pluralize(@preference.errors.count, "error")}. Your change is not saved."
+      %div(class="alert-box alert")= "#{pluralize(@preference.errors.count, "error")}. Your change is not saved."
       %ul
         - @preference.errors.full_messages.each do |msg|
           %li= msg          
@@ -30,6 +30,9 @@
     %span(class="prefix") D  
     = f.text_field :depth
     %span(class="postfix") cm
+    %br
+    = f.label :items_per_box, "What is the maximum number of items that can fit in the box?", :title=>"When there are multiple items ordered, enter the number of items that can fit in your default shipping container."
+    = f.text_field :items_per_box    
   %br  
   %fieldset
     = f.label :surchange_percentage, "Enter the surchange percentage<br/> to add on top of shipping".html_safe
