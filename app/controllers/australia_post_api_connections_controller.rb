@@ -80,11 +80,16 @@ class AustraliaPostApiConnectionsController < ApplicationController
     #TODO
     #raise error if @preference.nil?
 
+
+    # recalculate the weight
+    puts params
+    calculated_weight = params[:australia_post_api_connection][:blanks].to_i * @preference.default_weight.to_i
+    calculated_weight += params[:australia_post_api_connection][:weight].to_i
+    params[:australia_post_api_connection][:blanks] = '0'
+    params[:australia_post_api_connection][:weight] = calculated_weight.to_s
+
     @australia_post_api_connection = AustraliaPostApiConnection.new(params[:australia_post_api_connection])
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
-
-    @calculated_weight = @australia_post_api_connection.weight.to_i + @australia_post_api_connection.blanks.to_i * @preference.default_weight.to_i
-    @australia_post_api_connection.weight = @calculated_weight
 
     # TODO we are repeating this code here (and making an expensive API call) because the countries
     # list won't fit in the flash (CookieOVERFLOW).
