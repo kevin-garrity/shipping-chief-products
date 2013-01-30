@@ -53,38 +53,57 @@ submit_calculation_request = function(dataHash) {
   $("#results").empty();
   update_loader_and_submit("POST", params, function(data) { 
     $('#results').append(data); 
-    $('input:radio').change(function() {
-      var price = $(this).siblings('.option-price').text();
-      var shipping_quantity = Number(price.replace(/[^0-9\.]+/g,"")) * 100;
-      var shipping_type = $(this).attr('value');
-
-      // create or modify the Shipping line item
-      // further, add the relevant shipping into to the line item properties
-      if ( $('input#quantity').attr('value') === '0' ) {
-        $('input#quantity').attr('value', shipping_quantity);
-        //console.log("  about to click #Shipping")
-        $('input#shipping-type').val(shipping_type);
-        $('input#Shipping').click();
-      } else {
-        $('input#quantity').attr('value', shipping_quantity);
-        //console.log("  about to click #change-quantity")
-        $('input#shipping-type').val(shipping_type);
-        $('.change-quantity a').click();
-      }
-    });
+    $('input:radio').change(remove_and_add_again_shipping_line_item);
 
     $('input:radio').eq(0).change();
   });
 }
 
-remove_shipping_item = function() {
+remove_and_add_again_shipping_line_item = function() {
+  var price = $(this).siblings('.option-price').text();
+  var shipping_quantity = Number(price.replace(/[^0-9\.]+/g,"")) * 100;
+  var shipping_type = $(this).attr('value');
+
+  // remove the existing line item
+  remove_shipping_item(function() {
+    // once the item is removed spaghetti add the line item back in!
+    // we do this to change the line item property
+    $('input#quantity').attr('value', shipping_quantity);
+    $('input#shipping-type').val(shipping_type);
+    $('input#Shipping').click();
+  });
+}
+
+// once we are able to change line item properties from the api
+// we will use this create or modify method instead
+modify_or_update_shipping_line_item = function() {
+  var price = $(this).siblings('.option-price').text();
+  var shipping_quantity = Number(price.replace(/[^0-9\.]+/g,"")) * 100;
+  var shipping_type = $(this).attr('value');
+
+  // create or modify the Shipping line item
+  // further, add the relevant shipping into to the line item properties
+  if ( $('input#quantity').attr('value') === '0' ) {
+    $('input#quantity').attr('value', shipping_quantity);
+    //console.log("  about to click #Shipping")
+    $('input#shipping-type').val(shipping_type);
+    $('input#Shipping').click();
+  } else {
+    $('input#quantity').attr('value', shipping_quantity);
+    //console.log("  about to click #change-quantity")
+    $('input#shipping-type').val(shipping_type);
+    $('.change-quantity a').click();
+  }
+}
+
+remove_shipping_item = function(callback) {
   //console.log("  remove_shipping_item")
   var shipping_line_item = $('input#quantity');
   var variant_id = $('input[name=id]').attr('value');
   $('input#shipping-type').val("");
 
   // clear the old shipping item
-  Shopify.removeItem(variant_id);
+  Shopify.removeItem(variant_id, callback);
 }
 
 validate_and_process_form = function(dataHash) {
