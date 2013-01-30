@@ -17,5 +17,5 @@
     {% endif %}
 
   {% endfor %}
-  var datahash = { weight: total_weight, blanks: total_blanks };
+  var datahash = { weight: total_weight / 1000, blanks: total_blanks };
   update_loader_and_submit("GET", datahash, function(data) { inject_shipping_calculator(data); }); </script>

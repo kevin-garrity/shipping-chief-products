@@ -17,7 +17,9 @@ ajax_request_calculation = function(data) {
   var height = $("input#australia_post_api_connection_height").val();
   var width = $("input#australia_post_api_connection_width").val();
   var length = $("input#australia_post_api_connection_length").val();
+  var blanks = $("input#australia_post_api_connection_blanks").val();
   var shop_url = window.location.hostname;
+
   var dataHash = {
     weight: weight,
     to_postcode: to_postcode,
@@ -26,6 +28,7 @@ ajax_request_calculation = function(data) {
     height: height,
     width: width,
     length: length,
+    blanks: blanks,
     shop: shop_url
   }
 

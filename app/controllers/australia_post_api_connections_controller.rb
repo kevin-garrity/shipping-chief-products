@@ -32,10 +32,12 @@ class AustraliaPostApiConnectionsController < ApplicationController
   #   to enter the postcode instead (for domestic).
   def new
     puts "---------------IN NEW--------------------"
-    @weight = params[:weight]  
+    @weight = params[:weight]
+    @blanks = params[:blanks]
 
     @australia_post_api_connection = AustraliaPostApiConnection.new(parameters_supplied_by_preferences)
     @australia_post_api_connection.weight = @weight
+    @australia_post_api_connection.blanks = @blanks
 
     # get country list from the API
     @countries = @australia_post_api_connection.data_oriented_methods(:country)
@@ -68,15 +70,19 @@ class AustraliaPostApiConnectionsController < ApplicationController
     # merge the raw post data into the params
     params.merge!(Rack::Utils.parse_nested_query(request.raw_post))
 
-     #TODO pass in shop_url from shopify theme    
+     #TODO pass in shop_url from shopify theme
     @url = params[:australia_post_api_connection][:shop]
+
+    puts params
 
     #try to find the shop preference using shop_url
     @preference = Preference.find_by_shop_url(@url)
-    
+
     #TODO
     #raise error if @preference.nil?
-      
+
+    puts @preference.inspect
+
     @australia_post_api_connection = AustraliaPostApiConnection.new(params[:australia_post_api_connection])
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
 
