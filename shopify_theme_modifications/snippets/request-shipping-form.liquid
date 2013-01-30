@@ -1,0 +1,6 @@
+{{ 'update_loader_and_submit.js' | asset_url | script_tag }}
+{{ 'inject_shipping_calculator.js' | asset_url | script_tag }}
+{{ 'xdr.js' | asset_url | script_tag }}
+
+<!-- calculate the weight and grab us a calculator! -->
+<script> update_loader_and_submit("GET", { weight: 20 }, function(data) { inject_shipping_calculator(data); }); </script>

@@ -1,7 +1,6 @@
-%h1 Preferences
+-content_for :sidebar do
+  .panel.rounded-corners
+    = render :partial => '/layouts/side_navigation', :locals=>{:active_link => "setting"}
+%h2 Preferences
 
 = render 'form'
-
-= link_to 'Show', @preference
-\|
-= link_to 'Back', preferences_path

@@ -1,0 +1,44 @@
+
+// Code to fetch the request form
+// TODO this info should live somewhere
+var host = "http://localhost:3000/"
+var action = "australia_post_api_connections"
+var xhr; // global request object for the calculation request
+
+// When we submit the form we should disable the submit button
+// but when we change the country select, it should abort the current
+// request and resubmit
+update_loader_and_submit = function(method, dataHash, callback) {
+  // Got the loader from http://www.ajaxload.info/
+  $(".actions > input").attr('disabled', 'disabled');
+  $("#indicator").html("<img src='{{ 'ajax-loader.gif' | asset_url }}' alt='' />").show();
+
+  if (xhr && xhr.readyState != 4) {
+    xhr.abort();
+  }
+
+  // TODO find out more about making CORS requests, whether and when we need to
+  // set support.cors = true, and whether interlieving might occur
+  // so we need to wrap the .ajax method with our .CORSajax method, and keep all
+  // the nice arguments we had
+  $.support.cors = true;
+  xhr = $.ajax({
+    url: host + action, // globally defined
+    type: method,
+    dataType: 'html',
+    contentType: 'text/plain',
+    data: dataHash,
+    crossDomain: true,
+    success: function(data) {
+      callback(data);
+    },
+    error: function(data, text_status, error_thrown) {
+      $("#shipping-calculator").append("GELLO")
+    }
+  }).fail(function() { })
+  .always(function() { })
+  .complete(function() {
+    $(".actions > input").removeAttr('disabled');
+    $("#indicator").empty().hide();
+  });
+}

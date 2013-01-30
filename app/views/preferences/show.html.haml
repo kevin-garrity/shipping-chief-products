@@ -1,10 +1,7 @@
+-content_for :sidebar do
+  .panel.rounded-corners
+    = render :partial => '/layouts/side_navigation', :locals=>{:active_link => "setting"}
 %p#notice= notice
 
-%table
-  = @preference.attributes.each do |pref_key|
-    %tr
-      %td= pref_key
-      %td= @preference.value(pref_key) 
+
 = link_to 'Edit', edit_preferences_path(@preference)
-\|
-= link_to 'Back', preferences_path

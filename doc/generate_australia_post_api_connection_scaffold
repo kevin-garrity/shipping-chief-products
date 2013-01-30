@@ -1,0 +1,37 @@
+The files generated when I made the scaffold.
+
+rails generate scaffold AustraliaPostAPIConnection domestic:boolean height:integer weight:integer length:integer width:integer country_code:string postcode:integer air_mail_price:float sea_mail_price:float regular_price:float priority_price:float express_price:float
+      invoke  active_record
+      create    db/migrate/20121231203816_create_australia_post_api_connections.rb
+      create    app/models/australia_post_api_connection.rb
+      invoke    rspec
+      create      spec/models/australia_post_api_connection_spec.rb
+      invoke      factory_girl
+      create        spec/factories/australia_post_api_connections.rb
+      invoke  resource_route
+       route    resources :australia_post_api_connections
+      invoke  scaffold_controller
+      create    app/controllers/australia_post_api_connections_controller.rb
+      invoke    haml
+      create      app/views/australia_post_api_connections
+      create      app/views/australia_post_api_connections/index.html.haml
+      create      app/views/australia_post_api_connections/edit.html.haml
+      create      app/views/australia_post_api_connections/show.html.haml
+      create      app/views/australia_post_api_connections/new.html.haml
+      create      app/views/australia_post_api_connections/_form.html.haml
+      invoke    rspec
+      create      spec/controllers/australia_post_api_connections_controller_spec.rb
+      create      spec/routing/australia_post_api_connections_routing_spec.rb
+      invoke      rspec
+      create        spec/requests/australia_post_api_connections_spec.rb
+      invoke    helper
+      create      app/helpers/australia_post_api_connections_helper.rb
+      invoke      rspec
+      invoke  assets
+      invoke    coffee
+      create      app/assets/javascripts/australia_post_api_connections.js.coffee
+      invoke    scss
+      create      app/assets/stylesheets/australia_post_api_connections.css.scss
+      invoke  scss
+   identical    app/assets/stylesheets/scaffolds.css.scss
+

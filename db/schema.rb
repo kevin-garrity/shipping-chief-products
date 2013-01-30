@@ -11,6 +11,28 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 20130129060346) do
+
+  create_table "preference", :force => true do |t|
+    t.string  "shop_url"
+    t.string  "origin_postal_code"
+    t.string  "default_weight"
+    t.float   "surchange_percentage"
+    t.decimal "height",               :precision => 10, :scale => 0
+    t.decimal "width",                :precision => 10, :scale => 0
+    t.decimal "depth",                :precision => 10, :scale => 0
+    t.integer "items_per_box"
+  end
+
+  create_table "shops", :force => true do |t|
+    t.string   "url"
+    t.string   "token"
+    t.boolean  "active_subscriber"
+    t.datetime "signup_date"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "shops", ["url"], :name => "index_shops_on_url"
 
 end

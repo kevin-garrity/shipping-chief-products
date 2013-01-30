@@ -1,0 +1,20 @@
+%h2
+  Testing the APP
+  .small
+    by calling australia_post_api_connections/new from a different page
+
+#results
+
+:javascript
+  $.ajax({
+    url: "http://localhost:3000/australia_post_api_connections/new",
+    datatype: "html",
+    data: { weight: 20 },
+    success: function( data ) {
+      $('#results').append(data);
+    }
+  }).done(function() { console.log("success"); })
+    .fail(function() { console.log("error"); })
+    .always(function() { console.log("complete"); });
+
+= link_to 'Back', australia_post_api_connections_path

@@ -1,0 +1,54 @@
+= form_for @australia_post_api_connection, remote: true do |f|
+  - if @australia_post_api_connection.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@australia_post_api_connection.errors.count, "error")} prohibited this australia_post_api_connection from being saved:"
+      %ul
+        - @australia_post_api_connection.errors.full_messages.each do |msg|
+          %li= msg
+
+  - flash.each do |key, msg|
+    %div{:id => key}
+      %p{:style => "float:right;"}= link_to_function 'X', "Effect.Fade('#{key}')"
+      %p= msg
+      .clear
+
+  .row
+    .six.columns
+      .field#country-select
+        = f.label :country_code
+        = f.select :country_code, @countries, selected: "Australia"
+      .field#postcode
+        = f.label :"Please enter a postcode for shipping to", { :class => "error" }
+        = f.label :to_postcode
+        = f.number_field :to_postcode
+
+      .actions
+        = f.submit 'Calculate'
+
+      / this is the container for the ajax results
+      #shipping-prices
+
+      / these are calculated in yaml and returned to us
+      / so these fields can remain hidden
+      .field.hidden
+        = f.label :weight
+        = f.number_field :weight
+
+      .field.hidden
+        = f.label :height
+        = f.number_field :height
+
+      .field.hidden
+        = f.label :width
+        = f.number_field :width
+
+      .field.hidden
+        = f.label :length
+        = f.number_field :length
+
+      .field.hidden
+        = f.label :from_postcode
+        = f.number_field :from_postcode
+
+      .field.hidden
+        %input#tokentag{:name => "authenticity_token", :type => "hidden", :value => form_authenticity_token}

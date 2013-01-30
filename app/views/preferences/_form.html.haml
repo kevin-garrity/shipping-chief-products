@@ -1,10 +1,44 @@
-= form_for @preference do |f|
+= form_for @preference, :url=>preferences_path(), :method => :put do |f|
+  - unless (flash[:notice].nil?)
+    %div(class="alert-box") 
+      = flash[:notice]
   - if @preference.errors.any?
     #error_explanation
-      %h2= "#{pluralize(@preference.errors.count, "error")} prohibited this preference from being saved:"
+      %div(class="alert-box alert")= "#{pluralize(@preference.errors.count, "error")}. Your change is not saved."
       %ul
         - @preference.errors.full_messages.each do |msg|
-          %li= msg
-
+          %li= msg          
+  %fieldset
+    = f.label :origin_postal_code, "Enter the Postal Code your items would be shipping from", :title=>"This will be used to calculate the cost of shipping"
+    = f.text_field :origin_postal_code
+    = f.label :default_weight, "Enter the default product weight to used in calculation<br/> if not specified in Shopify".html_safe, :title=>"If a product does not have a weight entered in Shopify, the default weight entered here will be used to determine the shipping cost."
+    = f.text_field :default_weight
+    %span(class="postfix") kg
+  %br
+  %fieldset
+    = f.label :height, "Enter the default size of your shipping containers <br/>(Height, Width, Depth)<br/> You can specify container size for products individually. This size is only used when none is specified.".html_safe
+    %span(class="prefix") H
+    = f.text_field :height
+    %span(class="postfix") cm
+    %br 
+    = f.label :width, "", :class=>"hidden-prefix"
+    %span(class="prefix") W
+    = f.text_field :width
+    %span(class="postfix") cm
+    %br
+    = f.label :depth, " ", :class=>"hidden-prefix"
+    %span(class="prefix") D  
+    = f.text_field :depth
+    %span(class="postfix") cm
+    %br
+    = f.label :items_per_box, "What is the maximum number of items that can fit in the box?", :title=>"When there are multiple items ordered, enter the number of items that can fit in your default shipping container."
+    = f.text_field :items_per_box    
+  %br  
+  %fieldset
+    = f.label :surchange_percentage, "Enter the surchange percentage<br/> to add on top of shipping".html_safe
+    = f.text_field :surchange_percentage
+    %span(class="postfix") %
   .actions
-    = f.submit 'Save'
+    = f.submit 'Save', :class=>"button"
+    = link_to 'Cancel', preferences_path
+    

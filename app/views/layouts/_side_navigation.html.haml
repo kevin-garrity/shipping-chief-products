@@ -1,0 +1,5 @@
+%ul.side-nav
+  %li{:class=>(active_link=="setting"?"active" :"")}
+    = link_to "Settings", "/preferences"
+  %li{:class=>(active_link=="help"?"active" :"")}
+    = link_to "Help", "/help"

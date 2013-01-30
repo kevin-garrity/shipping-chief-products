@@ -1,0 +1,11 @@
+= form_tag "/shipping_calculations", :method => "get" do
+
+  = label_tag :shipping_type
+  %br
+  - @service_list.each_with_index do |service, index|
+    - checked = true if index == 0
+    .option-price-radio
+      = radio_button_tag(:shipping_type, service[:code], checked)
+      = label_tag(:"shipping_type_#{service[:code]}", service[:name])
+      %span.option-price= " -- $#{service[:price]}"
+      %br
