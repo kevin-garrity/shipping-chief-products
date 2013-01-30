@@ -34,6 +34,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
     puts "---------------IN NEW--------------------"
     @weight = params[:weight]
     @blanks = params[:blanks]
+    @shop_url = request.headers["HTTP_ORIGIN"].sub(%r{^.*//}, "")
 
     @australia_post_api_connection = AustraliaPostApiConnection.new(parameters_supplied_by_preferences)
     @australia_post_api_connection.weight = @weight
@@ -104,7 +105,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
         # TODO right now we are not including the suboptions for each shipping type
         @service_list = Array.wrap( @service_list[1]['service'] ).inject([]) do |list, service|
-          price_to_charge = service['price'].to_f          
+          price_to_charge = service['price'].to_f
           unless @preference.nil?
             if @preference.surchange_percentage > 0.0
               price_to_charge =(price_to_charge * (1 + @preference.surchange_percentage/100)).round(2)
@@ -164,12 +165,13 @@ class AustraliaPostApiConnectionsController < ApplicationController
   private
 
   def parameters_supplied_by_preferences
+    @preference = Preference.find_by_shop_url(@shop_url)
 
     {
-      from_postcode: 3000,
-      height: 16,
-      width: 16,
-      length: 16
+      from_postcode: @preference.origin_postal_code,
+      height: @preference.height,
+      width: @preference.width,
+      length: @preference.depth
     }
   end
 
