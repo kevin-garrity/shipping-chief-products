@@ -65,7 +65,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
   # POST /australia_post_api_connections
   # POST /australia_post_api_connections.json
   def create
-    puts "---------------IN CREATE------------" + request.raw_post.to_s
+    puts "---------------IN CREATE------------"
 
     # merge the raw post data into the params
     params.merge!(Rack::Utils.parse_nested_query(request.raw_post))
@@ -73,18 +73,17 @@ class AustraliaPostApiConnectionsController < ApplicationController
      #TODO pass in shop_url from shopify theme
     @url = params[:australia_post_api_connection][:shop]
 
-    puts params
-
     #try to find the shop preference using shop_url
     @preference = Preference.find_by_shop_url(@url)
 
     #TODO
     #raise error if @preference.nil?
 
-    puts @preference.inspect
-
     @australia_post_api_connection = AustraliaPostApiConnection.new(params[:australia_post_api_connection])
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
+
+    @calculated_weight = @australia_post_api_connection.weight.to_i + @australia_post_api_connection.blanks.to_i * @preference.default_weight.to_i
+    @australia_post_api_connection.weight = @calculated_weight
 
     # TODO we are repeating this code here (and making an expensive API call) because the countries
     # list won't fit in the flash (CookieOVERFLOW).
