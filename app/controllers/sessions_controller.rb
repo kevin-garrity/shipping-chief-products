@@ -54,6 +54,8 @@ class SessionsController < ApplicationController
       
       sess = ShopifyAPI::Session.new(shop_name, shop.token, params)      
     
+      init_webhooks
+      puts("xxxxx")
       if sess.valid?
         ShopifyAPI::Base.activate_session(sess)        
         session[:shopify] = sess        
@@ -80,4 +82,5 @@ class SessionsController < ApplicationController
     name += '.myshopify.com' if !name.include?("myshopify.com") && !name.include?(".")
     name.sub('https://', '').sub('http://', '')
   end
+  
 end

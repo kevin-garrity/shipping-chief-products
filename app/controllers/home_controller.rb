@@ -25,6 +25,14 @@ class HomeController < ApplicationController
     shop.signup_date = DateTime.now
     shop.save()
     
+
+    begin
+      init_webhooks
+    rescue Exception=>e
+      puts("Exception:" + e.to_s)
+    end
+    
+    
     flash[:notice] = "Thank you for signing up! You are ready to go."
     redirect_to preferences_path()
   end
