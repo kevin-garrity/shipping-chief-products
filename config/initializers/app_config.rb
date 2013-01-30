@@ -5,3 +5,5 @@ AppConfig = ConfigSpartan.create do
     file f if File.exist?(f)
   end
 end
+
+DOMAIN_NAMES = {"staging" => "test.biguglyurl.com", "development" => "localhost:3000", "production" =>  "www.mycoolurl.com", "test" => "localhost:3000"}
