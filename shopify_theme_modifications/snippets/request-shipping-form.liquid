@@ -14,11 +14,11 @@
         {% if item.title != "Shipping" %}
           {% if item.grams != 0 %}
             console.log('non-zero ' + {{ item.grams }})
-            total_weight = total_weight + {{ item.grams }};
+            total_weight = total_weight + {{ item.grams }} * {{ item.quantity }};
 
           {% else %}
             console.log('zero ' + {{ item.grams }})
-            total_blanks = total_blanks + 1;
+            total_blanks = total_blanks + 1 * {{ item.quantity }};
           {% endif %}
         {% endif %}
       {% endfor %}
