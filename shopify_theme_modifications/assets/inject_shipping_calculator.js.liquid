@@ -64,7 +64,8 @@ submit_calculation_request = function(dataHash) {
 remove_and_add_again_shipping_line_item = function() {
   var price = $(this).siblings('.option-price').text();
   var shipping_quantity = Number(price.replace(/[^0-9\.]+/g,"")) * 100;
-  var shipping_type = $(this).attr('value');
+  var shipping_type = $(this).siblings('label').text() + price;
+  console.log(shipping_quantity)
 
   // remove the existing line item
   remove_shipping_item(function() {
@@ -99,7 +100,7 @@ modify_or_update_shipping_line_item = function() {
 }
 
 remove_shipping_item = function(callback) {
-  //console.log("  remove_shipping_item")
+  console.log("  remove_shipping_item")
   var shipping_line_item = $('input#quantity');
   var variant_id = $('input[name=id]').attr('value');
   $('input#shipping-type').val("");
