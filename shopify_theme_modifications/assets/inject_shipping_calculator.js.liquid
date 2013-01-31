@@ -63,7 +63,7 @@ submit_calculation_request = function(dataHash) {
 
 remove_and_add_again_shipping_line_item = function() {
   var price = $(this).siblings('.option-price').text();
-  var shipping_quantity = Number(price.replace(/[^0-9\.]+/g,"")) * 100;
+  var shipping_quantity = Number(price.replace(/[^0-9]+/g,""));
   var shipping_type = $(this).siblings('label').text() + price;
   console.log(shipping_quantity)
 
