@@ -75,6 +75,10 @@ form input[type=text] {
   width:190px;
 }
 
+form span.has-tip {
+  margin-left:10px;
+}
+
 .panel {
   height:600px;
 }
@@ -100,14 +104,14 @@ form input[type=text] {
   width:70px;
 }
 
-#preference_height, #preference_width, #preference_depth {
+#preference_height, #preference_width, #preference_length {
   width:50px;
   display:inline;
 }
 
 
 
-#preference_surchange_percentage, #preference_default_weight, #preference_items_per_box {
+#preference_surchange_percentage, #preference_default_weight, #preference_items_per_box,#preference_default_charge  {
   display:inline;
   width:70px;
 }

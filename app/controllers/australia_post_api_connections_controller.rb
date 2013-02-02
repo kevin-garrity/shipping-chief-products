@@ -77,7 +77,15 @@ class AustraliaPostApiConnectionsController < ApplicationController
     #TODO
     #raise error if @preference.nil?
       
-    @australia_post_api_connection = AustraliaPostApiConnection.new(params[:australia_post_api_connection])
+    @australia_post_api_connection = AustraliaPostApiConnection.new({:weight=> params[:australia_post_api_connection][:weight],
+                                                                    :from_postcode => @preference.origin_postal_code,
+                                                                    :country_code => params[:australia_post_api_connection][:country_code],
+                                                                    :to_postcode => params[:australia_post_api_connection][:to_postcode],
+                                                                    :height=>@preference.height, :width=>@preference.width, :length=>@preference.length
+                                                                     } )
+    
+    
+    
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
 
     # TODO we are repeating this code here (and making an expensive API call) because the countries
@@ -98,17 +106,21 @@ class AustraliaPostApiConnectionsController < ApplicationController
         end
 
         # TODO right now we are not including the suboptions for each shipping type
+        #filter out unwanted methods more efficiently?
+        puts (@service_list.to_s)
         @service_list = Array.wrap( @service_list[1]['service'] ).inject([]) do |list, service|
-          price_to_charge = service['price'].to_f          
-          unless @preference.nil?
-            if @preference.surchange_percentage > 0.0
-              price_to_charge =(price_to_charge * (1 + @preference.surchange_percentage/100)).round(2)
+          if  @preference.shipping_methods_allowed[service['code']]
+            price_to_charge = service['price'].to_f
+            unless @preference.nil?
+              if @preference.surchange_percentage > 0.0
+                price_to_charge =(price_to_charge * (1 + @preference.surchange_percentage/100)).round(2)
+              end
             end
-          end
 
-          list.append({ name: service['name'],
-                      code: service['code'],
-                      price: price_to_charge})
+            list.append({ name: service['name'],
+                        code: service['code'],
+                        price: price_to_charge})
+            end
           list
         end
 

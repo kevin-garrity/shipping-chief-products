@@ -20,7 +20,7 @@ gem "launchy", ">= 2.1.2", :group => :test
 gem "capybara", ">= 1.1.2", :group => :test
 gem "factory_girl_rails", ">= 4.1.0", :group => [:development, :test]
 gem "compass-rails", ">= 1.0.3", :group => :assets
-gem "zurb-foundation", ">= 3.1.1", :group => :assets
+gem "zurb-foundation", ">= 3.2.5", :group => :assets
 gem "simple_form", ">= 2.0.4"
 gem "css_canon", :git => "https://github.com/lastobelus/css_canon"
 gem "shopify_app"

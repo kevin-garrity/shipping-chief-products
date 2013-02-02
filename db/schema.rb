@@ -11,17 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130129060346) do
+ActiveRecord::Schema.define(:version => 20130202085812) do
 
   create_table "preference", :force => true do |t|
     t.string  "shop_url"
     t.string  "origin_postal_code"
     t.string  "default_weight"
     t.float   "surchange_percentage"
-    t.decimal "height",               :precision => 10, :scale => 0
-    t.decimal "width",                :precision => 10, :scale => 0
-    t.decimal "depth",                :precision => 10, :scale => 0
+    t.decimal "height",                   :precision => 10, :scale => 0
+    t.decimal "width",                    :precision => 10, :scale => 0
+    t.decimal "length",                   :precision => 10, :scale => 0
     t.integer "items_per_box"
+    t.decimal "default_charge",           :precision => 10, :scale => 0
+    t.text    "shipping_methods_allowed"
   end
 
   create_table "shops", :force => true do |t|
