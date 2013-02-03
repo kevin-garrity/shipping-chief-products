@@ -38,15 +38,16 @@ class AustraliaPostApiConnectionsController < ApplicationController
     @australia_post_api_connection.weight = @weight
 
     # get country list from the API
-    @countries = @australia_post_api_connection.data_oriented_methods(:country)
+   # @countries = @australia_post_api_connection.data_oriented_methods(:country)
 
     # format the response how we like it
-    @countries = @countries[1]['country'].inject([]) do |list, country|
-      list.append([country['name'].capitalize, country['code'].capitalize])
-      list
-    end
+   # @countries = @countries[1]['country'].inject([]) do |list, country|
+  #    list.append([country['name'].capitalize, country['code'].capitalize])
+  #    list
+  #  end
 
-    @countries.prepend([ "Australia", "AUS" ])
+  #  @countries.prepend([ "Australia", "AUS" ])
+  @countries = get_country_list(@australia_post_api_connection)
 
     respond_to do |format|
       puts "---------------About to format--------------------"
@@ -67,8 +68,6 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
     # merge the raw post data into the params
     params.merge!(Rack::Utils.parse_nested_query(request.raw_post))
-
-     #TODO pass in shop_url from shopify theme    
     @url = params[:australia_post_api_connection][:shop]
 
     #try to find the shop preference using shop_url
@@ -82,9 +81,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
                                                                     :country_code => params[:australia_post_api_connection][:country_code],
                                                                     :to_postcode => params[:australia_post_api_connection][:to_postcode],
                                                                     :height=>@preference.height, :width=>@preference.width, :length=>@preference.length
-                                                                     } )
-    
-    
+                                                                     } )    
     
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
 
@@ -93,21 +90,15 @@ class AustraliaPostApiConnectionsController < ApplicationController
     # We should cache the list on the server
 
     # get country list from the API -- we'll format these if there were no errors
-    @countries = @australia_post_api_connection.data_oriented_methods(:country)
     @service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
 
     respond_to do |format|
       if @australia_post_api_connection.save
-
-        # format the response how we like it
-        @countries = @countries[1]['country'].inject([]) do |list, country|
-          list.append([country['name'].capitalize, country['code'].capitalize])
-          list
-        end
-
+        
+        @countries = get_country_list(@australia_post_api_connection)
         # TODO right now we are not including the suboptions for each shipping type
         #filter out unwanted methods more efficiently?
-        puts (@service_list.to_s)
+
         @service_list = Array.wrap( @service_list[1]['service'] ).inject([]) do |list, service|
           if  @preference.shipping_methods_allowed[service['code']]
             price_to_charge = service['price'].to_f
@@ -178,6 +169,29 @@ class AustraliaPostApiConnectionsController < ApplicationController
       width: 16,
       length: 16
     }
+  end
+  
+  def get_country_list(api_connection)
+    #see if list exist in cache
+    if Rails.cache.exist?("aus_post_country_list")
+      list =  Rails.cache.read("aus_post_country_list")
+    end
+    if list.nil?
+      # get country list from the API
+      countries = api_connection.data_oriented_methods(:country)      
+      
+      countries = countries[1]['country'].inject([]) do |list, country|
+        list.append([country['name'].capitalize, country['code'].capitalize])
+        list
+      end
+
+      countries.prepend([ "Australia", "AUS" ])
+        
+      list = countries
+      
+      Rails.cache.write('aus_post_country_list', countries, :timeToLive => 300.days)
+    end
+    list
   end
 
 end
