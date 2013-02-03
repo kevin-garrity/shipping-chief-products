@@ -109,9 +109,15 @@ form span.has-tip {
   display:inline;
 }
 
+form .field_with_errors {
+  display:inline;
+}
 
-
-#preference_surchange_percentage, #preference_default_weight, #preference_items_per_box,#preference_default_charge  {
+form .field_with_errors input {
+  border:1px solid red;
+}
+#preference_surchange_percentage, #preference_default_weight, #preference_items_per_box,#preference_default_charge,
+#preference_container_weight  {
   display:inline;
   width:70px;
 }
