@@ -8,7 +8,7 @@ class AustraliaPostApiConnection
 
   attr_accessor :attributes, :api_errors
 
-  attr_accessor :height, :length, :weight, :width
+  attr_accessor :height, :length, :weight, :width, :blanks
   attr_accessor :country_code, :air_mail_price, :sea_mail_price
   attr_accessor :domestic, :from_postcode, :to_postcode, :regular_price, :priority_price, :express_price
 
@@ -44,7 +44,8 @@ class AustraliaPostApiConnection
   validates :width, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 16 }
   validates_with Girth, { less_than_or_equal_to: 140 }
 
-  validates :weight, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 20 }
+  # TODO we no longer need to validate weight, since we now accept larger packages 
+  # validates :weight, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 20 }
 
   class << self
     def find(id)
@@ -78,38 +79,94 @@ class AustraliaPostApiConnection
       raise InvalidError.new(errors.full_messages)
     end
 
-    true
+    valid = true
+    unless self.api_errors.empty?
+      valid = false
+    end
+
+    valid
   end
 
   def data_oriented_methods(method)
     # routing for data oriented API
 
     case method
-    when :country then api_call "country.json"
-    when :service then
-      if self.domestic
-        api_call "parcel/domestic/service.json"
-      else
-        api_call "parcel/international/service.json"
-      end
+    when :country then get_list_of_countries
+    when :service then get_service_list
     else raise "unknown data_oriented_method"
     end
   end
 
+  def get_list_of_countries
+    api_call "country.json"
+  end
+
+  def get_service_list
+    request_url = if self.domestic
+                    "parcel/domestic/service.json"
+                  else
+                    "parcel/international/service.json"
+                  end
+
+    total_weight = self.attributes[:weight].to_i
+    package_weight = 20
+    number_of_packages = total_weight / package_weight
+    excess_weight = total_weight % package_weight
+
+    self.attributes[:weight] = package_weight
+    result = api_call(request_url)
+
+    unless self.api_errors
+      result[1]["service"].each do |hash|
+        # gsub so that we can work with integers
+        original_price = hash["price"].to_s.gsub(/\./, "").to_i
+
+        # gsub so that the price will be in dollars and cents yo
+        modified_price = ( original_price * number_of_packages).to_s.gsub(/(.*)([0-9]{2}$)/) {$1 + "." + $2}
+
+        hash["price"] = modified_price
+      end
+
+      if excess_weight > 0
+        self.attributes[:weight] = excess_weight
+        response = api_call(request_url)
+
+        # we iterate with index so that we can compare the two response structures
+        result[1]["service"].to_enum.with_index(0) do |hash, i|
+          original_price = hash["price"].to_s.gsub(/\./, "").to_i
+          excess_weight_price = response[1]["service"][i]["price"].to_s.gsub(/\./, "").to_i
+
+          modified_price = ( original_price + excess_weight_price).to_s.gsub(/(.*)([0-9]{2}$)/) {$1 + "." + $2}
+
+          hash["price"] = modified_price
+        end
+      end
+    end
+
+    # set the weight back to its original value
+    self.attributes[:weight] = total_weight
+    result
+  end
+
   def api_call(method)
+
     command = Thread.new do
       Thread.current["httparty_response"] = HTTParty.get("#{self.api_root}/#{method}",
                                                            :query => self.attributes,
-                                                           :timeout => 5, # sec
+                                                           :timeout => 150, # sec
                                                            :headers => { 'auth-key' => credentials['api-key']})
     end
 
     command.join                 # main programm waiting for thread
 
-    @service_list = command["httparty_response"].flatten
+    begin
+      @service_list = command["httparty_response"].flatten
 
-    if @service_list[0] == "error"
-      self.api_errors.append(@service_list[1]['errorMessage'])
+      if @service_list[0] == "error"
+        self.api_errors.append(@service_list[1]['errorMessage'])
+      end
+    rescue
+      raise "command in rescue " + command["httparty_response"].inspect
     end
 
     @service_list

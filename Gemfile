@@ -27,6 +27,7 @@ gem "shopify_app"
 gem "heroku"
 gem "nokogiri"
 gem "kaminari"
+gem "pg"
 gem "rvm"
 gem "mysql2", :group => :development
 gem "config_spartan"

@@ -1,6 +1,5 @@
 
 inject_shipping_calculator = function(data) {
-  remove_shipping_item();
   $('#shipping-calculator').html(data);
   $('#new_australia_post_api_connection').attr("action", host + action);
   $('.error').hide();
@@ -17,7 +16,9 @@ ajax_request_calculation = function(data) {
   var height = $("input#australia_post_api_connection_height").val();
   var width = $("input#australia_post_api_connection_width").val();
   var length = $("input#australia_post_api_connection_length").val();
+  var blanks = $("input#australia_post_api_connection_blanks").val();
   var shop_url = window.location.hostname;
+
   var dataHash = {
     weight: weight,
     to_postcode: to_postcode,
@@ -26,6 +27,7 @@ ajax_request_calculation = function(data) {
     height: height,
     width: width,
     length: length,
+    blanks: blanks,
     shop: shop_url
   }
 
@@ -61,8 +63,9 @@ submit_calculation_request = function(dataHash) {
 
 remove_and_add_again_shipping_line_item = function() {
   var price = $(this).siblings('.option-price').text();
-  var shipping_quantity = Number(price.replace(/[^0-9\.]+/g,"")) * 100;
-  var shipping_type = $(this).attr('value');
+  var shipping_quantity = Number(price.replace(/[^0-9]+/g,""));
+  var shipping_type = $(this).siblings('label').text() + price;
+  console.log(shipping_quantity)
 
   // remove the existing line item
   remove_shipping_item(function() {
@@ -97,7 +100,7 @@ modify_or_update_shipping_line_item = function() {
 }
 
 remove_shipping_item = function(callback) {
-  //console.log("  remove_shipping_item")
+  console.log("  remove_shipping_item")
   var shipping_line_item = $('input#quantity');
   var variant_id = $('input[name=id]').attr('value');
   $('input#shipping-type').val("");

@@ -32,10 +32,13 @@ class AustraliaPostApiConnectionsController < ApplicationController
   #   to enter the postcode instead (for domestic).
   def new
     puts "---------------IN NEW--------------------"
-    @weight = params[:weight]  
+    @weight = params[:weight]
+    @blanks = params[:blanks]
+    @shop_url = request.headers["HTTP_ORIGIN"].sub(%r{^.*//}, "")
 
     @australia_post_api_connection = AustraliaPostApiConnection.new(parameters_supplied_by_preferences)
     @australia_post_api_connection.weight = @weight
+    @australia_post_api_connection.blanks = @blanks
 
     # get country list from the API
    # @countries = @australia_post_api_connection.data_oriented_methods(:country)
@@ -64,25 +67,33 @@ class AustraliaPostApiConnectionsController < ApplicationController
   # POST /australia_post_api_connections
   # POST /australia_post_api_connections.json
   def create
-    puts "---------------IN CREATE------------" + request.raw_post.to_s
+    puts "---------------IN CREATE------------"
 
     # merge the raw post data into the params
     params.merge!(Rack::Utils.parse_nested_query(request.raw_post))
+
     @url = params[:australia_post_api_connection][:shop]
 
     #try to find the shop preference using shop_url
     @preference = Preference.find_by_shop_url(@url)
-    
+
     #TODO
     #raise error if @preference.nil?
-      
+
+    # recalculate the weight to include blanks
+    calculated_weight = params[:australia_post_api_connection][:blanks].to_i * @preference.default_weight.to_i
+    calculated_weight += params[:australia_post_api_connection][:weight].to_i
+    params[:australia_post_api_connection][:blanks] = '0'
+    params[:australia_post_api_connection][:weight] = calculated_weight.to_s
+
     @australia_post_api_connection = AustraliaPostApiConnection.new({:weight=> params[:australia_post_api_connection][:weight],
+                                                                    :blanks => params[:australia_post_api_connection][:blanks],
                                                                     :from_postcode => @preference.origin_postal_code,
                                                                     :country_code => params[:australia_post_api_connection][:country_code],
                                                                     :to_postcode => params[:australia_post_api_connection][:to_postcode],
                                                                     :height=>@preference.height, :width=>@preference.width, :length=>@preference.length
-                                                                     } )    
-    
+                                                                     })
+
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
 
     # TODO we are repeating this code here (and making an expensive API call) because the countries
@@ -111,7 +122,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
             list.append({ name: service['name'],
                         code: service['code'],
                         price: price_to_charge})
-            end
+          end
           list
         end
 
@@ -162,12 +173,13 @@ class AustraliaPostApiConnectionsController < ApplicationController
   private
 
   def parameters_supplied_by_preferences
+    @preference = Preference.find_by_shop_url(@shop_url)
 
     {
-      from_postcode: 3000,
-      height: 16,
-      width: 16,
-      length: 16
+      from_postcode: @preference.origin_postal_code,
+      height: @preference.height,
+      width: @preference.width,
+      length: @preference.depth
     }
   end
   

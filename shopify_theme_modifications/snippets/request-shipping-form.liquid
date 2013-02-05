@@ -3,4 +3,28 @@
 {{ 'xdr.js' | asset_url | script_tag }}
 
 <!-- calculate the weight and grab us a calculator! -->
-<script> update_loader_and_submit("GET", { weight: 20 }, function(data) { inject_shipping_calculator(data); }); </script>
+<script>
+  $(document).ready(function() {
+
+    $.when(remove_shipping_item()).done(function() {
+      console.log("and then_get_the_total_weight_and")
+      var total_weight = 0;
+      var total_blanks = 0;
+      {% for item in cart.items %}
+        {% if item.title != "Shipping" %}
+          {% if item.grams != 0 %}
+            console.log('non-zero ' + {{ item.grams }})
+            total_weight = total_weight + {{ item.grams }} * {{ item.quantity }};
+
+          {% else %}
+            console.log('zero ' + {{ item.grams }})
+            total_blanks = total_blanks + 1 * {{ item.quantity }};
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      var datahash = { weight: total_weight / 1000, blanks: total_blanks };
+      update_loader_and_submit("GET", datahash, function(data) { inject_shipping_calculator(data); });
+    });
+  });
+
+</script>

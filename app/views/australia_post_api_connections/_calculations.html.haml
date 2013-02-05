@@ -7,5 +7,5 @@
     .option-price-radio
       = radio_button_tag(:shipping_type, service[:code], checked)
       = label_tag(:"shipping_type_#{service[:code]}", service[:name])
-      %span.option-price= " -- $#{service[:price]}"
+      %span.option-price= " -- $#{service[:price].to_s.gsub(/(\.[0-9]{1}$)/) do $1 + "0" end }"
       %br
