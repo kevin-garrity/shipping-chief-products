@@ -105,6 +105,12 @@ class AustraliaPostApiConnectionsController < ApplicationController
     # get country list from the API -- we'll format these if there were no errors
     @service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
 
+    if params[:australia_post_api_connection][:country_code] == 'AUS'
+      shipping_methods = @preference.shipping_methods_allowed_dom
+    else
+      shipping_methods = @preference.shipping_methods_allowed_int
+    end
+    
     respond_to do |format|
       if @australia_post_api_connection.save
         
@@ -113,7 +119,8 @@ class AustraliaPostApiConnectionsController < ApplicationController
         #filter out unwanted methods more efficiently?
 
         @service_list = Array.wrap( @service_list[1]['service'] ).inject([]) do |list, service|
-          if  @preference.shipping_methods_allowed[service['code']]
+          puts("service code is " + service['code'])
+          if shipping_methods[service['code']]
             price_to_charge = service['price'].to_f
             unless @preference.nil?
               if @preference.surchange_percentage > 0.0
