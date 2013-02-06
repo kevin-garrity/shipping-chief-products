@@ -32,8 +32,17 @@ update_loader_and_submit = function(method, dataHash, callback) {
     success: function(data) {
       callback(data);
     },
-    error: function(data, text_status, error_thrown) {
-      $("#shipping-calculator").append("GELLO")
+    error: function(request, text_status, error_thrown) {
+      // TODO big problems here, status is always 0...
+      // not sure how to get a CORS request to return non-zero status
+      switch(request.state()) {
+        case 'rejected':
+          console.log(request.state())
+          $('#shipping-calculator-info p').text("Sorry, we couldn't reach the shipping calculator.")
+          break;
+        default:
+          console.log(request.state())
+      };
     }
   }).fail(function() { })
   .always(function() { })

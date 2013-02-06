@@ -22,9 +22,9 @@ ActiveRecord::Schema.define(:version => 20130205233845) do
     t.decimal "width",                        :precision => 10, :scale => 0
     t.decimal "length",                       :precision => 10, :scale => 0
     t.integer "items_per_box"
-    t.decimal "default_charge",               :precision => 10, :scale => 0
+    t.decimal "default_charge"
     t.text    "shipping_methods_allowed_int"
-    t.decimal "container_weight",             :precision => 10, :scale => 0
+    t.decimal "container_weight"
     t.text    "shipping_methods_allowed_dom"
   end
 
