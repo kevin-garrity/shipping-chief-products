@@ -86,6 +86,8 @@ class AustraliaPostApiConnectionsController < ApplicationController
     params[:australia_post_api_connection][:blanks] = '0'
     params[:australia_post_api_connection][:weight] = calculated_weight.to_s
 
+    puts params[:australia_post_api_connection][:weight]
+
     @australia_post_api_connection = AustraliaPostApiConnection.new({:weight=> params[:australia_post_api_connection][:weight],
                                                                     :blanks => params[:australia_post_api_connection][:blanks],
                                                                     :from_postcode => @preference.origin_postal_code,
@@ -179,7 +181,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
       from_postcode: @preference.origin_postal_code,
       height: @preference.height,
       width: @preference.width,
-      length: @preference.depth
+      length: @preference.length
     }
   end
   
@@ -192,9 +194,9 @@ class AustraliaPostApiConnectionsController < ApplicationController
       # get country list from the API
       countries = api_connection.data_oriented_methods(:country)      
       
-      countries = countries[1]['country'].inject([]) do |list, country|
-        list.append([country['name'].capitalize, country['code'].capitalize])
-        list
+      countries = countries[1]['country'].inject([]) do |country_list, country|
+        country_list.append([country['name'].capitalize, country['code'].capitalize])
+        country_list
       end
 
       countries.prepend([ "Australia", "AUS" ])

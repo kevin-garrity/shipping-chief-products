@@ -108,40 +108,77 @@ class AustraliaPostApiConnection
                     "parcel/international/service.json"
                   end
 
+    # calculate the number of packages, and the excess
     total_weight = self.attributes[:weight].to_i
     package_weight = 20
     number_of_packages = total_weight / package_weight
     excess_weight = total_weight % package_weight
 
+    puts "total weight: " + total_weight.to_s
+
+    # perform the API call for 1 package
     self.attributes[:weight] = package_weight
     result = api_call(request_url)
 
-    unless self.api_errors
-      result[1]["service"].each do |hash|
+    puts "api_errors: " + self.api_errors.inspect
+
+    # modify the results so that they represent n packages + the excess
+    if self.api_errors.empty?
+      puts "20 kg packages"
+      services = Array.wrap(result[1]["service"]) # sometimes the services are a plain hash
+
+      # multiply the prices by the number of packages
+      services.map do |hash|
         # gsub so that we can work with integers
-        original_price = hash["price"].to_s.gsub(/\./, "").to_i
+        puts "  service: \n " + hash.inspect
+        if hash.has_key?("price")
 
-        # gsub so that the price will be in dollars and cents yo
-        modified_price = ( original_price * number_of_packages).to_s.gsub(/(.*)([0-9]{2}$)/) {$1 + "." + $2}
+          original_price = hash["price"].to_s.gsub(/\./, "").to_i
 
-        hash["price"] = modified_price
+          # gsub so that the price will be in dollars and cents yo
+          modified_price = ( original_price * number_of_packages).to_s.gsub(/(.*)([0-9]{2}$)/) {$1 + "." + $2}
+
+          puts "  modified price: " + modified_price
+          hash["price"] = modified_price
+          hash
+        end
       end
 
+      puts "after 20 package stuff -- \n\n" + services.inspect
+
       if excess_weight > 0
+        puts "#{excess_weight} kg package"
+
+        # set up a mini API call to determine the cost of shipping the excess
         self.attributes[:weight] = excess_weight
         response = api_call(request_url)
 
+        response_services = Array.wrap(response[1]["service"]) # same reason as above
+        puts "  response_services: -- \n\n" + response_services.inspect
+
         # we iterate with index so that we can compare the two response structures
-        result[1]["service"].to_enum.with_index(0) do |hash, i|
+        # we can't iterate with an index and map at the same time
+        # so we are rebuilding the services array
+        services_after_excess = []
+
+        services.to_enum.with_index(0) do |hash, i|
           original_price = hash["price"].to_s.gsub(/\./, "").to_i
-          excess_weight_price = response[1]["service"][i]["price"].to_s.gsub(/\./, "").to_i
+          excess_weight_price = response_services[i]["price"].to_s.gsub(/\./, "").to_i
 
           modified_price = ( original_price + excess_weight_price).to_s.gsub(/(.*)([0-9]{2}$)/) {$1 + "." + $2}
 
+          puts "  modified price: " + modified_price
           hash["price"] = modified_price
+          services_after_excess[i] = hash
         end
+
+        services = services_after_excess
       end
+
+      result[1]["service"] = services
     end
+
+    puts "finally -- \n\n\n" + result[1]["service"].inspect
 
     # set the weight back to its original value
     self.attributes[:weight] = total_weight
