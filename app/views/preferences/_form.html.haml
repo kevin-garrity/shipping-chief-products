@@ -19,7 +19,7 @@
     = f.text_field :default_charge
   %br
   %fieldset
-    = f.label :height, "Enter the default size of your shipping containers <br/>(Height, Width, Depth)<span class='has-tip' data-width='280' title='You can specify container size for products individually. This size is only used when none is specified.'>?</span>".html_safe
+    = f.label :height, "Enter the default size of your shipping containers <br/>(Height, Width, Length)<span class='has-tip' data-width='280' title='You can specify container size for products individually. This size is only used when none is specified.'>?</span>".html_safe
     %span(class="prefix") H
     = f.text_field :height
     %span(class="postfix") cm
@@ -30,7 +30,7 @@
     %span(class="postfix") cm
     %br
     = f.label :length, " ", :class=>"hidden-prefix"
-    %span(class="prefix") D  
+    %span(class="prefix") L  
     = f.text_field :length
     %span(class="postfix") cm
     %br
