@@ -75,10 +75,11 @@ class AustraliaPostApiConnection
   end
 
   def save(force=false)
-    unless valid?
-      raise InvalidError.new(errors.full_messages)
-    end
+    # unless valid?
+    #   raise InvalidError.new(errors.full_messages)
+    # end
 
+    puts "api_errors " + self.api_errors.inspect
     valid = true
     unless self.api_errors.empty?
       valid = false
@@ -114,23 +115,23 @@ class AustraliaPostApiConnection
     number_of_packages = total_weight / package_weight
     excess_weight = total_weight % package_weight
 
-    puts "total weight: " + total_weight.to_s
+    #puts "total weight: " + total_weight.to_s
 
     # perform the API call for 1 package
     self.attributes[:weight] = package_weight
     result = api_call(request_url)
 
-    puts "api_errors: " + self.api_errors.inspect
+    #puts "api_errors: " + self.api_errors.inspect
 
     # modify the results so that they represent n packages + the excess
     if self.api_errors.empty?
-      puts "20 kg packages"
+      #puts "20 kg packages"
       services = Array.wrap(result[1]["service"]) # sometimes the services are a plain hash
 
       # multiply the prices by the number of packages
       services.map do |hash|
         # gsub so that we can work with integers
-        puts "  service: \n " + hash.inspect
+        #puts "  service: \n " + hash.inspect
         if hash.has_key?("price")
 
           original_price = hash["price"].to_s.gsub(/\./, "").to_i
@@ -138,23 +139,23 @@ class AustraliaPostApiConnection
           # gsub so that the price will be in dollars and cents yo
           modified_price = ( original_price * number_of_packages).to_s.gsub(/(.*)([0-9]{2}$)/) {$1 + "." + $2}
 
-          puts "  modified price: " + modified_price
+          #puts "  modified price: " + modified_price
           hash["price"] = modified_price
           hash
         end
       end
 
-      puts "after 20 package stuff -- \n\n" + services.inspect
+      #puts "after 20 package stuff -- \n\n" + services.inspect
 
       if excess_weight > 0
-        puts "#{excess_weight} kg package"
+        #puts "#{excess_weight} kg package"
 
         # set up a mini API call to determine the cost of shipping the excess
         self.attributes[:weight] = excess_weight
         response = api_call(request_url)
 
         response_services = Array.wrap(response[1]["service"]) # same reason as above
-        puts "  response_services: -- \n\n" + response_services.inspect
+        #puts "  response_services: -- \n\n" + response_services.inspect
 
         # we iterate with index so that we can compare the two response structures
         # we can't iterate with an index and map at the same time
@@ -167,7 +168,7 @@ class AustraliaPostApiConnection
 
           modified_price = ( original_price + excess_weight_price).to_s.gsub(/(.*)([0-9]{2}$)/) {$1 + "." + $2}
 
-          puts "  modified price: " + modified_price
+          #puts "  modified price: " + modified_price
           hash["price"] = modified_price
           services_after_excess[i] = hash
         end
@@ -178,7 +179,7 @@ class AustraliaPostApiConnection
       result[1]["service"] = services
     end
 
-    puts "finally -- \n\n\n" + result[1]["service"].inspect
+    #puts "finally -- \n\n\n" + result[1]["service"].inspect
 
     # set the weight back to its original value
     self.attributes[:weight] = total_weight
@@ -186,13 +187,20 @@ class AustraliaPostApiConnection
   end
 
   def api_call(method)
+    Thread.abort_on_exception = true
 
-    command = Thread.new do
-      Thread.current["httparty_response"] = HTTParty.get("#{self.api_root}/#{method}",
-                                                           :query => self.attributes,
-                                                           :timeout => 150, # sec
-                                                           :headers => { 'auth-key' => credentials['api-key']})
-    end
+      command = Thread.new do
+        begin
+        Thread.current["httparty_response"] = HTTParty.get("#{self.api_root}/#{method}",
+                                                             :query => self.attributes,
+                                                             :timeout => 1, # sec
+                                                             :headers => { 'auth-key' => credentials['api-key']})
+        rescue Exception => e
+          self.api_errors.append(e)
+          puts "error: " + e.message
+          puts "api connection will not be saved"
+        end
+      end
 
     command.join                 # main programm waiting for thread
 
@@ -202,8 +210,10 @@ class AustraliaPostApiConnection
       if @service_list[0] == "error"
         self.api_errors.append(@service_list[1]['errorMessage'])
       end
-    rescue
-      raise "command in rescue " + command["httparty_response"].inspect
+    rescue Exception => e
+      self.api_errors.append(e)
+      puts "error: " + e.message
+      puts "api connection will not be saved"
     end
 
     @service_list

@@ -98,22 +98,18 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
 
-    # TODO we are repeating this code here (and making an expensive API call) because the countries
-    # list won't fit in the flash (CookieOVERFLOW).
-    # We should cache the list on the server
-
     # get country list from the API -- we'll format these if there were no errors
     @service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
 
-    if params[:australia_post_api_connection][:country_code] == 'AUS'
+    if @australia_post_api_connection.domestic
       shipping_methods = @preference.shipping_methods_allowed_dom
     else
       shipping_methods = @preference.shipping_methods_allowed_int
     end
-    
+
     respond_to do |format|
       if @australia_post_api_connection.save
-        
+
         @countries = get_country_list(@australia_post_api_connection)
         # TODO right now we are not including the suboptions for each shipping type
         #filter out unwanted methods more efficiently?
@@ -146,7 +142,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
         # format.html { render action: "new" }
         # format.json { render json: @australia_post_api_connection.errors, status: :unprocessable_entity }
-        format.js { render layout: false }
+        format.html { render partial: "trouble", status: 400, layout: false }
       end
     end
   end
