@@ -22,20 +22,18 @@ gem "factory_girl_rails", ">= 4.1.0", :group => [:development, :test]
 gem "compass-rails", ">= 1.0.3", :group => :assets
 gem "zurb-foundation", ">= 3.2.5", :group => :assets
 gem "simple_form", ">= 2.0.4"
-gem "css_canon", :git => "https://github.com/lastobelus/css_canon"
+gem "css_canon", :git => "git://github.com/lastobelus/css_canon.git"
 gem "shopify_app"
 gem "heroku"
 gem "nokogiri"
 gem "kaminari"
-gem "pg"
 gem "rvm"
-gem "mysql2", :group => :development
+gem "mysql2"
 gem "config_spartan"
 gem "quiet_assets", ">= 1.0.1", :group => :development
 gem 'pry-rails', :group => :development
 
 # aus_controller_development branch added these
-gem "pg"
 gem "activerecord-postgresql-adapter"
 gem "httparty"
 gem "rack-cors", :require => 'rack/cors'
