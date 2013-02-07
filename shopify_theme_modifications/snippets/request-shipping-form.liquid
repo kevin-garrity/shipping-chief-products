@@ -2,6 +2,9 @@
 {{ 'inject_shipping_calculator.js' | asset_url | script_tag }}
 {{ 'xdr.js' | asset_url | script_tag }}
 
+<!-- These are our api overrides -->
+{{ 'ajaxify-shop.js' | asset_url | script_tag }}
+
 <!-- calculate the weight and grab us a calculator! -->
 <script>
   $(document).ready(function() {
