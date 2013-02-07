@@ -11,7 +11,7 @@
   $('#cartform').submit(function (e) {
     console.log("in click")
 
-    if ($('#Shipping').length == 0) {
+    if ($('.item.shipping').length > 0) {
       // there are Shipping items in the cart, so proceed
       console.log("OK to checkout")
     } else {
