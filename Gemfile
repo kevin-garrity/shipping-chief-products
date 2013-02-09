@@ -22,7 +22,7 @@ gem "factory_girl_rails", ">= 4.1.0", :group => [:development, :test]
 gem "compass-rails", ">= 1.0.3", :group => :assets
 gem "zurb-foundation", ">= 3.2.5", :group => :assets
 gem "simple_form", ">= 2.0.4"
-gem "css_canon", :git => "https://github.com/lastobelus/css_canon", :group => :development
+gem "css_canon", :git => "git://github.com/lastobelus/css_canon", :group => :development
 gem "shopify_app"
 gem "heroku"
 gem "nokogiri"
