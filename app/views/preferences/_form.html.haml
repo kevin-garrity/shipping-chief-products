@@ -44,10 +44,16 @@
   %div The list of shipping methods you want to offer to international customers
   %br
   %table(class="twelve")
+    %tr 
+      %td Aus. Post Shipping Methods
+      %td Description to show to customer <span class='has-tip' data-width='280' title='Provide a shorter description for your customers and include estimated delivery time ideally.'>?</span>
+      %td Offer this choice to customer<span class='has-tip' data-width='280' title='Allow customers to pick this option'>?</span>
     - Preference.AusPostParcelServiceListInt.each {|key, value|
     %tr 
       %td 
         = value
+      %td
+        = text_field_tag("shipping_methods_desc_int[#{key}]", @preference.shipping_methods_desc_int[key.to_s].nil? ? value : @preference.shipping_methods_desc_int[key.to_s])        
       %td
         = check_box_tag("shipping_methods_int[#{key}]", value=1, @preference.shipping_methods_allowed_int[key.to_s])
     -}    
@@ -55,10 +61,16 @@
   %div The list of shipping methods you want to offer to domestic customers
   %br
   %table(class="twelve")
+    %tr 
+      %td Aus. Post Shipping Methods
+      %td Description to show to customer<span class='has-tip' data-width='280' title='Provide a shorter description for your customers and include estimated delivery time ideally.'>?</span>
+      %td Offer this choice to customer <span class='has-tip' data-width='280' title='Allow customers to pick this option'>?</span>  
     - Preference.AusPostParcelServiceListDom.each {|key, value|
     %tr 
       %td 
         = value
+      %td
+        = text_field_tag("shipping_methods_desc_dom[#{key}]", @preference.shipping_methods_desc_dom[key.to_s].nil? ? value : @preference.shipping_methods_desc_dom[key.to_s])        
       %td
         = check_box_tag("shipping_methods_dom[#{key}]", value=1, @preference.shipping_methods_allowed_dom[key.to_s])
     -}    
