@@ -6,4 +6,4 @@ AppConfig = ConfigSpartan.create do
   end
 end
 
-DOMAIN_NAMES = {"staging" => "test.biguglyurl.com", "development" => "localhost:3000", "production" =>  "www.mycoolurl.com", "test" => "localhost:3000"}
+DOMAIN_NAMES = {"staging" => "test.biguglyurl.com", "development" => "localhost:3000", "production" =>  "shipping.webifytechnology.com", "test" => "localhost:3000"}

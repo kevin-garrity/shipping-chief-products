@@ -39,9 +39,9 @@ class AustraliaPostApiConnection
 
   validates_with ResponseErrors
 
-  validates :length, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 16, less_than_or_equal_to: 105 }
-  validates :height, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 16 }
-  validates :width, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 16 }
+  validates :length, presence: true, numericality: { greater_than_or_equal_to: 14, less_than_or_equal_to: 105 }
+  validates :height, presence: true, numericality: true
+  validates :width, presence: true, numericality: {  greater_than_or_equal_to: 12 }
   validates_with Girth, { less_than_or_equal_to: 140 }
 
   # TODO we no longer need to validate weight, since we now accept larger packages 
@@ -110,22 +110,34 @@ class AustraliaPostApiConnection
                   end
 
     # calculate the number of packages, and the excess
-    total_weight = self.attributes[:weight].to_i
+    total_weight = self.attributes[:weight].to_f
+        
     package_weight = 20
-    number_of_packages = total_weight / package_weight
-    excess_weight = total_weight % package_weight
+    if total_weight< package_weight
+      number_of_packages = 1
+      excess_weight = 0
+    else
+      number_of_packages = (total_weight / package_weight).to_i
+      excess_weight = total_weight % package_weight      
+    end
+    
 
-    #puts "total weight: " + total_weight.to_s
+    puts "total weight: " + total_weight.to_s
+    puts "package_weight : " + package_weight.to_s
+
+    puts "number_of_packages : " + number_of_packages.to_s
+    puts "excess_weight : " + excess_weight.to_s
 
     # perform the API call for 1 package
-    self.attributes[:weight] = package_weight
+    if number_of_packages > 1
+      self.attributes[:weight] = package_weight
+    end
     result = api_call(request_url)
 
     #puts "api_errors: " + self.api_errors.inspect
 
     # modify the results so that they represent n packages + the excess
     if self.api_errors.empty?
-      #puts "20 kg packages"
       services = Array.wrap(result[1]["service"]) # sometimes the services are a plain hash
 
       # multiply the prices by the number of packages
@@ -134,18 +146,17 @@ class AustraliaPostApiConnection
         #puts "  service: \n " + hash.inspect
         if hash.has_key?("price")
 
-          original_price = hash["price"].to_s.gsub(/\./, "").to_i
-
+          original_price = hash["price"].to_f
           # gsub so that the price will be in dollars and cents yo
-          modified_price = ( original_price * number_of_packages).to_s.gsub(/(.*)([0-9]{2}$)/) {$1 + "." + $2}
+          modified_price = ( original_price * number_of_packages).to_f
 
-          #puts "  modified price: " + modified_price
+          puts "  modified price: " + modified_price.to_s
           hash["price"] = modified_price
           hash
         end
       end
 
-      #puts "after 20 package stuff -- \n\n" + services.inspect
+      puts "after 20 package stuff -- \n\n" + services.inspect
 
       if excess_weight > 0
         #puts "#{excess_weight} kg package"
@@ -163,17 +174,16 @@ class AustraliaPostApiConnection
         services_after_excess = []
 
         services.to_enum.with_index(0) do |hash, i|
-          original_price = hash["price"].to_s.gsub(/\./, "").to_i
-          excess_weight_price = response_services[i]["price"].to_s.gsub(/\./, "").to_i
+          original_price = hash["price"].to_f
+          excess_weight_price = response_services[i]["price"].to_f
 
-          modified_price = ( original_price + excess_weight_price).to_s.gsub(/(.*)([0-9]{2}$)/) {$1 + "." + $2}
+          modified_price = original_price + excess_weight_price
 
-          #puts "  modified price: " + modified_price
-          hash["price"] = modified_price
+          puts "  modified price: " + modified_price.to_s
+          hash["price"] = modified_price.to_f
           services_after_excess[i] = hash
         end
 
-        services = services_after_excess
       end
 
       result[1]["service"] = services

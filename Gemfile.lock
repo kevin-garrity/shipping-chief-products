@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/lastobelus/css_canon.git
+  remote: git://github.com/lastobelus/css_canon
   revision: c510342834a29d4a0573634becc29161f1f63acd
   specs:
     css_canon (0.0.5)

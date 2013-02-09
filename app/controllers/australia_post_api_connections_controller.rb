@@ -68,7 +68,6 @@ class AustraliaPostApiConnectionsController < ApplicationController
   # POST /australia_post_api_connections.json
   def create
     puts "---------------IN CREATE------------"
-
     # merge the raw post data into the params
     params.merge!(Rack::Utils.parse_nested_query(request.raw_post))
 
@@ -81,12 +80,10 @@ class AustraliaPostApiConnectionsController < ApplicationController
     #raise error if @preference.nil?
 
     # recalculate the weight to include blanks
-    calculated_weight = params[:australia_post_api_connection][:blanks].to_i * @preference.default_weight.to_i
-    calculated_weight += params[:australia_post_api_connection][:weight].to_i
+    calculated_weight = params[:australia_post_api_connection][:blanks].to_i * @preference.default_weight.to_f
+    calculated_weight += params[:australia_post_api_connection][:weight].to_f
     params[:australia_post_api_connection][:blanks] = '0'
     params[:australia_post_api_connection][:weight] = calculated_weight.to_s
-
-    puts params[:australia_post_api_connection][:weight]
 
     @australia_post_api_connection = AustraliaPostApiConnection.new({:weight=> params[:australia_post_api_connection][:weight],
                                                                     :blanks => params[:australia_post_api_connection][:blanks],

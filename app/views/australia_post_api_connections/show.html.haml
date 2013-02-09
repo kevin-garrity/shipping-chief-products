@@ -7,7 +7,7 @@
 
 :javascript
   $.ajax({
-    url: "http://localhost:3000/australia_post_api_connections/new",
+    url: "http://#{DOMAIN_NAMES[Rails.env]}/australia_post_api_connections/new",
     datatype: "html",
     data: { weight: 20 },
     success: function( data ) {

@@ -19,9 +19,12 @@
     = f.text_field :default_charge
   %br
   %fieldset
-    = f.label :height, "Enter the default size of your shipping containers <br/>(Height, Width, Length)<span class='has-tip' data-width='280' title='You can specify container size for products individually. This size is only used when none is specified.'>?</span>".html_safe
-    %span(class="prefix") H
-    = f.text_field :height
+
+    = f.label :height, "Approximate dimensions of your parcel <br/>(Length, Width, Height)<br/>See <a href='http://auspost.com.au/parcels-mail/size-and-weight-guidelines.html' target='_blank'>parcel dimensions</a> for Dimension restrictions.<span class='has-tip' data-width='280' title='Enter the size of your container. We assume you will use the same box for all your items.'>?</span>".html_safe
+    = f.select :default_box_size,  options_for_select(AusDefBoxSize(), selected = @preference.default_box_size)
+    %br
+    %span(class="prefix") L
+    = f.text_field :length
     %span(class="postfix") cm
     %br 
     = f.label :width, "", :class=>"hidden-prefix"
@@ -29,17 +32,14 @@
     = f.text_field :width
     %span(class="postfix") cm
     %br
-    = f.label :length, " ", :class=>"hidden-prefix"
-    %span(class="prefix") L  
-    = f.text_field :length
+    = f.label :height, " ", :class=>"hidden-prefix"
+    %span(class="prefix") H  
+    = f.text_field :height
     %span(class="postfix") cm
     %br
     = f.label :container_weight, "Enter the weight of your shipping container in kg<span class='has-tip' data-width='300' title='The weight of the container will be included when calculating shipping.'>?</span>".html_safe
     = f.text_field :container_weight
     %span(class="postfix") kg
-    %br
-    = f.label :items_per_box, "The maximum number of items that can fit in the box<span class='has-tip' data-width='300' title='When there are multiple items ordered, enter the number of items that can fit in your default shipping container. We can calculate the cost of shipping using multiple containers.'>?</span>".html_safe
-    = f.text_field :items_per_box    
   %br  
   %div The list of shipping methods you want to offer to international customers
   %br
@@ -70,4 +70,57 @@
   .actions
     = f.submit 'Save', :class=>"button"
     = link_to 'Cancel', preferences_path
-    
+
+:javascript
+  $(document).ready( function() {
+    $('#preference_default_box_size').change(function() {
+     switch(this.value)
+     {
+      case "0":
+        break;
+      case "1":
+        $('#preference_length').val("22.0");
+        $('#preference_width').val("16.0");
+        $('#preference_height').val("7.7");
+        break;
+      
+      case "2":
+        $('#preference_length').val("31.0");
+        $('#preference_width').val("22.5");
+        $('#preference_height').val("10.2");
+        break;
+      case "3":
+        $('#preference_length').val("40.0");
+        $('#preference_width').val("20.0");
+        $('#preference_height').val("18.0");
+        break;
+      case "4":
+        $('#preference_length').val("43.0");
+        $('#preference_width').val("30.5");
+        $('#preference_height').val("14.0");
+        break;             
+      case "5":
+        $('#preference_length').val("40.5");
+        $('#preference_width').val("30.0");
+        $('#preference_height').val("25.5");
+        break;
+      case "6":
+        $('#preference_length').val("22.0");
+        $('#preference_width').val("14.5");
+        $('#preference_height').val("3.5");
+        break;         
+      case "7":
+        $('#preference_length').val("14.5");
+        $('#preference_width').val("12.7");
+        $('#preference_height').val("1.0");
+        break;
+      case "8":
+        $('#preference_length').val("36.3");
+        $('#preference_width').val("21.2");
+        $('#preference_height').val("6.5");
+        break;                                        
+     }
+    });
+      
+  });
+  
