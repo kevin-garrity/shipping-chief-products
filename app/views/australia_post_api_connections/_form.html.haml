@@ -15,11 +15,11 @@
   .row
     .six.columns
       .field#country-select
-        = f.label :country_code
+        = f.label :country_code, "Select your country"
         = f.select :country_code, @countries, selected: "Australia"
       .field#postcode
         = f.label :"Please enter a postcode for shipping to", { :class => "error" }
-        = f.label :to_postcode
+        = f.label :to_postcode, "Australia Post Code"
         = f.number_field :to_postcode
 
       .actions
