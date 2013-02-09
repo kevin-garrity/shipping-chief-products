@@ -30,7 +30,9 @@ class PreferencesController < ApplicationController
        @preference.attributes = params[:preference]
        @preference.shipping_methods_allowed_int = params[:shipping_methods_int]
        @preference.shipping_methods_allowed_dom = params[:shipping_methods_dom]
-       
+       @preference.shipping_methods_desc_dom = params[:shipping_methods_desc_dom]
+       @preference.shipping_methods_desc_int = params[:shipping_methods_desc_int]
+              
       if @preference.save
         #store default charge in shop metafields
         update_shop_metafield(@preference.default_charge)

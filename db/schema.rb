@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130209074400) do
+ActiveRecord::Schema.define(:version => 20130209082220) do
 
   create_table "preference", :force => true do |t|
     t.string  "shop_url"
@@ -27,6 +27,8 @@ ActiveRecord::Schema.define(:version => 20130209074400) do
     t.decimal "container_weight",             :precision => 10, :scale => 2
     t.text    "shipping_methods_allowed_dom"
     t.integer "default_box_size"
+    t.text    "shipping_methods_desc_int"
+    t.text    "shipping_methods_desc_dom"
   end
 
   create_table "shops", :force => true do |t|

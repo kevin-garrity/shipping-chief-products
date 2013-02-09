@@ -104,8 +104,10 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
     if params[:australia_post_api_connection][:country_code] == 'AUS'
       shipping_methods = @preference.shipping_methods_allowed_dom
+      shipping_desc = @preference.shipping_methods_desc_dom
     else
       shipping_methods = @preference.shipping_methods_allowed_int
+      shipping_desc = @preference.shipping_methods_desc_int
     end
     
     respond_to do |format|
@@ -119,13 +121,14 @@ class AustraliaPostApiConnectionsController < ApplicationController
           puts("service code is " + service['code'])
           if shipping_methods[service['code']]
             price_to_charge = service['price'].to_f
+            shipping_name = shipping_desc[service['code']].blank? ? service['name'] : shipping_desc[service['code']]
             unless @preference.nil?
               if @preference.surchange_percentage > 0.0
                 price_to_charge =(price_to_charge * (1 + @preference.surchange_percentage/100)).round(2)
               end
             end
 
-            list.append({ name: service['name'],
+            list.append({ name: shipping_name,
                         code: service['code'],
                         price: price_to_charge})
           end
