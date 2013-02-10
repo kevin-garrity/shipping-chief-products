@@ -8,21 +8,19 @@
 <!-- calculate the weight and grab us a calculator! -->
 <script>
 
-  $('#cartform').submit(function (e) {
-    console.log("in click")
-
-    if ($('.item.shipping').length > 0) {
-      // there are Shipping items in the cart, so proceed
-      console.log("OK to checkout")
+  $("#cartform").find('input[type=submit]').on('click', function (e) {
+    if ($(e.target).attr('name') == 'checkout') {
+      if ($('.item.shipping').length == 0) {
+        // there no Shipping items in the cart
+        e.preventDefault();
+        $('#shipping-calculator-info p').text("Please select a destination for shipping.")
+      }
     } else {
-      // there are no Shipping items so display help
-      console.log("NO")
-      e.preventDefault();
-      $('#shipping-calculator-info p').text("Please select a destination for shipping.")
-
-
+      console.log("it worked!")
+      //do something else
     }
   });
+
 
   $(document).ready(function() {
 
