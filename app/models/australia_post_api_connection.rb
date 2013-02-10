@@ -109,32 +109,41 @@ class AustraliaPostApiConnection
                     "parcel/international/service.json"
                   end
 
-    # calculate the number of packages, and the excess
+    # cases:
+    #   total_weight < 20
+    #     make 1 API call at total_weight
+    #   total_weight = 20
+    #     make 1 API call at total_weight
+    #   total_weight > 20
+    #     make 1 API call at max_weight and multiply the result
+    #     make 1 API call at excess weight
+    #
     total_weight = self.attributes[:weight].to_f
-        
+
+    # package_weight is the max weight for a single AUS api call
     package_weight = 20
-    if total_weight< package_weight
+
+    if total_weight <= package_weight
+      # we can fit the cart into 1 API call
       number_of_packages = 1
       excess_weight = 0
     else
+      # we will need to do an API call at the max weight,
+      # and then multiply the resulting price
+      # and then make 1 more call to get the excess
       number_of_packages = (total_weight / package_weight).to_i
-      excess_weight = total_weight % package_weight      
+      excess_weight = total_weight % package_weight
+      self.attributes[:weight] = package_weight
     end
-    
 
     puts "total weight: " + total_weight.to_s
-    puts "package_weight : " + package_weight.to_s
+    puts "api max weight : " + package_weight.to_s
 
     puts "number_of_packages : " + number_of_packages.to_s
     puts "excess_weight : " + excess_weight.to_s
 
-    # perform the API call for 1 package
-    if number_of_packages > 1
-      self.attributes[:weight] = package_weight
-    end
     result = api_call(request_url)
-
-    #puts "api_errors: " + self.api_errors.inspect
+    puts "after performing 20 kg call"
 
     # modify the results so that they represent n packages + the excess
     if self.api_errors.empty?
@@ -147,10 +156,12 @@ class AustraliaPostApiConnection
         if hash.has_key?("price")
 
           original_price = hash["price"].to_f
+          puts "  original_price: " + original_price.to_s
           # gsub so that the price will be in dollars and cents yo
           modified_price = ( original_price * number_of_packages).to_f
 
           puts "  modified price: " + modified_price.to_s
+          puts "---------------------------------------"
           hash["price"] = modified_price
           hash
         end
@@ -159,7 +170,7 @@ class AustraliaPostApiConnection
       puts "after 20 package stuff -- \n\n" + services.inspect
 
       if excess_weight > 0
-        #puts "#{excess_weight} kg package"
+        puts "#{excess_weight.to_s} kg package"
 
         # set up a mini API call to determine the cost of shipping the excess
         self.attributes[:weight] = excess_weight
@@ -168,20 +179,17 @@ class AustraliaPostApiConnection
         response_services = Array.wrap(response[1]["service"]) # same reason as above
         #puts "  response_services: -- \n\n" + response_services.inspect
 
-        # we iterate with index so that we can compare the two response structures
-        # we can't iterate with an index and map at the same time
-        # so we are rebuilding the services array
-        services_after_excess = []
-
         services.to_enum.with_index(0) do |hash, i|
           original_price = hash["price"].to_f
+          puts "  original_price: " + original_price.to_s
           excess_weight_price = response_services[i]["price"].to_f
+          puts "  excess_weight_price: " + excess_weight_price.to_s
 
           modified_price = original_price + excess_weight_price
 
           puts "  modified price: " + modified_price.to_s
+          puts "---------------------------------------"
           hash["price"] = modified_price.to_f
-          services_after_excess[i] = hash
         end
 
       end
@@ -189,7 +197,7 @@ class AustraliaPostApiConnection
       result[1]["service"] = services
     end
 
-    #puts "finally -- \n\n\n" + result[1]["service"].inspect
+    puts "finally -- \n\n\n" + result[1]["service"].inspect
 
     # set the weight back to its original value
     self.attributes[:weight] = total_weight
