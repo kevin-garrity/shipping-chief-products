@@ -170,6 +170,7 @@ Shopify.addItemFromForm = function(form, callback) {
 // GET cart.js returns the cart in JSON.
 // ---------------------------------------------------------
 Shopify.getCart = function(callback) {
+  console.log("getCart")
   jQuery.getJSON('/cart.js', function (cart, textStatus) {
     if ((typeof callback) === 'function') {
       callback(cart);
@@ -198,6 +199,7 @@ Shopify.getProduct = function(handle, callback) {
 // POST to cart/change.js returns the cart in JSON.
 // ---------------------------------------------------------
 Shopify.changeItem = function(variant_id, quantity, callback) {
+  console.log("changeItem")
   var params = {
     type: 'POST',
     url: '/cart/change.js',
@@ -222,9 +224,10 @@ Shopify.changeItem = function(variant_id, quantity, callback) {
 // POST to cart/change.js returns the cart in JSON.
 // ---------------------------------------------------------
 Shopify.removeItem = function(variant_id, callback) {
+  console.log("removeItem")
   var params = {
     type: 'POST',
-    url: '/cart/update.js',
+    url: '/cart/change.js',
     data: 'quantity=0&id='+variant_id,
     dataType: 'json',
     success: function(cart) {
@@ -248,6 +251,8 @@ Shopify.removeItem = function(variant_id, callback) {
 // not clear the cart attributes nor the cart note.
 // ---------------------------------------------------------
 Shopify.clear = function(callback) {
+  console.log("clear")
+
   var params = {
     type: 'POST',
     url: '/cart/clear.js',
@@ -278,6 +283,7 @@ Shopify.clear = function(callback) {
 //@param HTMLElement the form element which was submitted. Or you could pass in a string selector such as the #form_id.
 //@param function callback callback fuction if you like, but I just override Shopify.onCartUpdate() instead
 Shopify.updateCartFromForm = function(form, callback) {
+  console.log("updateCartFromForm")
   var params = {
     type: 'POST',
     url: '/cart/update.js',
@@ -304,6 +310,7 @@ Shopify.updateCartFromForm = function(form, callback) {
 // Receives attributes as a hash or array. Look at comments below.
 // ---------------------------------------------------------
 Shopify.updateCartAttributes = function(attributes, callback) {
+  console.log("updateCartAttributes")
   var data = '';
   // If attributes is an array of the form:
   // [ { key: 'my key', value: 'my value' }, ... ]
@@ -346,6 +353,7 @@ Shopify.updateCartAttributes = function(attributes, callback) {
 // POST to cart/update.js returns the cart in JSON.
 // ---------------------------------------------------------
 Shopify.updateCartNote = function(note, callback) {
+  console.log("updateCartNote")
   var params = {
     type: 'POST',
     url: '/cart/update.js',

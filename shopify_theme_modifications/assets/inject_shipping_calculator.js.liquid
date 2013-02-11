@@ -62,13 +62,16 @@ submit_calculation_request = function(dataHash) {
 }
 
 remove_and_add_again_shipping_line_item = function() {
+  console.log("remove_and_add_again_shipping_line_item")
   var price = $(this).siblings('.option-price').text();
   var price_string = price.replace(/ -- /, '');
   var shipping_quantity = Number(price.replace(/[^0-9]+/g,""));
   var shipping_type = $(this).siblings('label').text() + price;
 
   // remove the existing line item
+  // TODO WHY IS IT ADDING TWICE?
   remove_shipping_item(function() {
+    console.log("  spaghetti add")
     // once the item is removed spaghetti add the line item back in!
     // we do this to change the line item property
     $('input#quantity').attr('value', shipping_quantity);
@@ -76,6 +79,7 @@ remove_and_add_again_shipping_line_item = function() {
     $('input#Shipping').click(); // add the logical shipping item
   });
 
+  // TODO document this
   // we assume that the first table row on a cart page is the headers
   var table_header = $('tr').first()
 
@@ -123,6 +127,8 @@ modify_or_update_shipping_line_item = function() {
 remove_shipping_item = function(callback) {
   var html_shipping_line_item = $('.item.shipping');
   var variant_id = $('input[name=id]').attr('value');
+
+  console.log("variant_id " + variant_id)
 
   $('input#shipping-type').val("");
 
