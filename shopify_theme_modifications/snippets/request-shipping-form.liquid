@@ -5,6 +5,11 @@
 <!-- These are our api overrides -->
 {{ 'ajaxify-shop.js' | asset_url | script_tag }}
 
+{% include "add-to-cart" %}
+<div id="indicator"></div>
+<div id="shipping-calculator"></div>
+<div id="results"></div>
+
 <!-- calculate the weight and grab us a calculator! -->
 <script>
 
@@ -30,7 +35,8 @@
       var total_weight = 0;
       var total_blanks = 0;
       {% for item in cart.items %}
-        {% if item.title != "Shipping" %}
+        {% assign item_title = item.title | downcase %}
+        {% if item_title != "shipping" %}
           {% if item.grams != 0 %}
             total_weight = total_weight + {{ item.grams }} * {{ item.quantity }};
 
