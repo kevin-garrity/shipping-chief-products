@@ -23,7 +23,6 @@ bc. /* Webify Changes
   display: none;
 }
 
-
 In order to integrate smoothly with your store, WSC imagines that you have adopted certain conventions. This is so that WSC can interact with your store's cart, adding shipping price line items, and manipulating the various inputs.
 
 * The Cart is a table
@@ -33,6 +32,9 @@ In order to integrate smoothly with your store, WSC imagines that you have adopt
 ** There are at least the following headers: item, quantity, total, price
 * The Cart contains a form, with a submit input
 ** The @name@ attribute of the input used to proceed to checkout should be 'checkout'
+* There is a @shipping@ collection
+** The collection has just one product, the @shipping@ product
+** The shipping product has price $0.01
 
 This application was generated with the "rails_apps_composer":https://github.com/RailsApps/rails_apps_composer gem provided by the "RailsApps Project":http://railsapps.github.com/.
 
