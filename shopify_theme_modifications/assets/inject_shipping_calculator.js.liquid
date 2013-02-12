@@ -76,7 +76,7 @@ remove_and_add_again_shipping_line_item = function() {
     // we do this to change the line item property
     $('input#quantity').attr('value', shipping_quantity);
     $('input#shipping-type').val(shipping_type);
-    $('input#Shipping').first().click(); // add the logical shipping item
+    $('form#shipping-form input#shipping').click(); // add the logical shipping item
   });
 
   // TODO document this
