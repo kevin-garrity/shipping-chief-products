@@ -21,7 +21,7 @@ jQuery(document).ready(function() {
   */
   var selectors = {
     // Any elements(s) with this selector will have the total item count put there on add to cart.
-    TOTAL_ITEMS: '.cart-total-items',
+    TOTAL_ITEMS: '.cart-total-items, .num-items-in-cart',
     TOTAL_PRICE: '.cart-total-price',
 
     SUBMIT_ADD_TO_CART: 'input[type=image], input.submit-add-to-cart',
@@ -144,8 +144,17 @@ Shopify.onCartUpdate = function(cart, form) {
   //console.log("in onCartUpdate")
 
   // Total Items Update
-  var message = '<span class="count">'+cart.item_count+'</span> ' +
-    ((cart.item_count == 1) ? text.ITEM : text.ITEMS );
+  // we only want to count items that are not shipping items
+  var index;
+  var non_shipping_items_count = 0;
+  for (index = 0; index < cart.items.length; index++) {
+    if (cart.items[index].title !== 'shipping') {
+      non_shipping_items_count += 1;
+    }
+  }
+
+  var message = '<span class="count">'+ non_shipping_items_count +'</span> ' +
+    ((non_shipping_items_count == 1) ? text.ITEM : text.ITEMS );
   jQ(selectors.TOTAL_ITEMS).html(message);
 
   // Price update - any element matching the selector will have their contents updated with the cart price.
