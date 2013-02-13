@@ -38,7 +38,6 @@ update_loader_and_submit = function(method, dataHash, callback) {
       switch(request.state()) {
         case 'rejected':
           console.log(request.state())
-          $('#shipping-calculator-info p').text("Sorry, we couldn't reach the shipping calculator.")
           break;
         default:
           console.log(request.state())
