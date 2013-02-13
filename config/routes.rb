@@ -17,7 +17,7 @@ WorldShippingCalculator::Application.routes.draw do
   resource 'preferences', only: [:show, :edit, :update]
   match '/australia_post_api_connections' => 'australia_post_api_connections#new', :via => :get
   
-  match 'webhooks/app/uninstalled' => 'webhooks#uninstall_app'
+  match 'webhooks/app/uninstalled' => 'webhooks#uninstall_app', :via => :post
   
   resources 'australia_post_api_connections'
   # match '/australia_post_api_connections', :controller => 'australia_post_api_connections', :action => 'options', :constraints => {:method => 'OPTIONS'}
