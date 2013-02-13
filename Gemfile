@@ -27,7 +27,6 @@ gem "shopify_app"
 gem "heroku"
 gem "nokogiri"
 gem "kaminari"
-gem "rvm"
 gem "pg"
 gem "config_spartan"
 gem "quiet_assets", ">= 1.0.1", :group => :development
@@ -37,4 +36,4 @@ gem 'pry-rails', :group => :development
 gem "activerecord-postgresql-adapter"
 gem "httparty"
 gem "rack-cors", :require => 'rack/cors'
-gem 'shopifydev', :git => "git://github.com/variousauthors/shopifydev.git", :branch => "GLI_commandline_suite"
+#gem 'shopifydev', :git => "git://github.com/variousauthors/shopifydev.git", :branch => "GLI_commandline_suite"
