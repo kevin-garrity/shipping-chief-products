@@ -7,7 +7,6 @@ class AddShopModel < ActiveRecord::Migration
       t.datetime :signup_date
       t.timestamps
     end
-    add_index "shops", ["url"], :name => "index_shops_on_url"    
   end
 
   def down

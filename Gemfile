@@ -28,7 +28,7 @@ gem "heroku"
 gem "nokogiri"
 gem "kaminari"
 gem "rvm"
-gem "mysql2"
+gem "pg"
 gem "config_spartan"
 gem "quiet_assets", ">= 1.0.1", :group => :development
 gem 'pry-rails', :group => :development

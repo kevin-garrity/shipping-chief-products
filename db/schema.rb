@@ -17,10 +17,10 @@ ActiveRecord::Schema.define(:version => 20130209082220) do
     t.string  "shop_url"
     t.string  "origin_postal_code"
     t.string  "default_weight"
-    t.float   "surchange_percentage"
     t.decimal "height",                       :precision => 10, :scale => 2
     t.decimal "width",                        :precision => 10, :scale => 2
     t.decimal "length",                       :precision => 10, :scale => 2
+    t.float   "surchange_percentage"
     t.integer "items_per_box"
     t.decimal "default_charge",               :precision => 10, :scale => 2
     t.text    "shipping_methods_allowed_int"
@@ -39,7 +39,5 @@ ActiveRecord::Schema.define(:version => 20130209082220) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
-
-  add_index "shops", ["url"], :name => "index_shops_on_url"
 
 end
