@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
         if hooks.size > 0
           hooks[0].destrory()
         end
+        puts("+++++ adding webhook" + "http://#{DOMAIN_NAMES[Rails.env]}/webhooks/#{topic}")
         webhook = ShopifyAPI::Webhook.create(:format => "json", :topic => topic, :address => "http://#{DOMAIN_NAMES[Rails.env]}/webhooks/#{topic}")
         raise "======Webhook invalid: #{webhook.errors.to_s}" unless webhook.valid?
       end
