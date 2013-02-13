@@ -5,7 +5,12 @@
 <!-- These are our api overrides -->
 {{ 'ajaxify-shop.js' | asset_url | script_tag }}
 
+<!-- This is foe debugging in IE during development -->
+{{ 'consolelog.js' | asset_url | script_tag }}
+
 {% include "add-to-cart" %}
+
+<div id="shipping-calculator-info"><p></p></div>
 <div id="indicator"></div>
 <div id="shipping-calculator"></div>
 <div id="results"></div>
@@ -21,7 +26,6 @@
         $('#shipping-calculator-info p').text("Please select a destination for shipping.")
       }
     } else {
-      console.log("it worked!")
       //do something else
     }
   });
