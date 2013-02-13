@@ -26,6 +26,7 @@ gem "css_canon", :git => "git://github.com/lastobelus/css_canon", :group => :dev
 gem "shopify_app"
 gem "heroku"
 gem "nokogiri"
+gem "log4r"
 gem "kaminari"
 gem "pg"
 gem "config_spartan"
