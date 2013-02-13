@@ -15,6 +15,7 @@ class WebhookController < ActionController::Base
     digest = OpenSSL::Digest::Digest.new('sha256')
     calculated_hmac = Base64.encode64(OpenSSL::HMAC.digest(digest, WorldShippingCalculator::Application.config.shopify.secret, data)).strip
     unless calculated_hmac == hmac_header
+      puts("+++unauthorized")
       head :unauthorized
     end
     request.body.rewind
