@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
           hooks[0].destrory()
         end
         webhook = ShopifyAPI::Webhook.create(:format => "json", :topic => topic, :address => "http://#{DOMAIN_NAMES[Rails.env]}/webhooks/#{topic}")
-        raise "#{###}Webhook invalid: #{webhook.errors.to_s}" unless webhook.valid?
+        raise "======Webhook invalid: #{webhook.errors.to_s}" unless webhook.valid?
       end
     end    
 end
