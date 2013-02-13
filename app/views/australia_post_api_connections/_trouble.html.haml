@@ -1,0 +1,11 @@
+- flash.each do |key, msg|
+  - case key
+  - when :error
+    %div{:class => 'alert-box alert'}
+      = msg
+      %a{:href => '#', :class => 'close'} &times;
+  - when :notice
+    %div{:class => 'alert-box'}
+      = msg
+      %a{:href => '#', :class => 'close'} &times;
+  - else

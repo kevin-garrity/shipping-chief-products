@@ -140,9 +140,14 @@ class AustraliaPostApiConnectionsController < ApplicationController
         format.html { render content_type: 'text/html', layout: false }
       else
 
+        # set the flash
+        puts "==================================================="
+        puts @australia_post_api_connection.api_errors.join(', ')
+
+        flash.now[:error] = @australia_post_api_connection.api_errors.join(', ')
         # format.html { render action: "new" }
         # format.json { render json: @australia_post_api_connection.errors, status: :unprocessable_entity }
-        format.html { render partial: "trouble", status: 400, layout: false }
+        format.html { render partial: "trouble", layout: false }
       end
     end
   end
@@ -195,7 +200,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
     end
     if list.nil?
       # get country list from the API
-      countries = api_connection.data_oriented_methods(:country)      
+      countries = api_connection.data_oriented_methods(:country)
       
       countries = countries[1]['country'].inject([]) do |country_list, country|
         country_list.append([country['name'].capitalize, country['code'].capitalize])

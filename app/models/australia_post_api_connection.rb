@@ -195,9 +195,8 @@ class AustraliaPostApiConnection
       end
 
       result[1]["service"] = services
+      puts "finally -- \n\n\n" + result[1]["service"].inspect
     end
-
-    puts "finally -- \n\n\n" + result[1]["service"].inspect
 
     # set the weight back to its original value
     self.attributes[:weight] = total_weight
@@ -211,9 +210,12 @@ class AustraliaPostApiConnection
         begin
         Thread.current["httparty_response"] = HTTParty.get("#{self.api_root}/#{method}",
                                                              :query => self.attributes,
-                                                             :timeout => 1, # sec
+                                                             :timeout => 10, # sec
                                                              :headers => { 'auth-key' => credentials['api-key']})
+        rescue Timeout::Error => e
+          self.api_errors.append("Sorry, we couldn't connect to Australia Post API. Try again in a moment.")
         rescue Exception => e
+          # anything else
           self.api_errors.append(e)
           puts "error: " + e.message
           puts "api connection will not be saved"
@@ -228,7 +230,14 @@ class AustraliaPostApiConnection
       if @service_list[0] == "error"
         self.api_errors.append(@service_list[1]['errorMessage'])
       end
+    rescue NoMethodError => e
+      puts "error: " + e.message
+      # we actually already reported this
+      # It refers to flatten above, and comes from
+      # the Timeout::Error rescued above
+      # So we'll not report it
     rescue Exception => e
+      # anything else
       self.api_errors.append(e)
       puts "error: " + e.message
       puts "api connection will not be saved"

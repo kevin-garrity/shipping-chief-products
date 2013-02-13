@@ -7,10 +7,14 @@
           %li= msg
 
   - flash.each do |key, msg|
-    %div{:id => key}
-      %p{:style => "float:right;"}= link_to_function 'X', "Effect.Fade('#{key}')"
+    - case key
+    - when :error
+      %div{:class => 'alert-box alert'}
+    - when :notice
+      %div{:class => 'alert-box'}
+    - else
       %p= msg
-      .clear
+      %a{:href => '#', :class => 'close'}&times;
 
   .row
     .six.columns
