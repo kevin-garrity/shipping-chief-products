@@ -10,7 +10,6 @@ class Preference < ActiveRecord::Base
   validates :origin_postal_code, :length => { :is => 4 }
   validates :origin_postal_code, :numericality  => { :only_integer => true }  
   validates :surchange_percentage, :numericality => {:greater_than_or_equal_to => 0 }
-  validates :items_per_box, :numericality =>  { :only_integer => true }  
   validates :default_weight, numericality: { greater_than: 0, less_than_or_equal_to: 20 }
   validates :default_charge, :numericality => true  
   
