@@ -5,8 +5,10 @@ class WebhooksController < ActionController::Base
   def uninstall_app
     
     data = ActiveSupport::JSON.decode(request.body.read)
-    shop_url = data[:myshopify_domain]
-    puts ("$$$$ shop url is " + shop_url)
+    puts ("$$$$ data is " + data.to_s)
+    
+    shop_url = data["domain"]
+    puts ("$$$$ shop url is " + shop_url) unless shop_url.nil?
     #look for shop record
     shop = Shop.find_by_url(shop_url)
     shop.destory unless shop.nil?
