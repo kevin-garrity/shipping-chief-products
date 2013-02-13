@@ -22,3 +22,4 @@
         = yield :sidebar
     %footer.row
       %p A Shopify app by <a target="_blank" href="http://webifytechnology.com">Webify Technology</a>
+      = Rails.env + " mode" if Rails.env != 'production'
