@@ -7,7 +7,7 @@ group :assets do
 end
 gem 'jquery-rails'
 gem "rails_apps_composer", :git => "git://github.com/lastobelus/rails_apps_composer.git", :branch => "devcloudcoder"
-gem "thin", ">= 1.5.0", :group => [:development, :test]
+gem "thin", ">= 1.5.0", :group => [:development, :production, :test]
 gem "haml", ">= 3.1.7"
 gem "haml-rails", ">= 0.3.5", :group => :development
 gem "hpricot", ">= 0.8.6", :group => :development
