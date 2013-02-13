@@ -1,0 +1,22 @@
+
+development:
+  adapter: postgresql
+  database: shipping_dev
+  username: richard
+  password:
+  host: localhost
+
+production:
+  adapter: postgresql
+  database: shipping_dev
+  username: richard
+  password: root
+  host: localhost
+
+staging:
+  adapter: postgresql
+  database: shipping_staging
+  username: richard
+  password: root
+  host: localhost
+  
