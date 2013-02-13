@@ -3,9 +3,14 @@ class WebhooksController < ActionController::Base
   before_filter :verify_webhook, :except => 'verify_webhook'
 
   def uninstall_app
-    data = ActiveSupport::JSON.decode(request.body.read)
-    puts ("$$$$ data is" + data.to_s)
     
+    data = ActiveSupport::JSON.decode(request.body.read)
+    shop_url = data[:myshopify_domain]
+    puts ("$$$$ shop url is " + shop_url)
+    #look for shop record
+    shop = Shop.find_by_url(shop_url)
+    shop.destory unless shop.nil?
+    puts ("$$$$ shop destroyed")
     head :ok
   end
   
@@ -15,7 +20,6 @@ class WebhooksController < ActionController::Base
     digest = OpenSSL::Digest::Digest.new('sha256')
     calculated_hmac = Base64.encode64(OpenSSL::HMAC.digest(digest, WorldShippingCalculator::Application.config.shopify.secret, data)).strip
     unless calculated_hmac == hmac_header
-      puts("+++unauthorized")
       head :unauthorized
     end
     request.body.rewind
