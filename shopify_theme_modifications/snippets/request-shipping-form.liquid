@@ -50,8 +50,16 @@
         {% endif %}
       {% endfor %}
       var datahash = { weight: total_weight / 1000, blanks: total_blanks };
-      update_loader_and_submit("GET", datahash, function(data) { inject_shipping_calculator(data); });
+      update_loader_and_submit("GET", datahash, function(data) { inject_shipping_calculator(data); }, function(data) {});
     });
+
+    use_flat_shipping = function(request, text_status, error_thrown ) {
+      console.log("hey hey")
+      // In here we will remove the ban on checking out, and add a shipping item with 
+      // the flat rate from store metafields
+
+      var flat_rate = {{ shop.metafields.shipping_calculator.flat_rate }}
+    }
   });
 
 </script>

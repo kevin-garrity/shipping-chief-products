@@ -8,7 +8,7 @@ var xhr; // global request object for the calculation request
 // When we submit the form we should disable the submit button
 // but when we change the country select, it should abort the current
 // request and resubmit
-update_loader_and_submit = function(method, dataHash, callback) {
+update_loader_and_submit = function(method, dataHash, callback, fallback) {
   // Got the loader from http://www.ajaxload.info/
   $(".actions > input").attr('disabled', 'disabled');
   $("#indicator").html("<img src='{{ 'ajax-loader.gif' | asset_url }}' alt='' />").show();
@@ -33,15 +33,19 @@ update_loader_and_submit = function(method, dataHash, callback) {
       callback(data);
     },
     error: function(request, text_status, error_thrown) {
-      // TODO big problems here, status is always 0...
-      // not sure how to get a CORS request to return non-zero status
-      switch(request.state()) {
-        case 'rejected':
-          console.log(request.state())
-          break;
-        default:
-          console.log(request.state())
-      };
+      if ((typeof fallback) === 'function') {
+        fallback(request, text_status, error_thrown);
+      } else {
+        // TODO big problems here, status is always 0...
+        // not sure how to get a CORS request to return non-zero status
+        switch(request.state()) {
+          case 'rejected':
+            console.log(request.state())
+            break;
+          default:
+            console.log(request.state())
+        };
+      }
     }
   }).fail(function() { })
   .always(function() { })
