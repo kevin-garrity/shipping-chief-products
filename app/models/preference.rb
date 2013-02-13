@@ -37,7 +37,10 @@ class Preference < ActiveRecord::Base
       :US_PARCEL_PLATINUM_SATCHEL_500G => "Express Post Platinum 500g Satchel",
       :AUS_PARCEL_REGULAR_SATCHEL_3KG => "Prepaid Parcel Post Plus 3kg Satchel",
       :AUS_PARCEL_EXPRESS_SATCHEL_3KG => "Express Post 3kg Satchel",
-      :US_PARCEL_PLATINUM_SATCHEL_3KG => "Express Post Platinum 3kg Satchel"
+      :US_PARCEL_PLATINUM_SATCHEL_3KG => "Express Post Platinum 3kg Satchel",
+      :AUS_PARCEL_REGULAR_SATCHEL_5KG => "Prepaid Parcel Post Plus 5kg Satchel",
+      :AUS_PARCEL_EXPRESS_SATCHEL_5KG => "Express Post 5kg Satchel",
+      :US_PARCEL_PLATINUM_SATCHEL_5KG => "Express Post Platinum 5kg Satchel"
     }
   end
 
