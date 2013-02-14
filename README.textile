@@ -17,11 +17,17 @@ Add the following to templates/cart.liquid
 
 Add the following to checkout.css.liquid:
 
-bc. /* Webify Changes 
+bc. /* Webify Changes
  * */
 #overview #thumbs h3[title^="Shipping"] + span {
   display: none;
 }
+
+Wherever you find @{{ cart.item_count }}@ in your @theme.liquid
+
+@{{ include 'shipping-items-hidden-price' }}@
+
+This is so that the number of items displayed in the cart will not reflect the secret hidden shipping line items we use internally.
 
 In order to integrate smoothly with your store, WSC imagines that you have adopted certain conventions. This is so that WSC can interact with your store's cart, adding shipping price line items, and manipulating the various inputs.
 
