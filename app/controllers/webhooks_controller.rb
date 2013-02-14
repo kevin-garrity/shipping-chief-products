@@ -8,13 +8,12 @@ class WebhooksController < ActionController::Base
     puts ("$$$$ data is " + data.to_s)
     
     shop_url = data["domain"]
-    puts ("$$$$ shop url is " + shop_url) unless shop_url.nil?
     #look for shop record
-    shop = Shop.find_by_url(shop_url)
-    puts ("$$$$ shop being destroy")
-    
+    shop = Shop.find_by_url(shop_url)    
     begin
-      shop.destory unless shop.nil?
+      charge = ShopifyAPI::RecurringApplicationCharge.find(:all).first
+      charge.cancel unless charge.nil?
+      shop.destroy unless shop.nil?
     rescue Exception=>e
       puts ("$$$$ exception destroying" + e.to_s)
     end
