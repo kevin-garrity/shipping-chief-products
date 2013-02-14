@@ -58,7 +58,9 @@
       // In here we will remove the ban on checking out, and add a shipping item with 
       // the flat rate from store metafields
 
+      {% if shop.metafields.shipping-calculator.flat_rate %}
       var flat_rate = {{ shop.metafields.shipping_calculator.flat_rate }}
+      {% endif %}
     }
   });
 

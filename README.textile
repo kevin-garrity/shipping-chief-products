@@ -10,6 +10,7 @@ Copy the following files into the shop:
 * assets/ajaxify-shop.js
 * assets/api.jquery.js
 * assets/xdr.js.liquid
+* assets/ajax-loader.gif
 * snippets/add-to-cart.liquid
 * snippets/request-shipping-form.liquid
 * snippets/shipping-items-hidden-price.liquid
@@ -26,13 +27,23 @@ bc. /* Webify Changes
   display: none;
 }
 
-Wherever you find @{{ cart.item_count }}@ in your @theme.liquid
+Add the following to the bottom of assets/style.css.liquid.
+
+bc. form#world-shipping-cartform {
+  display: none;
+}
+
+Wherever you find @{{ cart.item_count }}@ in the layout/theme.liquid file, replace it with:
 
 @{{ include 'shipping-items-hidden-price' }}@
 
 This is so that the number of items displayed in the cart will not reflect the secret hidden shipping line items we use internally.
 
-In order to integrate smoothly with your store, WSC imagines that you have adopted certain conventions. This is so that WSC can interact with your store's cart, adding shipping price line items, and manipulating the various inputs.
+Finally, in your store admin panel add a custom collection called 'shipping' with exactly 1 product, also called 'shipping'. Both of these names are case sensitive. The shipping product must have price $0.01. This is what is used by World Shipping Calculator to add the estimated cost of shipping to the shopper's cart. You must also give the shipping product a product-type, but that can be whatever you like (we don't use it).
+
+Move to FAQ
+
+In order to integrate smoothly with your store, World Shipping Calculator imagines that you have adopted certain conventions. This is so that World Shipping Calculator can interact with your store's cart, adding shipping price line items, and manipulating the various inputs.
 
 * The Cart is a table
 ** The first @tr@ is the table header row
