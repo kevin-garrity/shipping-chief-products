@@ -11,9 +11,10 @@ class WebhooksController < ActionController::Base
     #look for shop record
     shop = Shop.find_by_url(shop_url)    
     begin
-      charge = ShopifyAPI::RecurringApplicationCharge.find(:all).first
-      unless charge.nil?
-        charge.cancel unless charge.cancelled
+      charge = ShopifyAPI::RecurringApplicationCharge.find(:all).each do |ch|      
+        ch.cancel unless ch.cancelled
+        puts ("$$$$ cancelled charge")
+        
       end
       shop.destroy unless shop.nil?
     rescue Exception=>e
