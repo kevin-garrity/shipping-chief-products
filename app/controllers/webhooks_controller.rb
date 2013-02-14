@@ -15,8 +15,7 @@ class WebhooksController < ActionController::Base
       
       ch = ShopifyAPI::RecurringApplicationCharge.current
       puts ("$$$$ charge found " + ch.id)
-       
-      #ch.cancel unless ch.cancelled
+      ch.cancel
       puts ("$$$$ cancelled charge")
       
       #shop.destroy unless shop.nil?
