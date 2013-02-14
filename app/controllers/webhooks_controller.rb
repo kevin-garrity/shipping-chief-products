@@ -13,7 +13,11 @@ class WebhooksController < ActionController::Base
     shop = Shop.find_by_url(shop_url)
     puts ("$$$$ shop being destroy")
     
-    shop.destory unless shop.nil?
+    begin
+      shop.destory unless shop.nil?
+    rescue Exception=>e
+      puts ("$$$$ exception destroying" + e.to_s)
+    end
     puts ("$$$$ shop destroyed")
     head :ok
   end
