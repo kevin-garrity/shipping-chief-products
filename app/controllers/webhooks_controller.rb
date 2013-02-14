@@ -13,7 +13,7 @@ class WebhooksController < ActionController::Base
     begin
       puts ("$$$$ about to find charge " + shop.charge_id)
       
-      ch = ShopifyAPI::RecurringApplicationCharge.find(shop.charge_id)     
+      ch = ShopifyAPI::RecurringApplicationCharge.current
       puts ("$$$$ charge found " + ch.id)
        
       ch.cancel unless ch.cancelled
