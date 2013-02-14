@@ -22,6 +22,7 @@ class HomeController < ApplicationController
     shop = Shop.find_by_url(url)
     shop.active_subscriber = true
     shop.signup_date = DateTime.now
+    shop.charge_id = params[:charge_id]
     shop.save()
     
 
