@@ -1,5 +1,41 @@
 h1. World Shipping Calculator
 
+h2. Installation
+
+Copy the following files into the shop:
+* assets/inject_shipping_calculator.js.liquid
+* assets/update_loader_and_submit.js.liquid
+* assets/ajaxify-shop.js
+* assets/api.jquery.js
+* assets/xdr.js.liquid
+* snippets/add-to-cart.liquid
+* snippets/request-shipping-form.liquid
+
+Add the following to templates/cart.liquid
+
+@{% include 'request-shipping-form' %}@
+
+Add the following to checkout.css.liquid:
+
+bc. /* Webify Changes 
+ * */
+#overview #thumbs h3[title^="Shipping"] + span {
+  display: none;
+}
+
+In order to integrate smoothly with your store, WSC imagines that you have adopted certain conventions. This is so that WSC can interact with your store's cart, adding shipping price line items, and manipulating the various inputs.
+
+* The Cart is a table
+** The first @tr@ is the table header row
+** The elements of the table header row are @th@ elements naming the columns
+** In each subsequent table row, there is one table data corresponding to each header
+** There are at least the following headers: item, quantity, total, price
+* The Cart contains a form, with a submit input
+** The @name@ attribute of the input used to proceed to checkout should be 'checkout'
+* There is a @shipping@ collection
+** The collection has just one product, the @shipping@ product
+** The shipping product has price $0.01
+
 This application was generated with the "rails_apps_composer":https://github.com/RailsApps/rails_apps_composer gem provided by the "RailsApps Project":http://railsapps.github.com/.
 
 h2. Diagnostics
