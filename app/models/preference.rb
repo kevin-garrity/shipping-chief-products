@@ -12,7 +12,7 @@ class Preference < ActiveRecord::Base
   validates :origin_postal_code, :length => { :is => 4 }
   validates :origin_postal_code, :numericality  => { :only_integer => true }
   validates :surchange_percentage, :numericality => {:greater_than_or_equal_to => 0 }
-  validates :items_per_box, :numericality =>  { :only_integer => true }
+
   validates :default_weight, numericality: { greater_than: 0, less_than_or_equal_to: 20 }
   validates :default_charge, :numericality => true
 
@@ -37,20 +37,19 @@ class Preference < ActiveRecord::Base
       :US_PARCEL_PLATINUM_SATCHEL_500G => "Express Post Platinum 500g Satchel",
       :AUS_PARCEL_REGULAR_SATCHEL_3KG => "Prepaid Parcel Post Plus 3kg Satchel",
       :AUS_PARCEL_EXPRESS_SATCHEL_3KG => "Express Post 3kg Satchel",
-      :US_PARCEL_PLATINUM_SATCHEL_3KG => "Express Post Platinum 3kg Satchel"
+      :US_PARCEL_PLATINUM_SATCHEL_3KG => "Express Post Platinum 3kg Satchel",
+      :AUS_PARCEL_REGULAR_SATCHEL_5KG => "Prepaid Parcel Post Plus 5kg Satchel",
+      :AUS_PARCEL_EXPRESS_SATCHEL_5KG => "Express Post 5kg Satchel",
+      :US_PARCEL_PLATINUM_SATCHEL_5KG => "Express Post Platinum 5kg Satchel"
     }
   end
 
   def self.method_missing(name, *args, &block)
-    puts "method_missing"
     results = super(name, *args, &block)
-
-    if name =~ /find_by_shop_url/i && results.nil?
+    if name.to_s != "find_by_shop_url" && results.nil?
       # if the results are completely empty, we can't proceed
       raise UnknownShopError.new("Shipping Calculator has not been configured.")
-      puts "Prefs were nil"
     else
-      puts "Prefs!"
     end
 
     return results

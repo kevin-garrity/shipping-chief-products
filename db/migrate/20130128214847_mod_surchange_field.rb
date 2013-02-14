@@ -1,6 +1,7 @@
 class ModSurchangeField < ActiveRecord::Migration
   def up
-    change_column :preference, :surchange_percentage, :float 
+    remove_column :preference, :surchange_percentage
+    add_column :preference, :surchange_percentage, :float 
   end
 
   def down

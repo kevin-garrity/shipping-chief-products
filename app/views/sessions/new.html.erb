@@ -1,12 +1,25 @@
 <div class="page-header" id="login-header">
-  <h1>Install Australia Post Calculator</h1>
-  <h1><small>You need to log into your store before using this application.</small></h1>
+
+  <h1><small>You need to log into your Shopify store before using this application.</small></h1>
 </div>
 
 <div style="width:100%; margin:0 auto;">
   <%= form_tag login_path, :class => 'form-search' do %>
-    <%= text_field_tag 'shop', nil, :placeholder => 'Shop URL', :class => 'btn-large', :id=>"shop-url-text" %>
-    <%= submit_tag 'Install', :class => 'btn btn-primary btn-large' %>
+    <%= label_tag 'Enter your store address (mystore.com):'%><br clear="all"/>
+    <span class="prefix" style="display:inline;">http://</span>
+    <%= text_field_tag 'shop', nil,:class => 'btn-large', :id=>"shop-url-text" %>
+    <%= submit_tag 'Install', :class => 'button' %>
   <% end %>
 </div>
 
+
+<div style="margin-top:50px;margin-bottom:20px">
+  <h2>What does this application do?</h2>
+  <div class='ten columns'>
+    <p>The application would allow you to integrate Australian Post with your Shopify store. It will present a list of shipping options and the corresponding shipping cost at your Shopify cart page in real time. Once customers select a shipping method, the shipping cost is added to the cart and customers can complete their purchases. 
+    </p>
+    <p>
+      For more information, visit <a target="_blank" href="http://support.webifytechnology.com/customer/portal/topics/449112-australia-post-shipping-for-shopify/articles">support.webifytechnology.com</a>
+    </p>
+  </div>
+</div>

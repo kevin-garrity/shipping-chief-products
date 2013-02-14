@@ -9,8 +9,7 @@ class HomeController < ApplicationController
   end
   
   def index
-    #check if user has paid or not
-    redirect_to preferences_path()
+    redirect_to edit_preferences_path()
   end
 
   def confirm_charge

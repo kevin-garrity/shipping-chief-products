@@ -7,7 +7,7 @@ group :assets do
 end
 gem 'jquery-rails'
 gem "rails_apps_composer", :git => "git://github.com/lastobelus/rails_apps_composer.git", :branch => "devcloudcoder"
-gem "thin", ">= 1.5.0", :group => [:development, :test]
+gem "thin", ">= 1.5.0", :group => [:development, :production, :test]
 gem "haml", ">= 3.1.7"
 gem "haml-rails", ">= 0.3.5", :group => :development
 gem "hpricot", ">= 0.8.6", :group => :development
@@ -26,9 +26,9 @@ gem "css_canon", :git => "git://github.com/lastobelus/css_canon", :group => :dev
 gem "shopify_app"
 gem "heroku"
 gem "nokogiri"
+gem "log4r"
 gem "kaminari"
-gem "rvm"
-gem "mysql2"
+gem "pg"
 gem "config_spartan"
 gem "quiet_assets", ">= 1.0.1", :group => :development
 gem 'pry-rails', :group => :development
@@ -37,4 +37,4 @@ gem 'pry-rails', :group => :development
 gem "activerecord-postgresql-adapter"
 gem "httparty"
 gem "rack-cors", :require => 'rack/cors'
-gem 'shopifydev', :git => "git://github.com/variousauthors/shopifydev.git", :branch => "GLI_commandline_suite"
+#gem 'shopifydev', :git => "git://github.com/variousauthors/shopifydev.git", :branch => "GLI_commandline_suite"
