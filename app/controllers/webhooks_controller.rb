@@ -11,6 +11,8 @@ class WebhooksController < ActionController::Base
     puts ("$$$$ shop url is " + shop_url) unless shop_url.nil?
     #look for shop record
     shop = Shop.find_by_url(shop_url)
+    puts ("$$$$ shop being destroy")
+    
     shop.destory unless shop.nil?
     puts ("$$$$ shop destroyed")
     head :ok
