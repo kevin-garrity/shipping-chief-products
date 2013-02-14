@@ -1,0 +1,14 @@
+{% comment %}
+Count the number of items in the cart, but don't include any shipping items.
+This is done to avoid having numbers like 24601 appear in the cart instead of
+1.  {% endcomment %}
+
+{% assign sum = 0 %}
+{% for item in cart.items %}
+  {% if item.title contains 'shipping' %}
+
+  {% else %}
+    {% assign sum = sum | plus: item.quantity %}
+  {% endif %}
+{% endfor %}
+{{ sum }}
