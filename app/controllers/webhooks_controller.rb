@@ -12,10 +12,12 @@ class WebhooksController < ActionController::Base
     shop = Shop.find_by_url(shop_url)    
     begin
       charge = ShopifyAPI::RecurringApplicationCharge.find(:all).first
-      charge.cancel unless charge.nil?
+      unless charge.nil?
+        charge.cancel unless charge.cancelled
+      end
       shop.destroy unless shop.nil?
     rescue Exception=>e
-      puts ("$$$$ exception destroying" + e.to_s)
+      puts ("$$$$ exception destroying"  + e.to_s)
     end
     puts ("$$$$ shop destroyed")
     head :ok
