@@ -2,6 +2,8 @@ h1. World Shipping Calculator
 
 h2. Installation
 
+Remember to back up your theme before you start installing this app.
+
 Copy the following files into the shop:
 * assets/inject_shipping_calculator.js.liquid
 * assets/update_loader_and_submit.js.liquid
@@ -10,12 +12,13 @@ Copy the following files into the shop:
 * assets/xdr.js.liquid
 * snippets/add-to-cart.liquid
 * snippets/request-shipping-form.liquid
+* snippets/shipping-items-hidden-price.liquid
 
-Add the following to templates/cart.liquid
+Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for @<\form>@, the HTML that closes the form element.
 
 @{% include 'request-shipping-form' %}@
 
-Add the following to checkout.css.liquid:
+Add the following to the bottom of assets/checkout.css.liquid. If you don't have a checkout.css.liquid file in your shop already, you should create it.
 
 bc. /* Webify Changes
  * */
