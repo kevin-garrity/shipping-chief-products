@@ -4,6 +4,8 @@ h2. Installation
 
 Remember to back up your theme before you start installing this app.
 
+Create a custom collection in your store called shipping, create a product in the new collection called Shipping with the price of 0.01.
+
 Copy the following files into the shop:
 * assets/inject_shipping_calculator.js.liquid
 * assets/update_loader_and_submit.js.liquid
@@ -27,11 +29,16 @@ bc. /* Webify Changes
   display: none;
 }
 
+#payment {
+    display: none;
+}
+
 Add the following to the bottom of assets/style.css.liquid.
 
 bc. form#world-shipping-cartform {
   display: none;
 }
+
 
 Wherever you find @{{ cart.item_count }}@ in the layout/theme.liquid file, replace it with:
 
