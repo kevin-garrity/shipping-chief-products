@@ -20,7 +20,13 @@ Copy the following files into the shop:
 
 include 
 
-bc. <script type="text/javascript" charset="utf-8">
+bc. // Including api.jquery.js conditionnally.
+if (typeof Shopify.updateCartFromForm === 'undefined') {
+  {{ 'api.jquery.js' | asset_url | script_tag }}
+}
+
+
+<script type="text/javascript" charset="utf-8">
   //<![CDATA[
 
   // Including api.jquery.js conditionnally.
