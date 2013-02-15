@@ -17,6 +17,23 @@ Copy the following files into the shop:
 * snippets/request-shipping-form.liquid
 * snippets/shipping-items-hidden-price.liquid
 
+
+include 
+
+bc. <script type="text/javascript" charset="utf-8">
+  //<![CDATA[
+
+  // Including api.jquery.js conditionnally.
+  if (typeof Shopify.onCartShippingRatesUpdate === 'undefined') {
+    document.write("\u003Cscript src=\"http://cdn.shopify.com/s/shopify/api.jquery.js?b73f7b40d509c5be8587023dca6c0a465a27f493\" type=\"text/javascript\"\u003E\u003C/script\u003E");
+  }
+
+  //]]>
+  </script> 
+  
+  in theme.liquid
+  
+
 Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for @<\form>@, the HTML that closes the form element.
 
 @{% include 'request-shipping-form' %}@
