@@ -1,6 +1,6 @@
 
 inject_shipping_calculator = function(data) {
-  $('#shipping-calculator').html(data);
+  $('#webify-shipping-calculator').html(data);
   $('#new_australia_post_api_connection').attr("action", host + action);
   $('.error').hide();
 
@@ -71,37 +71,39 @@ remove_and_add_again_shipping_line_item = function() {
   // remove the existing line item
   // TODO WHY IS IT ADDING TWICE?
   remove_shipping_item(function() {
-    console.log("  spaghetti add")
+    console.log("  spaghetti add");
     // once the item is removed spaghetti add the line item back in!
     // we do this to change the line item property
     $('input#quantity').attr('value', shipping_quantity);
     $('input#shipping-type').val(shipping_type);
-    $('form#shipping-form input#shipping').click(); // add the logical shipping item
+    $('form#world-shipping-cartform input#shipping').click(); // add the logical shipping item
   });
 
   // TODO document this
   // we assume that the first table row on a cart page is the headers
-  var table_header = $('tr').first()
+  var table_header = $('tr').first();
 
   // we iterate over the table headers
   var headers = {};
   table_header.children('th').each(function(index) {
-    var header = $(this).text()
+    var header = $(this).text();
     headers[header.toLowerCase()] = index;
   });
 
-  var line_item_template = $('tr.item').first().clone()
-  var table_data = line_item_template.children()
+  var line_item_template = $('tr.item').first().clone();
+  var table_data = line_item_template.children();
 
-  table_data.eq(headers['item']).html('Shipping: ' + $(this).siblings('label').text())
-  table_data.eq(headers['quantity']).html("")
-  table_data.eq(headers['total']).html(price_string)
-  table_data.eq(headers['price']).html(price_string)
+  table_data.eq(headers['item']).html('Shipping: ' + $(this).siblings('label').text());
+  table_data.eq(headers['quantity']).html("");
+  table_data.eq(headers['total']).html(price_string);
+  table_data.eq(headers['price']).html(price_string);
 
   line_item_template.attr('class', 'item shipping');
-  line_item_template.find('img').remove()
-
-  $('.items tbody').append(line_item_template)
+  line_item_template.find('img').remove();
+  line_item_template.find('a').remove();
+  line_item_template.find('input[type=submit]').remove();
+ 
+   $('tr.item').last().insertAfter(line_item_template);
 }
 
 
