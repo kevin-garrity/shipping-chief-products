@@ -29,7 +29,7 @@ bc. /* Webify Changes
   display: none;
 }
 
-#payment {
+bc. #payment {
     display: none;
 }
 
