@@ -10,9 +10,9 @@
 
 {% include "add-to-cart" %}
 
-<div id="shipping-calculator-info"><p></p></div>
-<div id="indicator"></div>
-<div id="shipping-calculator"></div>
+<div id="webify-shipping-calculator-info"><p></p></div>
+<div id="indicator" style="clear:both"></div>
+<div id="webify-shipping-calculator" style="clear:both"></div>
 <div id="results"></div>
 
 <!-- calculate the weight and grab us a calculator! -->
@@ -23,7 +23,7 @@
       if ($('.item.shipping').length == 0) {
         // there no Shipping items in the cart
         e.preventDefault();
-        $('#shipping-calculator-info p').text("Please select a destination for shipping.")
+        $('#webify-shipping-calculator-info p').text("Please select a destination for shipping.")
       }
     } else {
       //do something else
