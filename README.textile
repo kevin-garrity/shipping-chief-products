@@ -9,8 +9,8 @@ Create a custom collection in your store called shipping, create a product in th
 Copy the following files into the shop:
 * assets/inject_shipping_calculator.js.liquid
 * assets/update_loader_and_submit.js.liquid
-* assets/ajaxify-shop.js
-* assets/api.jquery.js
+* assets/webify.ajaxify-shop.js
+* assets/webify.api.jquery.js
 * assets/xdr.js.liquid
 * assets/ajax-loader.gif
 * snippets/add-to-cart.liquid
@@ -18,27 +18,13 @@ Copy the following files into the shop:
 * snippets/shipping-items-hidden-price.liquid
 
 
-include 
+include this in theme.liquid
 
 bc. // Including api.jquery.js conditionnally.
 if (typeof Shopify.updateCartFromForm === 'undefined') {
   {{ 'api.jquery.js' | asset_url | script_tag }}
 }
 
-
-<script type="text/javascript" charset="utf-8">
-  //<![CDATA[
-
-  // Including api.jquery.js conditionnally.
-  if (typeof Shopify.onCartShippingRatesUpdate === 'undefined') {
-    document.write("\u003Cscript src=\"http://cdn.shopify.com/s/shopify/api.jquery.js?b73f7b40d509c5be8587023dca6c0a465a27f493\" type=\"text/javascript\"\u003E\u003C/script\u003E");
-  }
-
-  //]]>
-  </script> 
-  
-  in theme.liquid
-  
 
 Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for @<\form>@, the HTML that closes the form element.
 
@@ -65,7 +51,7 @@ bc. form#world-shipping-cartform {
 
 Wherever you find @{{ cart.item_count }}@ in the layout/theme.liquid file, replace it with:
 
-@{{ include 'shipping-items-hidden-price' }}@
+@{% include 'shipping-items-hidden-price' %}@
 
 This is so that the number of items displayed in the cart will not reflect the secret hidden shipping line items we use internally.
 
