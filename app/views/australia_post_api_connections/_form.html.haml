@@ -17,18 +17,18 @@
       %a{:href => '#', :class => 'close'}&times;
 
   .row
-    .six.columns
+    %div
       .field#country-select
         = f.label :country_code, "Select country of shipping destination"
-        = f.select :country_code, @countries, selected: "Australia"
+        = f.select :country_code, @countries,  {:selected => "Australia"}, {:style=>"padding-top:5px;height:30px"}
       %br
       .field#postcode
-        = f.label :"Please enter a postcode for shipping to", { :class => "error" }
-        = f.label :to_postcode, "Enter your Australia Post Code", :style=>"margin-left:40px;"
+        = f.label :"Please enter a postcode", { :class => "error" }
+        = f.label :to_postcode, "Enter your Australia Postcode", :style=>"margin-left:40px;"
         = f.number_field :to_postcode
       %br  
       .actions
-        = f.submit 'Calculate'
+        = f.submit 'Calculate', :style=>"margin-left:230px;"
 
       / this is the container for the ajax results
       #shipping-prices
