@@ -3,14 +3,16 @@
 {{ 'xdr.js' | asset_url | script_tag }}
 
 <!-- These are our api overrides -->
-{{ 'ajaxify-shop.js' | asset_url | script_tag }}
+{{ 'webify.ajaxify-shop.js' | asset_url | script_tag }}
+
+{{ 'webify.api.jquery.js' | asset_url | script_tag }}
 
 <!-- This is foe debugging in IE during development -->
 {{ 'consolelog.js' | asset_url | script_tag }}
 
 {% include "add-to-cart" %}
 
-<div id="webify-shipping-calculator-info"><p></p></div>
+<div id="webify-shipping-calculator-info" style="font-size:15px;font-weight:bold;"><p></p></div>
 <div id="indicator" style="clear:both"></div>
 <div id="webify-shipping-calculator" style="clear:both"></div>
 <div id="results"></div>
@@ -23,7 +25,7 @@
       if ($('.item.shipping').length == 0) {
         // there no Shipping items in the cart
         e.preventDefault();
-        $('#webify-shipping-calculator-info p').text("Please select a destination for shipping.")
+        $('#webify-shipping-calculator-info p').text("Please select a destination for shipping rate calculation.")
       }
     } else {
       //do something else

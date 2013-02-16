@@ -46,25 +46,6 @@ $('message').update('Added '+line_item.title + '...');
 }
 */
 
-Shopify.onError = function(XMLHttpRequest, textStatus) {
-  // Shopify returns a description of the error in XMLHttpRequest.responseText.
-  // It is JSON.
-  // Example: {"description":"The product 'Amelia - Small' is already sold out.","status":500,"message":"Cart Error"}
-  var data = eval('(' + XMLHttpRequest.responseText + ')');
-  alert(data.message + '(' + data.status + '): ' + data.description);
-};
-
-Shopify.onCartUpdate = function(cart) {
-  alert('There are now ' + cart.item_count + ' items in the cart.');
-};
-
-Shopify.onItemAdded = function(line_item) {
-  alert(line_item.title + ' was added to your shopping cart.');
-};
-
-Shopify.onProduct = function(product) {
-  alert('Received everything we ever wanted to know about ' + product.title);
-};
 
 /* Tools */
 
