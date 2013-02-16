@@ -4,19 +4,15 @@ You should be able to add any valid input fields to it
 -->
 
 <div id="webify-shipping-calculator-info" style="font-size:15px;font-weight:bold;"></div>
-
-  {% for product in collections['shipping'].products %}
 <form method="post" action="/cart/add" name="cartform" id="world-shipping-cartform">
     <!-- We can leave this in, since the select comes later,
     so it will override if user picks something different. -->
-    {% for variant in product.variants limit:1 %}
-      <input type="hidden" name="id" value="{{ variant.id }}" />
+      <input type="hidden" name="id" value="{{ shop.metafields.AusPostShipping.product_id }}" />
       <input type="hidden" id="quantity" name="quantity" value="0" />
       <div>
         <p><label for="shipping-type">Shipping Type</label></p>
         <p><input type="text" id="shipping-type" name="properties[shipping-type]" /></p>
       </div>
-    {% endfor %}
 
     <!-- If you don't want the variants dropdown, just comment this out. -->
     {% if product.variants.size > 1 %}
@@ -52,4 +48,3 @@ You should be able to add any valid input fields to it
     </div>
     <!-- END BUY -->
 </form>
-  {% endfor %}
