@@ -6,29 +6,20 @@ Remember to back up your theme before you start installing this app.
 
 Create a custom collection in your store called shipping, create a product in the new collection called Shipping with the price of 0.01.
 
-Copy the following files into the shop:
-* assets/inject_shipping_calculator.js.liquid
-* assets/update_loader_and_submit.js.liquid
+The following files are copied into the theme autmatically.
+* assets/webify_inject_shipping_calculator.js.liquid
+* assets/webify_update_loader_and_submit.js.liquid
 * assets/webify.ajaxify-shop.js
 * assets/webify.api.jquery.js
-* assets/xdr.js.liquid
-* assets/ajax-loader.gif
-* snippets/add-to-cart.liquid
-* snippets/request-shipping-form.liquid
-* snippets/shipping-items-hidden-price.liquid
-
-
-include this in theme.liquid
-
-bc. // Including api.jquery.js conditionnally.
-if (typeof Shopify.updateCartFromForm === 'undefined') {
-  {{ 'api.jquery.js' | asset_url | script_tag }}
-}
-
+* assets/webify.xdr.js.liquid
+* assets/webify-ajax-loader.gif
+* snippets/webify-add-to-cart.liquid
+* snippets/webify-request-shipping-form.liquid
+* snippets/webify-shipping-items-hidden-price.liquid
 
 Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for @<\form>@, the HTML that closes the form element.
 
-@{% include 'request-shipping-form' %}@
+@{% include 'webify-request-shipping-form' %}@
 
 Add the following to the bottom of assets/checkout.css.liquid. If you don't have a checkout.css.liquid file in your shop already, you should create it.
 
@@ -51,7 +42,7 @@ bc. form#world-shipping-cartform {
 
 Wherever you find @{{ cart.item_count }}@ in the layout/theme.liquid file, replace it with:
 
-@{% include 'shipping-items-hidden-price' %}@
+@{% include 'webify-shipping-items-hidden-price' %}@
 
 This is so that the number of items displayed in the cart will not reflect the secret hidden shipping line items we use internally.
 
