@@ -11,7 +11,7 @@ var xhr; // global request object for the calculation request
 update_loader_and_submit = function(method, dataHash, callback, fallback) {
   // Got the loader from http://www.ajaxload.info/
   $(".actions > input").attr('disabled', 'disabled');
-  $("#indicator").html("<img src='{{ 'ajax-loader.gif' | asset_url }}' alt='' />").show();
+  $("#indicator").html("<img src='{{ 'webify-ajax-loader.gif' | asset_url }}' alt='' />").show();
 
   if (xhr && xhr.readyState != 4) {
     xhr.abort();

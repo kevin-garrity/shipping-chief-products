@@ -4,7 +4,7 @@ class PreferencesController < ApplicationController
   
   def show
     check_shipping_product_exists
-    
+    check_shopify_files_present
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
     @preference = Preference.new if @preference.nil?
     
@@ -17,6 +17,8 @@ class PreferencesController < ApplicationController
   # GET /preference/edit
   def edit
     check_shipping_product_exists
+    check_shopify_files_present
+    
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
     @preference = Preference.new if @preference.nil?
     
@@ -49,6 +51,53 @@ class PreferencesController < ApplicationController
   end
 
 private 
+  
+  def check_shopify_files_present    
+    url = session[:shopify].url
+    shop = Shop.find_by_url(url)
+   # return if (shop.theme_modified)
+    themes = ShopifyAPI::Theme.find(:all)
+    
+    t = themes.find { |t| t.role == 'main' }
+    asset_files = [
+      "assets/webify.consolelog.js",
+      "assets/webify_inject_shipping_calculator.js.liquid",
+      "assets/webify.ajaxify-shop.js",
+      "assets/webify.api.jquery.js",
+      "assets/webify.xdr.js.liquid",
+      "assets/webify_update_loader_and_submit.js.liquid",
+      "assets/webify-ajax-loader.gif",
+      "snippets/webify-request-shipping-form.liquid",
+      "snippets/webify-add-to-cart.liquid",   
+      "snippets/webify-shipping-items-hidden-price.liquid"
+      ]
+    asset_files.each do |asset_file|  
+      begin        
+        asset = ShopifyAPI::Asset.find(asset_file, :params => { :theme_id => t.id})
+      rescue ActiveResource::ResourceNotFound 
+        #add asset
+        data = File.read(Dir.pwd + "/shopify_theme_modifications/" + asset_file)
+        if (asset_file.include?(".gif"))
+          data = Base64.encode64(data)          
+          f = ShopifyAPI::Asset.new(
+            :key =>asset_file,
+            :attachment => data
+          )
+          f.save!          
+        else
+          f = ShopifyAPI::Asset.new(
+            :key =>asset_file,
+            :value => data
+          )
+          f.save!
+        end
+      end
+    end
+    shop.theme_modified = true
+    shop.save!
+    
+  end
+  
   def check_shipping_product_exists
     fields = "id,title, handle"
     search_params = {:fields=>fields, :limit => 1, :page=>1}      
@@ -74,10 +123,13 @@ private
     #save product id in shop metafield for liquid template to consume
     shop = session[:shopify].shop
 
+    
     if (@vars.length > 0)
       fields = shop.metafields
       field = fields.find { |f| f.key == 'product_id' && f.namespace ='AusPostShipping'}
       
+      puts("xxxxx field value is" + field.value.to_s )
+      puts("xxxxx .id.to_s" + @vars[0].id.to_s )
       if field.nil?      
         field = ShopifyAPI::Metafield.new({:namespace =>'AusPostShipping',:key=>'product_id', :value=>@vars[0].id, :value_type=>'string' })
         field.save

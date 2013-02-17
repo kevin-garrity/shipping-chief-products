@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130214003309) do
+ActiveRecord::Schema.define(:version => 20130217064053) do
 
   create_table "preference", :force => true do |t|
     t.string  "shop_url"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(:version => 20130214003309) do
     t.datetime "updated_at",        :null => false
     t.string   "charge_id"
     t.string   "status"
+    t.boolean  "theme_modified"
   end
 
 end

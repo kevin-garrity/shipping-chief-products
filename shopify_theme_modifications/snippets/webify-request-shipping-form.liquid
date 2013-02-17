@@ -1,0 +1,69 @@
+{{ 'webify_update_loader_and_submit.js' | asset_url | script_tag }}
+{{ 'webify_inject_shipping_calculator.js' | asset_url | script_tag }}
+{{ 'webify.xdr.js' | asset_url | script_tag }}
+
+<!-- These are our api overrides -->
+{{ 'webify.ajaxify-shop.js' | asset_url | script_tag }}
+
+{{ 'webify.api.jquery.js' | asset_url | script_tag }}
+
+<!-- This is foe debugging in IE during development -->
+{{ 'webify.consolelog.js' | asset_url | script_tag }}
+
+{% include "add-to-cart" %}
+
+<div id="webify-shipping-calculator-info" style="font-size:15px;font-weight:bold;"><p></p></div>
+<div id="indicator" style="clear:both"></div>
+<div id="webify-shipping-calculator" style="clear:both"></div>
+<div id="results"></div>
+
+<!-- calculate the weight and grab us a calculator! -->
+<script>
+
+  $("#cartform").find('input[type=submit]').on('click', function (e) {
+    if ($(e.target).attr('name') == 'checkout') {
+      if ($('.item.shipping').length == 0) {
+        // there no Shipping items in the cart
+        e.preventDefault();
+        $('#webify-shipping-calculator-info p').text("Please select a destination for shipping rate calculation.")
+      }
+    } else {
+      //do something else
+    }
+  });
+
+
+  $(document).ready(function() {
+
+
+    // TODO a customer certainly shouldn't be able to checkout before this has happened
+    $.when(remove_shipping_item()).done(function() {
+      var total_weight = 0;
+      var total_blanks = 0;
+      {% for item in cart.items %}
+        {% assign item_title = item.title | downcase %}
+        {% if item_title != "shipping" %}
+          {% if item.grams != 0 %}
+            total_weight = total_weight + {{ item.grams }} * {{ item.quantity }};
+
+          {% else %}
+            total_blanks = total_blanks + 1 * {{ item.quantity }};
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      var datahash = { weight: total_weight / 1000, blanks: total_blanks };
+      update_loader_and_submit("GET", datahash, function(data) { inject_shipping_calculator(data); }, function(data) {});
+    });
+
+    use_flat_shipping = function(request, text_status, error_thrown ) {
+      console.log("hey hey")
+      // In here we will remove the ban on checking out, and add a shipping item with 
+      // the flat rate from store metafields
+
+      {% if shop.metafields.AusPostShipping.default_charge %}
+      var flat_rate = {{ shop.metafields.AusPostShipping.default_charge }}
+      {% endif %}
+    }
+  });
+
+</script>

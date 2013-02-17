@@ -9,6 +9,3 @@ AppConfig = ConfigSpartan.create do
 end
 
 DOMAIN_NAMES = {"staging" => "shipping-staging.herokuapp.com", "development" => "localhost:3000", "production" =>  "shipping.webifytechnology.com", "test" => "localhost:3000"}
-
-Rails.logger = Logger.new(STDOUT)
-Rails.logger = Log4r::Logger.new("Application Log")

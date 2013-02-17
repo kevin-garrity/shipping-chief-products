@@ -5,7 +5,6 @@ class WebhooksController < ActionController::Base
   def uninstall_app
     
     data = ActiveSupport::JSON.decode(request.body.read)
-    puts ("$$$$ data is " + data.to_s)
     
     shop_url = data["domain"]
     #look for shop record
