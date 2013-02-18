@@ -35,29 +35,29 @@
 
       / these are calculated in yaml and returned to us
       / so these fields can remain hidden
-      .field.hidden
+      .field.hidden(style='display:none')
         = f.label :weight
         = f.number_field :weight
 
-      .field.hidden
+      .field.hidden(style='display:none')
         = f.label :blanks
         = f.number_field :blanks
 
-      .field.hidden
+      .field.hidden(style='display:none')
         = f.label :height
         = f.number_field :height
 
-      .field.hidden
+      .field.hidden(style='display:none')
         = f.label :width
         = f.number_field :width
 
-      .field.hidden
+      .field.hidden(style='display:none')
         = f.label :length
         = f.number_field :length
 
-      .field.hidden
+      .field.hidden(style='display:none')
         = f.label :from_postcode
         = f.number_field :from_postcode
 
-      .field.hidden
+      .field.hidden(style='display:none')
         %input#tokentag{:name => "authenticity_token", :type => "hidden", :value => form_authenticity_token}
