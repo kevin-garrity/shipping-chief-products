@@ -62,7 +62,7 @@ submit_calculation_request = function(dataHash) {
 }
 
 remove_and_add_again_shipping_line_item = function() {
-  console.log("remove_and_add_again_shipping_line_item")
+  console.log("remove_and_add_again_shipping_line_item");
   var price = $(this).siblings('.option-price').text();
   var price_string = price.replace(/ -- /, '');
   var shipping_quantity = Number(price.replace(/[^0-9]+/g,""));
@@ -71,26 +71,63 @@ remove_and_add_again_shipping_line_item = function() {
   // remove the existing line item
   // TODO WHY IS IT ADDING TWICE?
   remove_shipping_item(function() {
-    console.log("  spaghetti add");
     // once the item is removed spaghetti add the line item back in!
     // we do this to change the line item property
     $('input#quantity').attr('value', shipping_quantity);
     $('input#shipping-type').val(shipping_type);
-    $('form#world-shipping-cartform input#shipping').click(); // add the logical shipping item
+    id = $('#shipping_product_id').text();
+    Webify.addItem(id, shipping_quantity, Webify.onItemAdded);
+    //$('form#world-shipping-cartform input#shipping').click(); // add the logical shipping item
   });
 
+  var headers = {};
+  var line_found = false;
+  var table_rows = $('tr');
+  // find the first row with product information
+  table_rows.each(function(index) {
+    row = table_rows[index];
+    if (!line_found) {
+      for (var i = 0; i < row.children.length; i++)
+      {
+        cell = row.children[i];  
+        text = cell.innerHTML;
+        // not image cell and remove item cell
+  
+          if (text.indexOf("/products") != -1 && text.indexOf("<img") == -1 ) {
+            //found the product cell
+             headers["item"] = i;
+             line_found = true;
+          }
+          else if (text.indexOf("updates") != -1)
+          {
+            headers["quantity"] = i;
+            line_found = true;
+          }
+          // either price field or total field
+          else if (text.indexOf("img") == -1 && text.indexOf("remove_item") == -1)
+          {
+            if (headers["price"]) // if price column is found, must be total
+              headers["total"] = i;
+            else
+              headers["price"] = i;
+          }      
+      }
+    } // !line_found
+   }
+  );
   // TODO document this
   // we assume that the first table row on a cart page is the headers
-  var table_header = $('tr').first();
+ // var table_header = $('tr').first();
 
   // we iterate over the table headers
-  var headers = {};
+/*
   table_header.children('th').each(function(index) {
     var header = $(this).text();
     headers[header.toLowerCase()] = index;
   });
-
+*/
   var line_item_template = $('tr.item').first().clone();
+
   var table_data = line_item_template.children();
 
   table_data.eq(headers['item']).html('Shipping: ' + $(this).siblings('label').text());
@@ -102,8 +139,10 @@ remove_and_add_again_shipping_line_item = function() {
   line_item_template.find('img').remove();
   line_item_template.find('a').remove();
   line_item_template.find('input[type=submit]').remove();
- 
-   $('tr.item').last().insertAfter(line_item_template);
+  item = $('tr.item').last();
+  
+  item.after(line_item_template);
+  //item.insertAfter("<tr>"+line_item_template+"</tr>");
 }
 
 
@@ -131,15 +170,13 @@ remove_shipping_item = function(callback) {
   var html_shipping_line_item = $('.item.shipping');
   var variant_id = $('input[name=id]').attr('value');
 
-  console.log("variant_id " + variant_id)
-
   $('input#shipping-type').val("");
 
   // clear the old shipping item
   if ( html_shipping_line_item.length ) {
     html_shipping_line_item.remove();
   }
-  Shopify.removeItem(variant_id, callback);
+  Webify.removeItem(variant_id, callback);
 }
 
 validate_and_process_form = function(dataHash) {

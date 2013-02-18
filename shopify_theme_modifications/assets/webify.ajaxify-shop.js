@@ -58,7 +58,7 @@ jQuery(document).ready(function() {
   //Convenience method to format money.
   //Can just transform the amount here if needed
   var formatMoney = function(price) {
-    return Shopify.formatMoney(price , '${{ amount }}');
+    return Webify.formatMoney(price , '${{ amount }}');
 };
 
 
@@ -70,8 +70,8 @@ jQ('form[action*=\\/cart\\/add]').submit(function(e) {
   jQ(e.target).find(selectors.SUBMIT_ADD_TO_CART).attr('disabled', true).addClass('disabled');
 
   //Can't use updateCartFromForm since you need the item added before you can update (otherwise, would have been more convenient)
-  //So, in onItemAdded, we Shopify.getCart() to force the repaint of items in cart.
-  Shopify.addItemFromForm(e.target);
+  //So, in onItemAdded, we Webify.getCart() to force the repaint of items in cart.
+  Webify.addItemFromForm(e.target);
   //console.log("out FORM_ADD_TO_CART")
 });
 
@@ -81,7 +81,7 @@ jQ(selectors.FORM_UPDATE_CART_BUTTON).click(function(e) {
   //console.log("in FORM_UPDATE_CART_BUTTON")
   e.preventDefault();
   jQ(e.target.form).find(selectors.FORM_UPDATE_CART_BUTTONS).attr('disabled', true).addClass('disabled');
-  Shopify.updateCartFromForm(e.target.form);
+  Webify.updateCartFromForm(e.target.form);
   //console.log("out FORM_UPDATE_CART_BUTTON")
 });
 
@@ -91,7 +91,7 @@ jQ(selectors.FORM_UPDATE_CART).delegate(selectors.LINE_ITEM_REMOVE, 'click', fun
   e.preventDefault();
   //Get the variant ID from the URL
   var vid = this.href.split('/').pop().split('?').shift();
-  Shopify.removeItem(vid);
+  Webify.removeItem(vid);
   jQ(this).parents(selectors.LINE_ITEM_ROW).remove();
   //console.log("out LINE_ITEM_REMOVE")
 });
@@ -102,13 +102,13 @@ jQ(selectors.FORM_UPDATE_CART).delegate(selectors.LINE_ITEM_CHANGE_QUANTITY, 'cl
   //Get the variant ID from the URL
   var vid = jQ(selectors.FORM_UPDATE_CART + " > input[name=id]").attr("value");
   var quantity = jQ(selectors.FORM_UPDATE_CART + " > input[name=quantity]").attr("value");
-  Shopify.changeItem(vid, quantity);
+  Webify.changeItem(vid, quantity);
   jQ(this).parents(selectors.LINE_ITEM_ROW).remove();
   //console.log("out LINE_ITEM_CHANGE_QUANTITY")
 });
 
 /**
-* Shopify.onItemAdded
+* Webify.onItemAdded
 *
 * Triggered by the response when something is added to the cart via the add to cart button.
 * This is where you would want to put any flash messaging, for example.
@@ -116,7 +116,7 @@ jQ(selectors.FORM_UPDATE_CART).delegate(selectors.LINE_ITEM_CHANGE_QUANTITY, 'cl
 * @param object line_item
 * @param HTMLelement/String Form HTMLElement, or selector
 */
-Shopify.onItemAdded = function(line_item, form) {
+Webify.onItemAdded = function(line_item, form) {
   //console.log("in onItemAdded")
   //Default behaviour for this modification:
   //When a Add To Cart form is clicked, we disable the button and apply a class of disabled.
@@ -126,7 +126,7 @@ Shopify.onItemAdded = function(line_item, form) {
   //You can add any extra messaging you would want here.
 
   //Get the state of the cart, which will trigger onCartUpdate
-  Shopify.getCart();
+  Webify.getCart();
   //console.log("out onItemAdded")
 };
 
@@ -140,7 +140,7 @@ Shopify.onItemAdded = function(line_item, form) {
 * @param object the cart object.
 * @param HTMLElement form. If included, we know its an Update of the CART FORM, which will trigger additional behaviour.
 */
-Shopify.onCartUpdate = function(cart, form) {
+Webify.onCartUpdate = function(cart, form) {
   //console.log("in onCartUpdate")
 
   // Total Items Update
@@ -148,7 +148,7 @@ Shopify.onCartUpdate = function(cart, form) {
   var index;
   var non_shipping_items_count = 0;
   for (index = 0; index < cart.items.length; index++) {
-    if (cart.items[index].title !== 'shipping') {
+    if (cart.items[index].title != 'shipping') {
       non_shipping_items_count += 1;
     }
   }
@@ -170,7 +170,7 @@ Shopify.onCartUpdate = function(cart, form) {
   // A form was passed in?
   form = form || false;
   //so it's the cart page form update, trigger behaviours for that page
-  if(form) {
+//  if(form) {
     //Nothing left in cart, we reveal the Nothing in cart content, hide the form.
     if(cart.item_count > 0) {
       //Loops through cart items, update the prices.
@@ -188,14 +188,14 @@ Shopify.onCartUpdate = function(cart, form) {
     }
     //You can add any extra messaging you would want here.
     //successMessage('Cart Updated.');
-  }
+ // }
   //console.log("out onCartUpdate")
 };
 
 
 //What to display when there is an error. You tell me?! I've left in a commented out example.
 // You can tie this in to any sort of flash messages, or lightbox, or whatnot you want.
-Shopify.onError = function(XMLHttpRequest, textStatus) {
+Webify.onError = function(XMLHttpRequest, textStatus) {
   //console.log("in onError")
   // Shopify returns a description of the error in XMLHttpRequest.responseText.
   // It is JSON.

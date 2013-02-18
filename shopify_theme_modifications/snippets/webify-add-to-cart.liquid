@@ -1,9 +1,11 @@
+<div id="shipping_product_id" style="display:none">{{shop.metafields.AusPostShipping.product_id}}</div>
 <div id="webify-shipping-calculator-info" style="font-size:15px;font-weight:bold;clear:both"></div>
-<form method="post" action="/cart/add" name="cartform" id="world-shipping-cartform">
+<form method="post" action="{shop.url}}/cart/add" name="cartform" id="world-shipping-cartform">
     <!-- We can leave this in, since the select comes later,
     so it will override if user picks something different. -->
       <input type="hidden" name="id" value="{{ shop.metafields.AusPostShipping.product_id }}" />
       <input type="hidden" id="quantity" name="quantity" value="0" />
+      <input type="hidden" name="return_to" value="back" />      
 
       <div class="cart-total-items"></div>
       <div class="cart-total-price"></div>   

@@ -10,7 +10,7 @@
 <!-- This is foe debugging in IE during development -->
 {{ 'webify.consolelog.js' | asset_url | script_tag }}
 
-{% include "add-to-cart" %}
+{% include "webify.add-to-cart" %}
 
 <div id="webify-shipping-calculator-info" style="font-size:15px;clear:both;font-weight:bold;"><p></p></div>
 <div id="indicator" style="clear:both"></div>
@@ -26,6 +26,7 @@
         // there no Shipping items in the cart
         e.preventDefault();
         $('#webify-shipping-calculator-info p').text("Please select a destination for shipping rate calculation.")
+        alert("Please select a destination for shipping rate calculation before checking out.");
       }
     } else {
       //do something else

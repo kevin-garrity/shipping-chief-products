@@ -21,48 +21,20 @@ for its callback to send your 3rd request, etc.
 *
 * Sept 02, 2010
 */
-if ((typeof Shopify) === 'undefined') {
-  Shopify = {};
+if ((typeof Webify) === 'undefined') {
+  Webify = {};
 }
 
 /*
 
-Override so that Shopify.formatMoney returns pretty
+Override so that Webify.formatMoney returns pretty
 money values instead of cents.
 
 */
 
-Shopify.money_format = '$ {{amount}}';
+Webify.money_format = '$ {{amount}}';
 
-/*
-
-Events (override!)
-
-Example override:
-... add to your theme.liquid's script tag....
-
-Shopify.onItemAdded = function(line_item) {
-$('message').update('Added '+line_item.title + '...');
-}
-*/
-
-
-/* Tools */
-
-/*
-Examples of call:
-Shopify.formatMoney(600000, '&euro;{{amount_with_comma_separator}} EUR')
-Shopify.formatMoney(600000, '&euro;{{amount}} EUR')
-Shopify.formatMoney(600000, '${{amount_no_decimals}}')
-Shopify.formatMoney(600000, '{{ shop.money_format }}') in a Liquid template!
-
-In a Liquid template, you have access to a shop money formats with:
-{{ shop.money_format }}
-{{ shop.money_with_currency_format }}
-{{ shop.money_without_currency_format }}
-All these formats are editable on the Preferences page in your admin.
-*/
-Shopify.formatMoney = function(cents, format) {
+Webify.formatMoney = function(cents, format) {
   var value = '';
   var patt = /\{\{\s*(\w+)\s*\}\}/;
   var formatString = (format || this.money_format);
@@ -80,7 +52,7 @@ Shopify.formatMoney = function(cents, format) {
   return formatString.replace(patt, value);
 };
 
-Shopify.resizeImage = function(image, size) {
+Webify.resizeImage = function(image, size) {
   try {
     if(size == 'original') { return image; }
     else {
@@ -95,7 +67,7 @@ Shopify.resizeImage = function(image, size) {
 // -------------------------------------------------------------------------------------
 // POST to cart/add.js returns the JSON of the line item associated with the added item.
 // -------------------------------------------------------------------------------------
-Shopify.addItem = function(variant_id, quantity, callback) {
+Webify.addItem = function(variant_id, quantity, callback) {
   quantity = quantity || 1;
   var params = {
     type: 'POST',
@@ -107,11 +79,11 @@ Shopify.addItem = function(variant_id, quantity, callback) {
         callback(line_item);
       }
       else {
-        Shopify.onItemAdded(line_item);
+        Webify.onItemAdded(line_item);
       }
     },
     error: function(XMLHttpRequest, textStatus) {
-      Shopify.onError(XMLHttpRequest, textStatus);
+      Webify.onError(XMLHttpRequest, textStatus);
     }
   };
   jQuery.ajax(params);
@@ -125,8 +97,8 @@ Shopify.addItem = function(variant_id, quantity, callback) {
 //Once you are having someone pass in an id, might as well make it selector based, or pass in the element itself.
 //Since you are just wrapping it in a jq(). The same rationale is behind the change for updateCartFromForm
 //@param HTMLElement the form element which was submitted. Or you could pass in a string selector such as the form id.
-//@param function callback callback fuction if you like, but I just override Shopify.onItemAdded() instead
-Shopify.addItemFromForm = function(form, callback) {
+//@param function callback callback fuction if you like, but I just override Webify.onItemAdded() instead
+Webify.addItemFromForm = function(form, callback) {
   var params = {
     type: 'POST',
     url: '/cart/add.js',
@@ -137,11 +109,11 @@ Shopify.addItemFromForm = function(form, callback) {
         callback(line_item, form);
       }
       else {
-        Shopify.onItemAdded(line_item, form);
+        Webify.onItemAdded(line_item, form);
       }
     },
     error: function(XMLHttpRequest, textStatus) {
-      Shopify.onError(XMLHttpRequest, textStatus);
+      Webify.onError(XMLHttpRequest, textStatus);
     }
   };
   jQuery.ajax(params);
@@ -150,14 +122,14 @@ Shopify.addItemFromForm = function(form, callback) {
 // ---------------------------------------------------------
 // GET cart.js returns the cart in JSON.
 // ---------------------------------------------------------
-Shopify.getCart = function(callback) {
+Webify.getCart = function(callback) {
   console.log("getCart")
   jQuery.getJSON('/cart.js', function (cart, textStatus) {
     if ((typeof callback) === 'function') {
       callback(cart);
     }
     else {
-      Shopify.onCartUpdate(cart);
+      Webify.onCartUpdate(cart);
     }
   });
 };
@@ -165,13 +137,13 @@ Shopify.getCart = function(callback) {
 // ---------------------------------------------------------
 // GET products/<product-handle>.js returns the product in JSON.
 // ---------------------------------------------------------
-Shopify.getProduct = function(handle, callback) {
+Webify.getProduct = function(handle, callback) {
   jQuery.getJSON('/products/' + handle + '.js', function (product, textStatus) {
     if ((typeof callback) === 'function') {
       callback(product);
     }
     else {
-      Shopify.onProduct(product);
+      Webify.onProduct(product);
     }
   });
 };
@@ -179,7 +151,7 @@ Shopify.getProduct = function(handle, callback) {
 // ---------------------------------------------------------
 // POST to cart/change.js returns the cart in JSON.
 // ---------------------------------------------------------
-Shopify.changeItem = function(variant_id, quantity, callback) {
+Webify.changeItem = function(variant_id, quantity, callback) {
   console.log("changeItem")
   var params = {
     type: 'POST',
@@ -191,11 +163,11 @@ Shopify.changeItem = function(variant_id, quantity, callback) {
         callback(cart);
       }
       else {
-        Shopify.onCartUpdate(cart);
+        Webify.onCartUpdate(cart);
       }
     },
     error: function(XMLHttpRequest, textStatus) {
-      Shopify.onError(XMLHttpRequest, textStatus);
+      Webify.onError(XMLHttpRequest, textStatus);
     }
   };
   jQuery.ajax(params);
@@ -204,8 +176,7 @@ Shopify.changeItem = function(variant_id, quantity, callback) {
 // ---------------------------------------------------------
 // POST to cart/change.js returns the cart in JSON.
 // ---------------------------------------------------------
-Shopify.removeItem = function(variant_id, callback) {
-  console.log("removeItem")
+Webify.removeItem = function(variant_id, callback) {
   var params = {
     type: 'POST',
     url: '/cart/change.js',
@@ -216,11 +187,11 @@ Shopify.removeItem = function(variant_id, callback) {
         callback(cart);
       }
       else {
-        Shopify.onCartUpdate(cart);
+        Webify.onCartUpdate(cart);
       }
     },
     error: function(XMLHttpRequest, textStatus) {
-      Shopify.onError(XMLHttpRequest, textStatus);
+      Webify.onError(XMLHttpRequest, textStatus);
     }
   };
   jQuery.ajax(params);
@@ -231,7 +202,7 @@ Shopify.removeItem = function(variant_id, callback) {
 // It removes all the items in the cart, but does
 // not clear the cart attributes nor the cart note.
 // ---------------------------------------------------------
-Shopify.clear = function(callback) {
+Webify.clear = function(callback) {
   console.log("clear")
 
   var params = {
@@ -244,11 +215,11 @@ Shopify.clear = function(callback) {
         callback(cart);
       }
       else {
-        Shopify.onCartUpdate(cart);
+        Webify.onCartUpdate(cart);
       }
     },
     error: function(XMLHttpRequest, textStatus) {
-      Shopify.onError(XMLHttpRequest, textStatus);
+      Webify.onError(XMLHttpRequest, textStatus);
     }
   };
   jQuery.ajax(params);
@@ -262,8 +233,8 @@ Shopify.clear = function(callback) {
 //Once you are having someone pass in an id, might as well make it selector based, or pass in the element itself,
 //since you are just wrapping it in a jq().
 //@param HTMLElement the form element which was submitted. Or you could pass in a string selector such as the #form_id.
-//@param function callback callback fuction if you like, but I just override Shopify.onCartUpdate() instead
-Shopify.updateCartFromForm = function(form, callback) {
+//@param function callback callback fuction if you like, but I just override Webify.onCartUpdate() instead
+Webify.updateCartFromForm = function(form, callback) {
   console.log("updateCartFromForm")
   var params = {
     type: 'POST',
@@ -275,11 +246,11 @@ Shopify.updateCartFromForm = function(form, callback) {
         callback(cart, form);
       }
       else {
-        Shopify.onCartUpdate(cart, form);
+        Webify.onCartUpdate(cart, form);
       }
     },
     error: function(XMLHttpRequest, textStatus) {
-      Shopify.onError(XMLHttpRequest, textStatus);
+      Webify.onError(XMLHttpRequest, textStatus);
     }
   };
   jQuery.ajax(params);
@@ -290,7 +261,7 @@ Shopify.updateCartFromForm = function(form, callback) {
 // To clear a particular attribute, set its value to an empty string.
 // Receives attributes as a hash or array. Look at comments below.
 // ---------------------------------------------------------
-Shopify.updateCartAttributes = function(attributes, callback) {
+Webify.updateCartAttributes = function(attributes, callback) {
   console.log("updateCartAttributes")
   var data = '';
   // If attributes is an array of the form:
@@ -320,11 +291,11 @@ Shopify.updateCartAttributes = function(attributes, callback) {
         callback(cart);
       }
       else {
-        Shopify.onCartUpdate(cart);
+        Webify.onCartUpdate(cart);
       }
     },
     error: function(XMLHttpRequest, textStatus) {
-      Shopify.onError(XMLHttpRequest, textStatus);
+      Webify.onError(XMLHttpRequest, textStatus);
     }
   };
   jQuery.ajax(params);
@@ -333,7 +304,7 @@ Shopify.updateCartAttributes = function(attributes, callback) {
 // ---------------------------------------------------------
 // POST to cart/update.js returns the cart in JSON.
 // ---------------------------------------------------------
-Shopify.updateCartNote = function(note, callback) {
+Webify.updateCartNote = function(note, callback) {
   console.log("updateCartNote")
   var params = {
     type: 'POST',
@@ -345,11 +316,11 @@ Shopify.updateCartNote = function(note, callback) {
         callback(cart);
       }
       else {
-        Shopify.onCartUpdate(cart);
+        Webify.onCartUpdate(cart);
       }
     },
     error: function(XMLHttpRequest, textStatus) {
-      Shopify.onError(XMLHttpRequest, textStatus);
+      Webify.onError(XMLHttpRequest, textStatus);
     }
   };
   jQuery.ajax(params);
