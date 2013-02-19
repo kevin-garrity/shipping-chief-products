@@ -129,8 +129,6 @@ private
       fields = shop.metafields
       field = fields.find { |f| f.key == 'product_id' && f.namespace ='AusPostShipping'}
       
-      puts("xxxxx field value is" + field.value.to_s )
-      puts("xxxxx .id.to_s" + @vars[0].id.to_s )
       if field.nil?      
         field = ShopifyAPI::Metafield.new({:namespace =>'AusPostShipping',:key=>'product_id', :value=>@vars[0].id, :value_type=>'string' })
         field.save
