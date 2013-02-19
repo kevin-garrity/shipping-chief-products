@@ -49,6 +49,9 @@ add @{% if item.title == 'Shipping' %}shipping{% endif %}@ to tr class
 add id="cartform" to form in cart.liquid
 add class="cart-total-price" to total price container in cart, look for cart.total_price
 
+look for <input class="text quantity" type="text" size="4" id="updates_{{ item.id }}" name="updates[{{ item.id }}]" value="{{ item.quantity }}" class="replace" />
+and make sure name="updates[{{ item.id }}] is present.
+
 tag td with class name price, quantity, total, item for calculator to work
 
 edit selects at var selectors in webify.ajaxify-shop.js to find cart total

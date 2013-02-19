@@ -62,11 +62,11 @@ submit_calculation_request = function(dataHash) {
 }
 
 remove_and_add_again_shipping_line_item = function() {
-  console.log("remove_and_add_again_shipping_line_item");
   var price = webifyJQ(this).siblings('.option-price').text();
   var price_string = price.replace(/ -- /, '');
   var shipping_quantity = Number(price.replace(/[^0-9]+/g,""));
   var shipping_type = webifyJQ(this).siblings('label').text() + price;
+  var shipping_product_id = webifyJQ('#shipping_product_id').text();
 
   // remove the existing line item
   remove_shipping_item(function() {
@@ -75,8 +75,7 @@ remove_and_add_again_shipping_line_item = function() {
     //webifyJQ('input#quantity').attr('value', shipping_quantity);
     //webifyJQ('input#shipping-type').val(shipping_type);
     
-    id = webifyJQ('#shipping_product_id').text();
-    Webify.addItem(id, shipping_quantity, Webify.onItemAdded);
+    Webify.addItem(shipping_product_id, shipping_quantity, Webify.onItemAdded);
     //webifyJQ('form#world-shipping-cartform input#shipping').click(); // add the logical shipping item
   });
 
@@ -123,9 +122,12 @@ remove_and_add_again_shipping_line_item = function() {
   var table_data = line_item_template.children();
 
   table_data.eq(headers['item']).html('Shipping: ' + webifyJQ(this).siblings('label').text());
-  table_data.eq(headers['quantity']).html("");
+  text = table_data.eq(headers['quantity']).html();
+  if (text.length > 0) {
+    table_data.eq(headers['quantity']).html('<input type="text" value="' + shipping_quantity + '" name="updates[' +shipping_product_id + ']" id="updates_' +shipping_product_id + '" size="4" class="text quantity">');
+  }
   table_data.eq(headers['total']).html(price_string);
-  table_data.eq(headers['price']).html(price_string);
+  table_data.eq(headers['price']).html('0.01');
 
   line_item_template.attr('class', 'item shipping');
   line_item_template.find('img').remove();
