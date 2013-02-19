@@ -24,7 +24,7 @@
       %br
       .field#postcode
         = f.label :"Please enter a postcode", { :class => "error" }
-        = f.label :to_postcode, "Enter your Australia Postcode", :style=>"margin-left:40px;"
+        %span(style="margin-left:40px;") Enter your Australia Postcode
         = f.number_field :to_postcode
       %br  
       .actions
