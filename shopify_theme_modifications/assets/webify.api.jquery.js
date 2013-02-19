@@ -86,7 +86,7 @@ Webify.addItem = function(variant_id, quantity, callback) {
       Webify.onError(XMLHttpRequest, textStatus);
     }
   };
-  jQuery.ajax(params);
+  webifyJQ.ajax(params);
 };
 
 // ---------------------------------------------------------
@@ -102,21 +102,21 @@ Webify.addItemFromForm = function(form, callback) {
   var params = {
     type: 'POST',
     url: '/cart/add.js',
-    data: jQuery(form).serialize(),
+    data: webifyJQ(form).serialize(),
     dataType: 'json',
     success: function(line_item) {
       if ((typeof callback) === 'function') {
         callback(line_item, form);
       }
       else {
-        Webify.onItemAdded(line_item, form);
+        Webify.onItemAdded(line_item);
       }
     },
     error: function(XMLHttpRequest, textStatus) {
       Webify.onError(XMLHttpRequest, textStatus);
     }
   };
-  jQuery.ajax(params);
+  webifyJQ.ajax(params);
 };
 
 // ---------------------------------------------------------
@@ -124,7 +124,7 @@ Webify.addItemFromForm = function(form, callback) {
 // ---------------------------------------------------------
 Webify.getCart = function(callback) {
   console.log("getCart")
-  jQuery.getJSON('/cart.js', function (cart, textStatus) {
+  webifyJQ.getJSON('/cart.js', function (cart, textStatus) {
     if ((typeof callback) === 'function') {
       callback(cart);
     }
@@ -138,7 +138,7 @@ Webify.getCart = function(callback) {
 // GET products/<product-handle>.js returns the product in JSON.
 // ---------------------------------------------------------
 Webify.getProduct = function(handle, callback) {
-  jQuery.getJSON('/products/' + handle + '.js', function (product, textStatus) {
+  webifyJQ.getJSON('/products/' + handle + '.js', function (product, textStatus) {
     if ((typeof callback) === 'function') {
       callback(product);
     }
@@ -170,7 +170,7 @@ Webify.changeItem = function(variant_id, quantity, callback) {
       Webify.onError(XMLHttpRequest, textStatus);
     }
   };
-  jQuery.ajax(params);
+  webifyJQ.ajax(params);
 };
 
 // ---------------------------------------------------------
@@ -194,7 +194,7 @@ Webify.removeItem = function(variant_id, callback) {
       Webify.onError(XMLHttpRequest, textStatus);
     }
   };
-  jQuery.ajax(params);
+  webifyJQ.ajax(params);
 };
 
 // ---------------------------------------------------------
@@ -222,7 +222,7 @@ Webify.clear = function(callback) {
       Webify.onError(XMLHttpRequest, textStatus);
     }
   };
-  jQuery.ajax(params);
+  webifyJQ.ajax(params);
 };
 
 // ---------------------------------------------------------
@@ -239,7 +239,7 @@ Webify.updateCartFromForm = function(form, callback) {
   var params = {
     type: 'POST',
     url: '/cart/update.js',
-    data: jQuery(form).serialize(),
+    data: webifyJQ(form).serialize(),
     dataType: 'json',
     success: function(cart) {
       if ((typeof callback) === 'function') {
@@ -253,7 +253,7 @@ Webify.updateCartFromForm = function(form, callback) {
       Webify.onError(XMLHttpRequest, textStatus);
     }
   };
-  jQuery.ajax(params);
+  webifyJQ.ajax(params);
 };
 
 // ---------------------------------------------------------
@@ -266,8 +266,8 @@ Webify.updateCartAttributes = function(attributes, callback) {
   var data = '';
   // If attributes is an array of the form:
   // [ { key: 'my key', value: 'my value' }, ... ]
-  if (jQuery.isArray(attributes)) {
-    jQuery.each(attributes, function(indexInArray, valueOfElement) {
+  if (webifyJQ.isArray(attributes)) {
+    webifyJQ.each(attributes, function(indexInArray, valueOfElement) {
       var key = attributeToString(valueOfElement.key);
       if (key !== '') {
         data += 'attributes[' + key + ']=' + attributeToString(valueOfElement.value) + '&';
@@ -277,7 +277,7 @@ Webify.updateCartAttributes = function(attributes, callback) {
   // If attributes is a hash of the form:
   // { 'my key' : 'my value', ... }
   else if ((typeof attributes === 'object') && attributes !== null) {
-    jQuery.each(attributes, function(key, value) {
+    webifyJQ.each(attributes, function(key, value) {
       data += 'attributes[' + attributeToString(key) + ']=' + attributeToString(value) + '&';
     });
   }
@@ -298,7 +298,7 @@ Webify.updateCartAttributes = function(attributes, callback) {
       Webify.onError(XMLHttpRequest, textStatus);
     }
   };
-  jQuery.ajax(params);
+  webifyJQ.ajax(params);
 };
 
 // ---------------------------------------------------------
@@ -323,7 +323,7 @@ Webify.updateCartNote = function(note, callback) {
       Webify.onError(XMLHttpRequest, textStatus);
     }
   };
-  jQuery.ajax(params);
+  webifyJQ.ajax(params);
 };
 
 /* Used by Tools */
@@ -345,5 +345,5 @@ function attributeToString(attribute) {
     }
   }
   // Removing leading and trailing whitespace.
-  return jQuery.trim(attribute);
+  return webifyJQ.trim(attribute);
 }

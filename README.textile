@@ -45,7 +45,7 @@ This is so that the number of items displayed in the cart will not reflect the s
 Finally, in your store admin panel add a custom collection called 'shipping' with exactly 1 product, also called 'shipping'. Both of these names are case sensitive. The shipping product must have price $0.01. This is what is used by World Shipping Calculator to add the estimated cost of shipping to the shopper's cart. You must also give the shipping product a product-type, but that can be whatever you like (we don't use it).
 
 Add item class to each tr in cart.liquid
-add {% if item.title == 'Shipping' %}shipping{% endif %} to tr class
+add @{% if item.title == 'Shipping' %}shipping{% endif %}@ to tr class
 add id="cartform" to form in cart.liquid
 add class="cart-total-price" to total price container in cart, look for cart.total_price
 

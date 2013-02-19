@@ -5,8 +5,7 @@ This is done to avoid having numbers like 24601 appear in the cart instead of
 
 {% assign sum = 0 %}
 {% for item in cart.items %}
-  {% if item.title contains 'shipping' %}
-
+  {% if item.title contains 'shipping' or  item.title contains 'Shipping'%}
   {% else %}
     {% assign sum = sum | plus: item.quantity %}
   {% endif %}

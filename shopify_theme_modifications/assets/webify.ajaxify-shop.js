@@ -116,13 +116,9 @@ jQ(selectors.FORM_UPDATE_CART).delegate(selectors.LINE_ITEM_CHANGE_QUANTITY, 'cl
 * @param object line_item
 * @param HTMLelement/String Form HTMLElement, or selector
 */
-Webify.onItemAdded = function(line_item, form) {
+Webify.onItemAdded = function(line_item) {
   //console.log("in onItemAdded")
   //Default behaviour for this modification:
-  //When a Add To Cart form is clicked, we disable the button and apply a class of disabled.
-  //Here is where we remove the disabled class, and reactivate the button.
-  jQ(form).find(selectors.SUBMIT_ADD_TO_CART).attr('disabled', false).removeClass('disabled');
-
   //You can add any extra messaging you would want here.
 
   //Get the state of the cart, which will trigger onCartUpdate
@@ -148,7 +144,7 @@ Webify.onCartUpdate = function(cart, form) {
   var index;
   var non_shipping_items_count = 0;
   for (index = 0; index < cart.items.length; index++) {
-    if (cart.items[index].title != 'shipping') {
+    if (cart.items[index].title != 'Shipping') {
       non_shipping_items_count += 1;
     }
   }
