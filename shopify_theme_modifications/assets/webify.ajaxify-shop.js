@@ -7,10 +7,10 @@
 
 // //console.log("start")
 
-jQuery(document).ready(function() {
+webifyJQ(document).ready(function() {
   //Begin Wrapper
 
-  var jQ = jQuery;
+  var jQ = webifyJQ;
 
   /**
   * Collection of Selectors for various pieces on the page we need to update
@@ -100,7 +100,7 @@ jQ(selectors.FORM_UPDATE_CART).delegate(selectors.LINE_ITEM_CHANGE_QUANTITY, 'cl
   //console.log("in LINE_ITEM_CHANGE_QUANTITY")
   e.preventDefault();
   //Get the variant ID from the URL
-  var vid = jQ(selectors.FORM_UPDATE_CART + " > input[name=id]").attr("value");
+  var vid = jQ(selectors.FORM_UPDATE_CART + " > input[name=shipping_variant_id]").attr("value");
   var quantity = jQ(selectors.FORM_UPDATE_CART + " > input[name=quantity]").attr("value");
   Webify.changeItem(vid, quantity);
   jQ(this).parents(selectors.LINE_ITEM_ROW).remove();

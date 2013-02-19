@@ -32,7 +32,7 @@ money values instead of cents.
 
 */
 
-Webify.money_format = '$ {{amount}}';
+Webify.money_format = 'webifyJQ {{amount}}';
 
 Webify.formatMoney = function(cents, format) {
   var value = '';

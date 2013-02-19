@@ -10,8 +10,8 @@ var xhr; // global request object for the calculation request
 // request and resubmit
 update_loader_and_submit = function(method, dataHash, callback, fallback) {
   // Got the loader from http://www.ajaxload.info/
-  $(".actions > input").attr('disabled', 'disabled');
-  $("#indicator").html("<img src='{{ 'webify-ajax-loader.gif' | asset_url }}' alt='' />").show();
+  webifyJQ(".actions > input").attr('disabled', 'disabled');
+  webifyJQ("#indicator").html("<img src='{{ 'webify-ajax-loader.gif' | asset_url }}' alt='' />").show();
 
   if (xhr && xhr.readyState != 4) {
     xhr.abort();
@@ -21,8 +21,8 @@ update_loader_and_submit = function(method, dataHash, callback, fallback) {
   // set support.cors = true, and whether interlieving might occur
   // so we need to wrap the .ajax method with our .CORSajax method, and keep all
   // the nice arguments we had
-  $.support.cors = true;
-  xhr = $.ajax({
+  webifyJQ.support.cors = true;
+  xhr = webifyJQ.ajax({
     url: host + action, // globally defined
     type: method,
     dataType: 'html',
@@ -50,7 +50,7 @@ update_loader_and_submit = function(method, dataHash, callback, fallback) {
   }).fail(function() { })
   .always(function() { })
   .complete(function() {
-    $(".actions > input").removeAttr('disabled');
-    $("#indicator").empty().hide();
+    webifyJQ(".actions > input").removeAttr('disabled');
+    webifyJQ("#indicator").empty().hide();
   });
 }

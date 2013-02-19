@@ -24,11 +24,11 @@
       %br
       .field#postcode
         = f.label :"Please enter a postcode", { :class => "error" }
-        %span(style="margin-left:40px;") Enter your Australia Postcode
+        %span(style="") Enter your Australia Postcode
         = f.number_field :to_postcode
       %br  
       .actions
-        = f.submit 'Calculate', :style=>"margin-left:230px;font-size:15px;font-weight:bold;"
+        = f.submit 'Calculate', :style=>"padding:10px;font-size:15px;font-weight:bold;"
 
       / this is the container for the ajax results
       #shipping-prices

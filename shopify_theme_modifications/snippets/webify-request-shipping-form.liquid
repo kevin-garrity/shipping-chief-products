@@ -1,3 +1,8 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js" type="text/javascript"></script>
+<script>
+  var webifyJQ = jQuery.noConflict();
+</script>
+  
 {{ 'webify_update_loader_and_submit.js' | asset_url | script_tag }}
 {{ 'webify_inject_shipping_calculator.js' | asset_url | script_tag }}
 {{ 'webify.xdr.js' | asset_url | script_tag }}
@@ -20,13 +25,17 @@
 <!-- calculate the weight and grab us a calculator! -->
 <script>
 
-  $("#cartform").find('input[type=submit]').on('click', function (e) {
-    if ($(e.target).attr('name') == 'checkout') {
-      if ($('.item.shipping').length == 0) {
+  webifyJQ("#cartform").find('input[type=submit]').on('click', function (e) {
+    if (webifyJQ(e.target).attr('name') == 'checkout') {
+      if (webifyJQ('.item.shipping').length == 0) {
         // there no Shipping items in the cart
         e.preventDefault();
-        $('#webify-shipping-calculator-info p').text("Please select a destination for shipping rate calculation.")
+        webifyJQ('#webify-shipping-calculator-info p').html("<span style='padding:5px;color:#fff;background-color:orange'>Please select a destination for shipping rate calculation.</span>");
         alert("Please select a destination for shipping rate calculation before checking out.");
+        
+        $('html, body').animate({
+        	scrollTop: webifyJQ("#webify-shipping-title").offset().top
+        }, 100);                
       }
     } else {
       //do something else
@@ -34,11 +43,11 @@
   });
 
 
-  $(document).ready(function() {
+  webifyJQ(document).ready(function() {
 
 
     // TODO a customer certainly shouldn't be able to checkout before this has happened
-    $.when(remove_shipping_item()).done(function() {
+    webifyJQ.when(remove_shipping_item()).done(function() {
       var total_weight = 0;
       var total_blanks = 0;
       {% for item in cart.items %}
