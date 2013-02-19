@@ -65,6 +65,7 @@ private
       "assets/webify.ajaxify-shop.js",
       "assets/webify.api.jquery.js",
       "assets/webify.xdr.js.liquid",
+      "assets/checkout.css.liquid",      
       "assets/webify_update_loader_and_submit.js.liquid",
       "assets/webify-ajax-loader.gif",
       "snippets/webify-request-shipping-form.liquid",
