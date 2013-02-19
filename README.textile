@@ -26,8 +26,6 @@ Add the following to the bottom of assets/checkout.css.liquid. If you don't have
 
 bc. /* Webify Changes
  * */
-if checkout.css.liquid not present, creates it.
- 
 #overview #thumbs h3[title^="Shipping"] + span {
   display: none;
 }
