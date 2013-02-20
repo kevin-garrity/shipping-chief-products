@@ -4,8 +4,6 @@ h2. Installation
 
 Remember to back up your theme before you start installing this app.
 
-Create a custom collection in your store called shipping, create a product in the new collection called Shipping with the price of 0.01.
-
 The following files are copied into the theme autmatically.
 * assets/webify_inject_shipping_calculator.js.liquid
 * assets/webify_update_loader_and_submit.js.liquid
@@ -17,20 +15,17 @@ The following files are copied into the theme autmatically.
 * snippets/webify-request-shipping-form.liquid
 * snippets/webify-shipping-items-hidden-price.liquid
 
-
-Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for @<\form>@, the HTML that closes the form element.
+Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for @<\form>@, the HTML that closes the form element, and add this line after it.
 
 @{% include 'webify-request-shipping-form' %}@
 
 Add the following to the bottom of assets/checkout.css.liquid. If you don't have a checkout.css.liquid file in your shop already, you should create it. add instruction to create it.
 
-bc. /* Webify Changes
- * */
+bc. /* Webify Changes */
 #overview #thumbs h3[title^="Shipping"] + span {
   display: none;
 }
-
-bc. #payment {
+#payment {
     display: none;
 }
 
@@ -42,15 +37,18 @@ This is so that the number of items displayed in the cart will not reflect the s
 
 Finally, in your store admin panel add a custom collection called 'shipping' with exactly 1 product, also called 'shipping'. Both of these names are case sensitive. The shipping product must have price $0.01. This is what is used by World Shipping Calculator to add the estimated cost of shipping to the shopper's cart. You must also give the shipping product a product-type, but that can be whatever you like (we don't use it).
 
-Add item class to each tr in cart.liquid
+Add item class to each product tr in cart.liquid
 add @{% if item.title == 'Shipping' %}shipping{% endif %}@ to tr class
 add id="cartform" to form in cart.liquid
 add class="cart-total-price" to total price container in cart, look for cart.total_price
+
+Remember: when adding classes or id's to elements that already have a class of id set, leave a space between the different classes and ids. For example, @class='even item shipping'@ is OK, but clearly @class='evenitem shipping'@ will cause some problems.
 
 look for <input class="text quantity" type="text" size="4" id="updates_{{ item.id }}" name="updates[{{ item.id }}]" value="{{ item.quantity }}" class="replace" />
 and make sure name="updates[{{ item.id }}] is present.
 
 tag td with class name price, quantity, total, item for calculator to work
+(TODO Ziggy thinks we should use 'sub-total' instead of 'total')
 
 edit selects at var selectors in webify.ajaxify-shop.js to find cart total
 
