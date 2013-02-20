@@ -1,3 +1,4 @@
+var request_params;
 
 inject_shipping_calculator = function(data) {
   webifyJQ('#webify-shipping-calculator').html(data);
@@ -53,7 +54,8 @@ submit_calculation_request = function(dataHash) {
   });
 
   webifyJQ("#results").empty();
-  update_loader_and_submit("POST", params, function(data) {
+  update_loader_and_submit("POST", params, function(data, query_string) {
+    request_params = parseQueryString(query_string);
     webifyJQ('#results').append(data);
     webifyJQ('input:radio').change(remove_and_add_again_shipping_line_item);
 
@@ -67,6 +69,11 @@ remove_and_add_again_shipping_line_item = function() {
   var shipping_quantity = Number(price.replace(/[^0-9]+/g,""));
   var shipping_type = webifyJQ(this).siblings('label').text() + " " + price;
   var shipping_product_id = webifyJQ('#shipping_product_id').text();
+  var line_item_properties = {
+    shipping_type: encodeURIComponent(shipping_type),
+    country_code: encodeURIComponent(request_params["australia_post_api_connection[country_code]"]),
+    postcode: encodeURIComponent(request_params["australia_post_api_connection[to_postcode]"])
+  }
 
   // remove the existing line item
   remove_shipping_item(function() {
@@ -75,7 +82,7 @@ remove_and_add_again_shipping_line_item = function() {
     //webifyJQ('input#quantity').attr('value', shipping_quantity);
     //webifyJQ('input#shipping-type').val(shipping_type);
 
-    Webify.addItem(shipping_product_id, shipping_quantity, encodeURIComponent(shipping_type), Webify.onItemAdded);
+    Webify.addItem(shipping_product_id, shipping_quantity, line_item_properties, Webify.onItemAdded);
     //webifyJQ('form#world-shipping-cartform input#shipping').click(); // add the logical shipping item
   });
 

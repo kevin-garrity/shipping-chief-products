@@ -29,8 +29,9 @@ update_loader_and_submit = function(method, dataHash, callback, fallback) {
     contentType: 'text/plain',
     data: dataHash,
     crossDomain: true,
-    success: function(data) {
-      callback(data);
+    success: function(data, text_status, jqXHR) {
+      var query_string = $(this).attr('data')
+      callback(data, query_string);
     },
     error: function(request, text_status, error_thrown) {
       if ((typeof fallback) === 'function') {
@@ -54,3 +55,19 @@ update_loader_and_submit = function(method, dataHash, callback, fallback) {
     webifyJQ("#indicator").empty().hide();
   });
 }
+
+// cred to http://www.joezimjs.com/javascript/3-ways-to-parse-a-query-string-in-a-url/
+parseQueryString = function( queryString ) {
+  var params = {}, queries, temp, i, l;
+
+  // Split into key/value pairs
+  queries = queryString.split("&");
+
+  // Convert the array of strings into an object
+  for ( i = 0, l = queries.length; i < l; i++ ) {
+    temp = queries[i].split('=');
+    params[decodeURI(temp[0])] = decodeURI(temp[1]);
+  }
+
+  return params;
+};

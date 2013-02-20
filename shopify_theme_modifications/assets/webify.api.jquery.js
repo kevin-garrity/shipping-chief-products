@@ -67,10 +67,16 @@ Webify.resizeImage = function(image, size) {
 // -------------------------------------------------------------------------------------
 // POST to cart/add.js returns the JSON of the line item associated with the added item.
 // -------------------------------------------------------------------------------------
-Webify.addItem = function(variant_id, quantity, shipping_type, callback) {
+Webify.addItem = function(variant_id, quantity, line_item_properties, callback) {
   quantity = quantity || 1;
 
-  var encoded_data = 'quantity=' + quantity + '&id=' + variant_id + '&' + encodeURIComponent('properties[shipping-type]') + '=' + shipping_type,
+  var encoded_data = 'quantity=' + quantity + '&id=' + variant_id
+
+  webifyJQ.each(line_item_properties, function(key, value) {
+    property_key = encodeURIComponent('properties[' + key + ']')
+    property_value = value
+    encoded_data += '&' + property_key + '=' + property_value
+  });
 
   var params = {
     type: 'POST',
