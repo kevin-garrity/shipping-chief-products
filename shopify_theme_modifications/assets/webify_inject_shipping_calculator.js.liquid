@@ -53,8 +53,8 @@ submit_calculation_request = function(dataHash) {
   });
 
   webifyJQ("#results").empty();
-  update_loader_and_submit("POST", params, function(data) { 
-    webifyJQ('#results').append(data); 
+  update_loader_and_submit("POST", params, function(data) {
+    webifyJQ('#results').append(data);
     webifyJQ('input:radio').change(remove_and_add_again_shipping_line_item);
 
     webifyJQ('input:radio').eq(0).change();
@@ -65,7 +65,7 @@ remove_and_add_again_shipping_line_item = function() {
   var price = webifyJQ(this).siblings('.option-price').text();
   var price_string = price.replace(/ -- /, '');
   var shipping_quantity = Number(price.replace(/[^0-9]+/g,""));
-  var shipping_type = webifyJQ(this).siblings('label').text() + price;
+  var shipping_type = webifyJQ(this).siblings('label').text() + " " + price;
   var shipping_product_id = webifyJQ('#shipping_product_id').text();
 
   // remove the existing line item
@@ -74,49 +74,42 @@ remove_and_add_again_shipping_line_item = function() {
     // we do this to change the line item property
     //webifyJQ('input#quantity').attr('value', shipping_quantity);
     //webifyJQ('input#shipping-type').val(shipping_type);
-    
-    Webify.addItem(shipping_product_id, shipping_quantity, Webify.onItemAdded);
+
+    Webify.addItem(shipping_product_id, shipping_quantity, encodeURIComponent(shipping_type), Webify.onItemAdded);
     //webifyJQ('form#world-shipping-cartform input#shipping').click(); // add the logical shipping item
   });
 
   var headers = {};
   var table_rows = webifyJQ('tr');
-  
-  var first_item_line = webifyJQ('tr.item').first();
-   
-  // find the first row with product information
-    row = first_item_line;
-    children = row.children();
-    for (var i = 0; i < children.length; i++)
-    {
-        cell = children[i];  
-        text = cell.innerHTML;
-        // not image cell and remove item cell
-        if (cell.className.indexOf("item") != -1 )
-        {
-            headers["item"] = i;
-        }
-          else if (cell.className.indexOf("quantity") != -1 )
-          {
-            headers["quantity"] = i;
-          }
-          else if (cell.className.indexOf("price") != -1 )
-          {
-            headers["price"] = i;
-          }
-         else if (cell.className.indexOf("total") != -1 )
-          {
-            headers["total"] = i;
-          }          
-      }
 
-  // we iterate over the table headers
-/*
-  table_header.children('th').each(function(index) {
-    var header = webifyJQ(this).text();
-    headers[header.toLowerCase()] = index;
-  });
-*/
+  var first_item_line = webifyJQ('tr.item').first();
+
+  // find the first row with product information
+  row = first_item_line;
+  children = row.children();
+  for (var i = 0; i < children.length; i++)
+  {
+    cell = children[i];
+    text = cell.innerHTML;
+    // not image cell and remove item cell
+    if (cell.className.indexOf("item") != -1 )
+    {
+      headers["item"] = i;
+    }
+    else if (cell.className.indexOf("quantity") != -1 )
+    {
+      headers["quantity"] = i;
+    }
+    else if (cell.className.indexOf("price") != -1 )
+    {
+      headers["price"] = i;
+    }
+    else if (cell.className.indexOf("total") != -1 )
+    {
+      headers["total"] = i;
+    }
+  }
+
   var line_item_template = webifyJQ('tr.item').first().clone();
 
   var table_data = line_item_template.children();
@@ -124,7 +117,13 @@ remove_and_add_again_shipping_line_item = function() {
   table_data.eq(headers['item']).html('Shipping: ' + webifyJQ(this).siblings('label').text());
   text = table_data.eq(headers['quantity']).html();
   if (text.length > 0) {
-    table_data.eq(headers['quantity']).html('<input type="text" value="' + shipping_quantity + '" name="updates[' +shipping_product_id + ']" id="updates_' +shipping_product_id + '" size="4" class="text quantity">');
+    table_data.eq(headers['quantity']).html('<input type="text" value="' +
+      shipping_quantity +
+      '" name="updates[' +
+        shipping_product_id +
+      ']" id="updates_' +
+      shipping_product_id +
+    '" size="4" class="text quantity">');
   }
   table_data.eq(headers['total']).html(price_string);
   table_data.eq(headers['price']).html('0.01');
@@ -134,7 +133,7 @@ remove_and_add_again_shipping_line_item = function() {
   line_item_template.find('a').remove();
   line_item_template.find('input[type=submit]').remove();
   item = webifyJQ('tr.item').last();
-  
+
   item.after(line_item_template);
   //item.insertAfter("<tr>"+line_item_template+"</tr>");
 }
