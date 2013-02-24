@@ -1,11 +1,23 @@
 var request_params;
 
 inject_shipping_calculator = function(data) {
+
   webifyJQ('#webify-shipping-calculator').html(data);
   webifyJQ('#new_australia_post_api_connection').attr("action", host + action);
   webifyJQ('.error').hide();
 
-  webifyJQ(".actions > input").click(ajax_request_calculation);
+  var cart_id = webifyJQ.cookie('cart');
+  var webify_cart_cookie = webifyJQ.cookie(cart_id);
+
+  if (webify_cart_cookie != undefined) {
+    var json_cookie = JSON.parse(webify_cart_cookie);
+
+    webifyJQ("select#australia_post_api_connection_country_code").val(json_cookie['country_code']);
+    webifyJQ("input#australia_post_api_connection_to_postcode").val(json_cookie['to_postcode']);
+    webifyJQ("#country-select").change(); // in order to hide the country code and make the request
+  } else {
+    webifyJQ(".actions > input").click(ajax_request_calculation);
+  }
 };
 
 ajax_request_calculation = function(data) {
@@ -19,6 +31,11 @@ ajax_request_calculation = function(data) {
   var length = webifyJQ("input#australia_post_api_connection_length").val();
   var blanks = webifyJQ("input#australia_post_api_connection_blanks").val();
   var shop_url = window.location.hostname;
+
+  // get the shopify cart ID and fashion our own cookie
+  var cart_cookie = webifyJQ.cookie('cart');
+  var cart_data = JSON.stringify({ country_code: country_code, to_postcode: to_postcode });
+  webifyJQ.cookie(cart_cookie, cart_data);
 
   var dataHash = {
     weight: weight,
