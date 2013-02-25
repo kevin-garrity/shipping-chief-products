@@ -46,7 +46,8 @@ class Preference < ActiveRecord::Base
 
   def self.method_missing(name, *args, &block)
     results = super(name, *args, &block)
-    if name.to_s != "find_by_shop_url" && results.nil?
+
+    if name.to_s == "find_by_shop_url" && results.nil?
       # if the results are completely empty, we can't proceed
       raise UnknownShopError.new("Shipping Calculator has not been configured.")
     else
