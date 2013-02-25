@@ -119,8 +119,15 @@ class AustraliaPostApiConnectionsController < ApplicationController
             price_to_charge = service['price'].to_f
             shipping_name = shipping_desc[service['code']].blank? ? service['name'] : shipping_desc[service['code']]
             unless @preference.nil?
-              if @preference.surchange_percentage > 0.0
-                price_to_charge =(price_to_charge * (1 + @preference.surchange_percentage/100)).round(2)
+              unless @preference.surchange_percentage.nil?
+                if @preference.surchange_percentage > 0.0
+                  price_to_charge =(price_to_charge * (1 + @preference.surchange_percentage/100)).round(2)
+                end
+              end
+              unless @preference.surchange_amount.nil?
+                if @preference.surchange_amount > 0.0
+                  price_to_charge = price_to_charge + @preference.surchange_amount
+                end
               end
             end
 

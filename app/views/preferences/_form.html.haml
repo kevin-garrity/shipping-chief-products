@@ -41,6 +41,13 @@
     = f.text_field :container_weight
     %span(class="postfix") kg
   %br  
+  %fieldset
+    = f.label :surchange_percentage, "Enter the surcharge percentage<br/> to add on top of shipping<span class='has-tip' data-width='280' title='If you want to add a charge on top of the shipping cost, enter the percentage here.'>?</span>".html_safe
+    = f.text_field :surchange_percentage
+    %span(class="postfix") %    
+    = f.label :surchange_amount, "<b>Or</b> enter a fixed amount<br/> to add on top of shipping<span class='has-tip' data-width='280' title='If you want to add a charge on top of the shipping cost, enter the amount here. You can enter an amount or a percentage.'>?</span>".html_safe    
+    = f.text_field :surchange_amount
+  %br    
   %div The list of shipping methods you want to offer to international customers
   %br
   %table(class="twelve")
@@ -74,11 +81,6 @@
       %td
         = check_box_tag("shipping_methods_dom[#{key}]", value=1, @preference.shipping_methods_allowed_dom[key.to_s])
     -}    
-  %br   
-  %fieldset
-    = f.label :surchange_percentage, "Enter the surcharge percentage<br/> to add on top of shipping<span class='has-tip' data-width='280' title='If you want to add a charge on top of the shipping cost, enter the percentage here.'>?</span>".html_safe
-    = f.text_field :surchange_percentage
-    %span(class="postfix") %
   .actions
     = f.submit 'Save', :class=>"button"
     = link_to 'Cancel', preferences_path
