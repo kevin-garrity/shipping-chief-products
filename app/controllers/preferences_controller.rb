@@ -19,16 +19,24 @@ class PreferencesController < ApplicationController
     check_shipping_product_exists
     check_shopify_files_present
 
+    begin
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
-    @preference = Preference.new if @preference.nil?
+    rescue Preference::UnknownShopError => e
+      puts 'in edit ' + e.message
+      @preference = Preference.new if @preference.nil?
+    end
 
   end
 
   # PUT /preference
   # PUT /preference
   def update
-    @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
-    @preference = Preference.new if @preference.nil?
+    begin
+      @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
+    rescue Preference::UnknownShopError => e
+      puts 'in update ' + e.message
+      @preference = Preference.new if @preference.nil?
+    end
     @preference.shop_url = session[:shopify].shop.domain
 
     respond_to do |format|
