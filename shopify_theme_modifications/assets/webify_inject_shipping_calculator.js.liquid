@@ -1,4 +1,6 @@
 var request_params;
+var webify_unavailable = false;
+var flat_shipping_rate;
 
 inject_shipping_calculator = function(data) {
 
@@ -6,6 +8,7 @@ inject_shipping_calculator = function(data) {
   webifyJQ('#new_australia_post_api_connection').attr("action", host + action);
   webifyJQ('.error').hide();
 
+  webifyJQ(".actions > input").click(ajax_request_calculation);
   var cart_id = webifyJQ.cookie('cart');
   var webify_cart_cookie = webifyJQ.cookie(cart_id);
 
@@ -16,8 +19,17 @@ inject_shipping_calculator = function(data) {
     webifyJQ("input#australia_post_api_connection_to_postcode").val(json_cookie['to_postcode']);
     webifyJQ("#country-select").change(); // in order to hide the country code and make the request
   } else {
-    webifyJQ(".actions > input").click(ajax_request_calculation);
+
   }
+};
+
+use_flat_shipping = function(rate) {
+  // In here we will remove the ban on checking out, and add a shipping item with
+  // the flat rate from store metafields
+
+  flat_shipping_rate = rate;
+  webify_unavailable = true;
+  remove_and_add_again_shipping_line_item();
 };
 
 ajax_request_calculation = function(data) {
@@ -86,10 +98,29 @@ remove_and_add_again_shipping_line_item = function() {
   var shipping_quantity = Number(price.replace(/[^0-9]+/g,""));
   var shipping_type = webifyJQ(this).siblings('label').text() + " " + price;
   var shipping_product_id = webifyJQ('#shipping_product_id').text();
-  var line_item_properties = {
-    shipping_type: encodeURIComponent(shipping_type),
-    country_code: encodeURIComponent(request_params["australia_post_api_connection[country_code]"]),
-    postcode: encodeURIComponent(request_params["australia_post_api_connection[to_postcode]"])
+  var line_item_properties = {}
+
+  console.log("webify unavailable? ")
+  if (webify_unavailable === true) {
+    console.log("YES")
+
+    shipping_quantity = String(flat_shipping_rate).replace(/\./, "")
+    console.log(shipping_quantity)
+    shipping_type = "default shipping type"
+    shipping_product_id = webifyJQ('#shipping_product_id').text();
+    line_item_properties = {
+      shipping_type: encodeURIComponent(shipping_type),
+      country_code: encodeURIComponent("default estimate"),
+      postcode: encodeURIComponent("default estimate")
+    }
+
+  } else {
+    console.log("NO")
+    var line_item_properties = {
+      shipping_type: encodeURIComponent(shipping_type),
+      country_code: encodeURIComponent(request_params["australia_post_api_connection[country_code]"]),
+      postcode: encodeURIComponent(request_params["australia_post_api_connection[to_postcode]"])
+    }
   }
 
   // remove the existing line item
