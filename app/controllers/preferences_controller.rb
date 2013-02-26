@@ -123,7 +123,7 @@ class PreferencesController < ApplicationController
         :product_type=>"product",
         :variants => ShopifyAPI::Variant.new(:price => 0.01)
       )
-      #prod.save!      
+      prod.save!      
     else
       prod = @products[0]
     end
