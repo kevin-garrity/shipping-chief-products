@@ -10,7 +10,9 @@ class AustraliaPostApiConnection
 
   attr_accessor :height, :length, :weight, :width, :blanks
   attr_accessor :country_code, :air_mail_price, :sea_mail_price
-  attr_accessor :domestic, :from_postcode, :to_postcode, :regular_price, :priority_price, :express_price
+  attr_accessor :domestic, :from_postcode, :to_postcode
+  attr_accessor :regular_price, :priority_price, :express_price
+  attr_accessor :container_weight
 
   class Girth < ActiveModel::Validator
     # implement the method where the validation logic must reside
@@ -120,24 +122,31 @@ class AustraliaPostApiConnection
     #
     total_weight = self.attributes[:weight].to_f
 
-    # package_weight is the max weight for a single AUS api call
-    package_weight = 20
+    # the max weight for a single AUS api call
+    # the weight of the container
+    # the difference
+    api_max_weight = 20
+    container_weight = self.attributes[:container_weight]
+    contents_weight = api_max_weight - container_weight
 
-    if total_weight <= package_weight
+    if total_weight <= contents_weight
       # we can fit the cart into 1 API call
       number_of_packages = 1
       excess_weight = 0
     else
       # we will need to do an API call at the max weight,
       # and then multiply the resulting price
-      # and then make 1 more call to get the excess
-      number_of_packages = (total_weight / package_weight).to_i
-      excess_weight = total_weight % package_weight
-      self.attributes[:weight] = package_weight
+      # and then make 1 more call to get the excess (which fits in 1 container)
+      number_of_packages = (total_weight / contents_weight).to_i
+      excess_weight = total_weight % contents_weight
+      excess_weight += container_weight if excess_weight > 0 # put it in a box
+      self.attributes[:weight] = api_max_weight
     end
 
     puts "total weight: " + total_weight.to_s
-    puts "api max weight : " + package_weight.to_s
+    puts "api max weight : " + api_max_weight.to_s
+    puts "container_weight: " + container_weight.to_s
+    puts "contents_weight: " + contents_weight.to_s
 
     puts "number_of_packages : " + number_of_packages.to_s
     puts "excess_weight : " + excess_weight.to_s

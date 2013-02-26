@@ -90,7 +90,8 @@ class AustraliaPostApiConnectionsController < ApplicationController
                                                                     :from_postcode => @preference.origin_postal_code,
                                                                     :country_code => params[:australia_post_api_connection][:country_code],
                                                                     :to_postcode => params[:australia_post_api_connection][:to_postcode],
-                                                                    :height=>@preference.height, :width=>@preference.width, :length=>@preference.length
+                                                                    :height=>@preference.height, :width=>@preference.width, :length=>@preference.length,
+                                                                    :container_weight => @preference.container_weight
                                                                      })
 
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
