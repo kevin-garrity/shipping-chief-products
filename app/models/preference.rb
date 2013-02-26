@@ -2,7 +2,7 @@ class Preference < ActiveRecord::Base
   class UnknownShopError < StandardError; end
 
   set_table_name 'preference'
-  attr_accessible :origin_postal_code, :default_weight, :surchange_percentage, :surchange_amount, :height, :width, :length, :items_per_box, :default_charge, :shipping_methods_allowed_dom, :default_box_size,
+  attr_accessible :origin_postal_code, :default_weight, :surcharge_percentage, :surcharge_amount, :height, :width, :length, :items_per_box, :default_charge, :shipping_methods_allowed_dom, :default_box_size,
     :shipping_methods_allowed_int, :container_weight, :shipping_methods_desc_int, :shipping_methods_desc_dom
   serialize   :shipping_methods_allowed_int, Hash
   serialize   :shipping_methods_allowed_dom, Hash
@@ -11,11 +11,11 @@ class Preference < ActiveRecord::Base
 
   validates :origin_postal_code, :length => { :is => 4 }
   validates :origin_postal_code, :numericality  => { :only_integer => true }
-  validates :surchange_percentage, :numericality => {:greater_than_or_equal_to => 0 }
+  validates :surcharge_percentage, :numericality => {:greater_than_or_equal_to => 0 }
 
   validates :default_weight, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 20 }
   validates :default_charge, :numericality => true, :allow_nil => true
-  validates :surchange_amount, :numericality => true, :allow_nil => true
+  validates :surcharge_amount, :numericality => true, :allow_nil => true
   
 
   validates :length, numericality: { greater_than_or_equal_to: 14, less_than_or_equal_to: 105 }
@@ -61,8 +61,8 @@ class Preference < ActiveRecord::Base
   end
   
   def no_surcharge_percentage_and_amount
-    if (surchange_percentage > 0.0 && surchange_amount > 0.0)
-      errors.add(:surchange_percentage, "cannot be non-zero when there is surcharge amount.")
+    if (surcharge_percentage > 0.0 && surcharge_amount > 0.0)
+      errors.add(:surcharge_percentage, "cannot be non-zero when there is surcharge amount.")
     end
   end
 

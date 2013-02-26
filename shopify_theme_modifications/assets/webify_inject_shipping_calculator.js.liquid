@@ -100,12 +100,12 @@ remove_and_add_again_shipping_line_item = function() {
   var shipping_product_id = webifyJQ('#shipping_product_id').text();
   var line_item_properties = {}
 
-  console.log("webify unavailable? ")
+  log("webify unavailable? ")
   if (webify_unavailable === true) {
-    console.log("YES")
+    log("YES")
 
     shipping_quantity = String(flat_shipping_rate).replace(/\./, "")
-    console.log(shipping_quantity)
+    log(shipping_quantity)
     shipping_type = "default shipping type"
     shipping_product_id = webifyJQ('#shipping_product_id').text();
     line_item_properties = {
@@ -115,7 +115,7 @@ remove_and_add_again_shipping_line_item = function() {
     }
 
   } else {
-    console.log("NO")
+    log("NO")
     var line_item_properties = {
       shipping_type: encodeURIComponent(shipping_type),
       country_code: encodeURIComponent(request_params["australia_post_api_connection[country_code]"]),
@@ -186,11 +186,14 @@ remove_and_add_again_shipping_line_item = function() {
   line_item_template.attr('class', 'item shipping');
   line_item_template.find('img').remove();
   line_item_template.find('a').remove();
-  line_item_template.find('input[type=submit]').remove();
-  item = webifyJQ('tr.item').last();
+  var input = line_item_template.find('input[type=submit]');
+
+   if (input){
+       input.remove();
+   }
+   var item = webifyJQ('tr.item').last();
 
   item.after(line_item_template);
-  //item.insertAfter("<tr>"+line_item_template+"</tr>");
 }
 
 
