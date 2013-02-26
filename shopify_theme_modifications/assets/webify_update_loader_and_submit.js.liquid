@@ -41,10 +41,10 @@ update_loader_and_submit = function(method, dataHash, callback, fallback) {
         // not sure how to get a CORS request to return non-zero status
         switch(request.state()) {
           case 'rejected':
-            console.log(request.state())
+            log(request.state())
             break;
           default:
-            console.log(request.state())
+            log(request.state())
         };
       }
     }

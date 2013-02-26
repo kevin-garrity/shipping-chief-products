@@ -116,7 +116,6 @@ Webify.addItem = function(variant_id, quantity, line_item_properties, callback) 
 // GET cart.js returns the cart in JSON.
 // ---------------------------------------------------------
 Webify.getCart = function(callback) {
-  console.log("getCart")
   webifyJQ.getJSON('/cart.js', function (cart, textStatus) {
     if ((typeof callback) === 'function') {
       callback(cart);
