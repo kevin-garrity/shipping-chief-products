@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130225004028) do
+ActiveRecord::Schema.define(:version => 20130226081744) do
 
   create_table "preference", :force => true do |t|
     t.string  "shop_url"
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(:version => 20130225004028) do
     t.decimal "height",                       :precision => 10, :scale => 2
     t.decimal "width",                        :precision => 10, :scale => 2
     t.decimal "length",                       :precision => 10, :scale => 2
-    t.float   "surchange_percentage"
+    t.float   "surcharge_percentage"
     t.integer "items_per_box"
     t.decimal "default_charge",               :precision => 10, :scale => 2
     t.text    "shipping_methods_allowed_int"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(:version => 20130225004028) do
     t.integer "default_box_size"
     t.text    "shipping_methods_desc_int"
     t.text    "shipping_methods_desc_dom"
-    t.decimal "surchange_amount"
+    t.decimal "surcharge_amount"
   end
 
   create_table "shops", :force => true do |t|
