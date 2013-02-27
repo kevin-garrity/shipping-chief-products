@@ -34,130 +34,31 @@ describe AustraliaPostApiConnectionsController do
     {}
   end
 
-  describe "GET index" do
-    it "assigns all australia_post_api_connections as @australia_post_api_connections" do
-      australia_post_api_connection = AustraliaPostApiConnection.create! valid_attributes
-      get :index, {}, valid_session
-      assigns(:australia_post_api_connections).should eq([australia_post_api_connection])
-    end
-  end
+  context 'handling GET new' do
 
-  describe "GET show" do
-    it "assigns the requested australia_post_api_connection as @australia_post_api_connection" do
-      australia_post_api_connection = AustraliaPostApiConnection.create! valid_attributes
-      get :show, {:id => australia_post_api_connection.to_param}, valid_session
-      assigns(:australia_post_api_connection).should eq(australia_post_api_connection)
-    end
-  end
+    let!(:existing_shop) { FactoryGirl.create :preference_for_shop }
 
-  describe "GET new" do
-    it "assigns a new australia_post_api_connection as @australia_post_api_connection" do
-      get :new, {}, valid_session
-      assigns(:australia_post_api_connection).should be_a_new(AustraliaPostApiConnection)
-    end
-  end
-
-  describe "GET edit" do
-    it "assigns the requested australia_post_api_connection as @australia_post_api_connection" do
-      australia_post_api_connection = AustraliaPostApiConnection.create! valid_attributes
-      get :edit, {:id => australia_post_api_connection.to_param}, valid_session
-      assigns(:australia_post_api_connection).should eq(australia_post_api_connection)
-    end
-  end
-
-  describe "POST create" do
-    describe "with valid params" do
-      it "creates a new AustraliaPostApiConnection" do
-        expect {
-          post :create, {:australia_post_api_connection => valid_attributes}, valid_session
-        }.to change(AustraliaPostApiConnection, :count).by(1)
-      end
-
-      it "assigns a newly created australia_post_api_connection as @australia_post_api_connection" do
-        post :create, {:australia_post_api_connection => valid_attributes}, valid_session
-        assigns(:australia_post_api_connection).should be_a(AustraliaPostApiConnection)
-        assigns(:australia_post_api_connection).should be_persisted
-      end
-
-      it "redirects to the created australia_post_api_connection" do
-        post :create, {:australia_post_api_connection => valid_attributes}, valid_session
-        response.should redirect_to(AustraliaPostApiConnection.last)
-      end
+    it "should render the australia post shipping form" do
+      @request.env['HTTP_ORIGIN'] = "http://www.existingshop.com"
+      get :new
+      controller.should render_template("new")
     end
 
-    describe "with invalid params" do
-      it "assigns a newly created but unsaved australia_post_api_connection as @australia_post_api_connection" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        AustraliaPostApiConnection.any_instance.stub(:save).and_return(false)
-        post :create, {:australia_post_api_connection => { "domestic" => "invalid value" }}, valid_session
-        assigns(:australia_post_api_connection).should be_a_new(AustraliaPostApiConnection)
-      end
-
-      it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        AustraliaPostApiConnection.any_instance.stub(:save).and_return(false)
-        post :create, {:australia_post_api_connection => { "domestic" => "invalid value" }}, valid_session
-        response.should render_template("new")
-      end
-    end
-  end
-
-  describe "PUT update" do
-    describe "with valid params" do
-      it "updates the requested australia_post_api_connection" do
-        australia_post_api_connection = AustraliaPostApiConnection.create! valid_attributes
-        # Assuming there are no other australia_post_api_connections in the database, this
-        # specifies that the AustraliaPostApiConnection created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        AustraliaPostApiConnection.any_instance.should_receive(:update_attributes).with({ "domestic" => "false" })
-        put :update, {:id => australia_post_api_connection.to_param, :australia_post_api_connection => { "domestic" => "false" }}, valid_session
-      end
-
-      it "assigns the requested australia_post_api_connection as @australia_post_api_connection" do
-        australia_post_api_connection = AustraliaPostApiConnection.create! valid_attributes
-        put :update, {:id => australia_post_api_connection.to_param, :australia_post_api_connection => valid_attributes}, valid_session
-        assigns(:australia_post_api_connection).should eq(australia_post_api_connection)
-      end
-
-      it "redirects to the australia_post_api_connection" do
-        australia_post_api_connection = AustraliaPostApiConnection.create! valid_attributes
-        put :update, {:id => australia_post_api_connection.to_param, :australia_post_api_connection => valid_attributes}, valid_session
-        response.should redirect_to(australia_post_api_connection)
-      end
+    it "should find a list of countries" do
+      @request.env['HTTP_ORIGIN'] = "http://www.existingshop.com"
+      get :new
+      assigns(:countries).should_not be_empty
     end
 
-    describe "with invalid params" do
-      it "assigns the australia_post_api_connection as @australia_post_api_connection" do
-        australia_post_api_connection = AustraliaPostApiConnection.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        AustraliaPostApiConnection.any_instance.stub(:save).and_return(false)
-        put :update, {:id => australia_post_api_connection.to_param, :australia_post_api_connection => { "domestic" => "invalid value" }}, valid_session
-        assigns(:australia_post_api_connection).should eq(australia_post_api_connection)
-      end
-
-      it "re-renders the 'edit' template" do
-        australia_post_api_connection = AustraliaPostApiConnection.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        AustraliaPostApiConnection.any_instance.stub(:save).and_return(false)
-        put :update, {:id => australia_post_api_connection.to_param, :australia_post_api_connection => { "domestic" => "invalid value" }}, valid_session
-        response.should render_template("edit")
-      end
-    end
-  end
-
-  describe "DELETE destroy" do
-    it "destroys the requested australia_post_api_connection" do
-      australia_post_api_connection = AustraliaPostApiConnection.create! valid_attributes
-      expect {
-        delete :destroy, {:id => australia_post_api_connection.to_param}, valid_session
-      }.to change(AustraliaPostApiConnection, :count).by(-1)
+    it "should assign @australia_post_api_connection => a valid connection object" do
+      @request.env['HTTP_ORIGIN'] = "http://www.existingshop.com"
+      get :new
+      expect { assigns(:australia_post_api_connection).save }.to be_true
     end
 
-    it "redirects to the australia_post_api_connections list" do
-      australia_post_api_connection = AustraliaPostApiConnection.create! valid_attributes
-      delete :destroy, {:id => australia_post_api_connection.to_param}, valid_session
-      response.should redirect_to(australia_post_api_connections_url)
+    it "should raise an UnknownShopError if the url is unrecognized" do
+      @request.env['HTTP_ORIGIN'] = "*/*, http://www.myshop.com"
+      expect {get :new}.to raise_error(Preference::UnknownShopError)
     end
   end
 

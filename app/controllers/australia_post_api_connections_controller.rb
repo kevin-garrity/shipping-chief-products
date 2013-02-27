@@ -11,23 +11,20 @@ class AustraliaPostApiConnectionsController < ApplicationController
   def new
     @weight = params[:weight]
     @blanks = params[:blanks]
-    @shop_url = request.headers["HTTP_ORIGIN"].sub(%r{^.*//}, "")
+    shop_url = request.headers["HTTP_ORIGIN"].sub(%r{^.*//}, "")
 
-    @australia_post_api_connection = AustraliaPostApiConnection.new(parameters_supplied_by_preferences)
+    preference = Preference.find_by_shop_url(shop_url)
+
+    @australia_post_api_connection = AustraliaPostApiConnection.new({
+      from_postcode: preference.origin_postal_code,
+      height: preference.height,
+      width: preference.width,
+      length: preference.length
+    })
+
     @australia_post_api_connection.weight = @weight
     @australia_post_api_connection.blanks = @blanks
-
-    # get country list from the API
-   # @countries = @australia_post_api_connection.data_oriented_methods(:country)
-
-    # format the response how we like it
-   # @countries = @countries[1]['country'].inject([]) do |list, country|
-  #    list.append([country['name'].capitalize, country['code'].capitalize])
-  #    list
-  #  end
-
-  #  @countries.prepend([ "Australia", "AUS" ])
-  @countries = get_country_list(@australia_post_api_connection)
+    @countries = get_country_list(@australia_post_api_connection)
 
     respond_to do |format|
       format.html { render layout: false } # new.html.erb 
@@ -43,26 +40,26 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
     @url = params[:australia_post_api_connection][:shop]
 
-    #try to find the shop preference using shop_url
-    @preference = Preference.find_by_shop_url(@url)
+    #try to find the shop preference using url
+    preference = Preference.find_by_shop_url(@url)
 
     #TODO
-    #raise error if @preference.nil?
+    #raise error if preference.nil?
 
     # recalculate the weight to include blanks
-    calculated_weight = params[:australia_post_api_connection][:blanks].to_i * @preference.default_weight.to_f
+    calculated_weight = params[:australia_post_api_connection][:blanks].to_i * preference.default_weight.to_f
     calculated_weight += params[:australia_post_api_connection][:weight].to_f
     params[:australia_post_api_connection][:blanks] = '0'
     params[:australia_post_api_connection][:weight] = calculated_weight.to_s
 
     @australia_post_api_connection = AustraliaPostApiConnection.new({:weight=> params[:australia_post_api_connection][:weight],
                                                                     :blanks => params[:australia_post_api_connection][:blanks],
-                                                                    :from_postcode => @preference.origin_postal_code,
+                                                                    :from_postcode => preference.origin_postal_code,
                                                                     :country_code => params[:australia_post_api_connection][:country_code],
                                                                     :to_postcode => params[:australia_post_api_connection][:to_postcode],
-                                                                    :height=>@preference.height, :width=>@preference.width, :length=>@preference.length,
-                                                                    :container_weight => @preference.container_weight
-                                                                     })
+                                                                    :height=>preference.height, :width=>preference.width, :length=>preference.length,
+                                                                    :container_weight => preference.container_weight
+    })
 
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
 
@@ -70,11 +67,11 @@ class AustraliaPostApiConnectionsController < ApplicationController
     @service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
 
     if @australia_post_api_connection.domestic
-      shipping_methods = @preference.shipping_methods_allowed_dom
-      shipping_desc = @preference.shipping_methods_desc_dom
+      shipping_methods = preference.shipping_methods_allowed_dom
+      shipping_desc = preference.shipping_methods_desc_dom
     else
-      shipping_methods = @preference.shipping_methods_allowed_int
-      shipping_desc = @preference.shipping_methods_desc_int
+      shipping_methods = preference.shipping_methods_allowed_int
+      shipping_desc = preference.shipping_methods_desc_int
     end
 
     respond_to do |format|
@@ -89,15 +86,15 @@ class AustraliaPostApiConnectionsController < ApplicationController
           if shipping_methods[service['code']]
             price_to_charge = service['price'].to_f
             shipping_name = shipping_desc[service['code']].blank? ? service['name'] : shipping_desc[service['code']]
-            unless @preference.nil?
-              unless @preference.surcharge_percentage.nil?
-                if @preference.surcharge_percentage > 0.0
-                  price_to_charge =(price_to_charge * (1 + @preference.surcharge_percentage/100)).round(2)
+            unless preference.nil?
+              unless preference.surcharge_percentage.nil?
+                if preference.surcharge_percentage > 0.0
+                  price_to_charge =(price_to_charge * (1 + preference.surcharge_percentage/100)).round(2)
                 end
               end
-              unless @preference.surcharge_amount.nil?
-                if @preference.surcharge_amount > 0.0
-                  price_to_charge = price_to_charge + @preference.surcharge_amount
+              unless preference.surcharge_amount.nil?
+                if preference.surcharge_amount > 0.0
+                  price_to_charge = price_to_charge + preference.surcharge_amount
                 end
               end
             end
@@ -133,16 +130,8 @@ class AustraliaPostApiConnectionsController < ApplicationController
   private
 
   def parameters_supplied_by_preferences
-    @preference = Preference.find_by_shop_url(@shop_url)
-
-    {
-      from_postcode: @preference.origin_postal_code,
-      height: @preference.height,
-      width: @preference.width,
-      length: @preference.length
-    }
   end
-  
+
   def get_country_list(api_connection)
     #see if list exist in cache
     if Rails.cache.exist?("aus_post_country_list")
@@ -151,16 +140,16 @@ class AustraliaPostApiConnectionsController < ApplicationController
     if list.nil?
       # get country list from the API
       countries = api_connection.data_oriented_methods(:country)
-      
+
       countries = countries[1]['country'].inject([]) do |country_list, country|
         country_list.append([country['name'].capitalize, country['code'].capitalize])
         country_list
       end
 
       countries.prepend([ "Australia", "AUS" ])
-        
+
       list = countries
-      
+
       Rails.cache.write('aus_post_country_list', countries, :timeToLive => 300.days)
     end
     list
