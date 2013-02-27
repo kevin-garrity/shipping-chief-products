@@ -6,6 +6,13 @@ development:
   password:
   host: localhost
 
+test:
+  adapter: postgresql
+  database: shipping_dev_test
+  username: richard
+  password:
+  host: localhost
+
 production:
   adapter: postgresql
   database: shipping_dev

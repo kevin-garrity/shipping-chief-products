@@ -1,7 +1,7 @@
 class Preference < ActiveRecord::Base
   class UnknownShopError < StandardError; end
 
-  set_table_name 'preference'
+  self.table_name = 'preference'
   attr_accessible :origin_postal_code, :default_weight, :surcharge_percentage, :surcharge_amount, :height, :width, :length, :items_per_box, :default_charge, :shipping_methods_allowed_dom, :default_box_size,
     :shipping_methods_allowed_int, :container_weight, :shipping_methods_desc_int, :shipping_methods_desc_dom
   serialize   :shipping_methods_allowed_int, Hash

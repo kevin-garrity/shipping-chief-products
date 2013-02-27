@@ -1,26 +1,4 @@
 class AustraliaPostApiConnectionsController < ApplicationController
-  # GET /australia_post_api_connections
-  # GET /australia_post_api_connections.json
-  def index
-    @australia_post_api_connections = AustraliaPostApiConnection.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @australia_post_api_connections }
-    end
-  end
-
-  # GET /australia_post_api_connections/1
-  # GET /australia_post_api_connections/1.json
-  def show
-    # @australia_post_api_connection = AustraliaPostApiConnection.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @australia_post_api_connection }
-    end
-  end
-
   # GET /australia_post_api_connections/new
   # GET /australia_post_api_connections/new.json
   #
@@ -31,7 +9,6 @@ class AustraliaPostApiConnectionsController < ApplicationController
   # The form we present should contain a list of countries, as well as an option
   #   to enter the postcode instead (for domestic).
   def new
-    puts "---------------IN NEW--------------------"
     @weight = params[:weight]
     @blanks = params[:blanks]
     @shop_url = request.headers["HTTP_ORIGIN"].sub(%r{^.*//}, "")
@@ -53,21 +30,14 @@ class AustraliaPostApiConnectionsController < ApplicationController
   @countries = get_country_list(@australia_post_api_connection)
 
     respond_to do |format|
-      puts "---------------About to format--------------------"
       format.html { render layout: false } # new.html.erb 
       format.json { render json: @australia_post_api_connection }
     end
   end
 
-  # GET /australia_post_api_connections/1/edit
-  def edit
-    @australia_post_api_connection = AustraliaPostApiConnection.find(params[:id])
-  end
-
   # POST /australia_post_api_connections
   # POST /australia_post_api_connections.json
   def create
-    puts "---------------IN CREATE------------"
     # merge the raw post data into the params
     params.merge!(Rack::Utils.parse_nested_query(request.raw_post))
 
@@ -157,34 +127,6 @@ class AustraliaPostApiConnectionsController < ApplicationController
         # format.json { render json: @australia_post_api_connection.errors, status: :unprocessable_entity }
         format.html { render partial: "trouble", layout: false }
       end
-    end
-  end
-
-  # PUT /australia_post_api_connections/1
-  # PUT /australia_post_api_connections/1.json
-  def update
-    @australia_post_api_connection = AustraliaPostApiConnection.find(params[:id])
-
-    respond_to do |format|
-      if @australia_post_api_connection.update_attributes(params[:australia_post_api_connection])
-        format.html { redirect_to @australia_post_api_connection, notice: 'Australia post api connection was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @australia_post_api_connection.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /australia_post_api_connections/1
-  # DELETE /australia_post_api_connections/1.json
-  def destroy
-    @australia_post_api_connection = AustraliaPostApiConnection.find(params[:id])
-    @australia_post_api_connection.destroy
-
-    respond_to do |format|
-      format.html { redirect_to australia_post_api_connections_url }
-      format.json { head :no_content }
     end
   end
 
