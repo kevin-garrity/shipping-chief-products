@@ -89,7 +89,13 @@ submit_calculation_request = function(dataHash) {
     webifyJQ('input:radio').change(remove_and_add_again_shipping_line_item);
 
     webifyJQ('input:radio').eq(0).change();
+
+    // if webify returned any errors, they will be in the alert-box
+    if (webifyJQ('#results .alert').length > 0) {
+      remove_shipping_item();
+    }
   });
+
 }
 
 remove_and_add_again_shipping_line_item = function() {
@@ -230,7 +236,8 @@ remove_shipping_item = function(callback) {
 
 validate_and_process_form = function(dataHash) {
   // validate and process form here
-  webifyJQ('.error').hide();
+  webifyJQ('.error').css('color', 'red').hide();
+  webifyJQ("#postcode > span").show();
 
   // TODO
     //   So this seems weird: the heigh, width, and length are all calculated
@@ -239,7 +246,9 @@ validate_and_process_form = function(dataHash) {
 
   // client side validation example
   if (dataHash['country_code'] === "AUS" && dataHash['to_postcode'] === "") {
+    remove_shipping_item();
     webifyJQ("#postcode > .error").show();
+    webifyJQ("#postcode > span").hide();
     webifyJQ("input#australia_post_api_connection_to_postcode").focus();
     return false;
   }
