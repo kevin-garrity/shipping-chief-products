@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130226081744) do
+ActiveRecord::Schema.define(:version => 20130228205930) do
 
   create_table "preference", :force => true do |t|
     t.string  "shop_url"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20130226081744) do
     t.text    "shipping_methods_desc_int"
     t.text    "shipping_methods_desc_dom"
     t.decimal "surcharge_amount"
+    t.boolean "hide_welcome_note"
   end
 
   create_table "shops", :force => true do |t|

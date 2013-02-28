@@ -59,13 +59,20 @@ class PreferencesController < ApplicationController
       end
     end
   end
+  
+  def hide_welcome_note
+    @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
+    @preference.hide_welcome_note = true
+    @preference.save
+    render :json =>{:result => "ok"}
+  end
 
   private 
 
   def check_shopify_files_present    
     url = session[:shopify].url
     shop = Shop.find_by_url(url)
-    # return if (shop.theme_modified)
+    return if (shop.theme_modified)
     themes = ShopifyAPI::Theme.find(:all)
 
     theme = themes.find { |t| t.role == 'main' }
