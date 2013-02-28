@@ -48,7 +48,7 @@
     = f.label :surcharge_amount, "<b>Or</b> enter a fixed amount<br/> to add on top of shipping<span class='has-tip' data-width='280' title='If you want to add a charge on top of the shipping cost, enter the amount here. You can enter an amount or a percentage.'>?</span>".html_safe    
     = f.text_field :surcharge_amount
   %br    
-  %div The list of shipping methods you want to offer to international customers
+  %h3 The list of shipping methods you want to offer to international customers
   %br
   %table(class="twelve")
     %tr 
@@ -65,7 +65,7 @@
         = check_box_tag("shipping_methods_int[#{key}]", value=1, @preference.shipping_methods_allowed_int[key.to_s])
     -}    
   %br 
-  %div The list of shipping methods you want to offer to domestic customers
+  %h3 The list of shipping methods you want to offer to domestic customers
   %br
   %table(class="twelve")
     %tr 

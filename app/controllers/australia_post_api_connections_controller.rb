@@ -126,7 +126,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
               end
               unless @preference.surcharge_amount.nil?
                 if @preference.surcharge_amount > 0.0
-                  price_to_charge = price_to_charge + @preference.surcharge_amount
+                  price_to_charge = (price_to_charge + @preference.surcharge_amount).round(2)
                 end
               end
             end
