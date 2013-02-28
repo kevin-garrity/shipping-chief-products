@@ -37,6 +37,8 @@ class PreferencesController < ApplicationController
       puts 'in update ' + e.message
       @preference = Preference.new if @preference.nil?
     end
+    @preference = Preference.new if @preference.nil?
+    
     @preference.shop_url = session[:shopify].shop.domain
 
     respond_to do |format|
