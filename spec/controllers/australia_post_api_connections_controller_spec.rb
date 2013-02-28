@@ -20,46 +20,78 @@ require 'spec_helper'
 
 describe AustraliaPostApiConnectionsController do
 
-  # This should return the minimal set of attributes required to create a valid
-  # AustraliaPostApiConnection. As you add validations to AustraliaPostApiConnection, be sure to
-  # update the return value of this method accordingly.
-  def valid_attributes
-    { "domestic" => "false" }
+  def valid_post_params
+    {"action"=>"create", "controller"=>"australia_post_api_connections", "authenticity_token"=>"Yt5WCv970HK3NJkCs7ZMlbjV+7VFvjxy9/B5wbFphE4=", "australia_post_api_connection"=>{"weight"=>"2", "to_postcode"=>"", "from_postcode"=>"3222", "country_code"=>"It", "height"=>"7.7", "width"=>"16.0", "length"=>"22.0", "blanks"=>"0", "shop"=>"www.existingshop.com"}}
   end
 
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # AustraliaPostApiConnectionsController. Be sure to keep this updated too.
-  def valid_session
-    {}
-  end
-
-  context 'handling GET new' do
-
+  describe :new do
     let!(:existing_shop) { FactoryGirl.create :preference_for_shop }
 
-    it "should render the australia post shipping form" do
-      @request.env['HTTP_ORIGIN'] = "http://www.existingshop.com"
-      get :new
-      controller.should render_template("new")
+    context "when request origin is a shop" do
+      let!(:request_origin) { @request.env['HTTP_ORIGIN'] = "http://www.existingshop.com" }
+      before(:each) { get :new }
+
+      it { should render_template("new") }
+      specify { expect { assigns(:australia_post_api_connection).save }.to be_true }
+      specify { assigns(:countries).should_not be_empty }
     end
 
-    it "should find a list of countries" do
-      @request.env['HTTP_ORIGIN'] = "http://www.existingshop.com"
-      get :new
-      assigns(:countries).should_not be_empty
-    end
-
-    it "should assign @australia_post_api_connection => a valid connection object" do
-      @request.env['HTTP_ORIGIN'] = "http://www.existingshop.com"
-      get :new
-      expect { assigns(:australia_post_api_connection).save }.to be_true
-    end
-
-    it "should raise an UnknownShopError if the url is unrecognized" do
-      @request.env['HTTP_ORIGIN'] = "*/*, http://www.myshop.com"
-      expect {get :new}.to raise_error(Preference::UnknownShopError)
+    context "when request origin is unknown" do
+      let!(:request_origin) { @request.env['HTTP_ORIGIN'] = "http://www.example.com" }
+      specify { expect {get :new}.to raise_error(Preference::UnknownShopError)}
     end
   end
 
+  shared_examples "a succesful post to create" do
+    before(:each) { post :create, post_params }
+
+    it { should render_template("create") }
+    specify { expect { assigns(:australia_post_api_connection).save }.to be_true }
+    specify { assigns(:countries).should_not be_empty }
+    specify { assigns(:service_list).should_not be_empty }
+  end
+
+  describe :create do
+    let!(:existing_shop) { FactoryGirl.create :preference_for_shop }
+    let!(:post_params) { post_params = valid_post_params }
+
+    context "when country code is international" do
+      let!(:international) { post_params['australia_post_api_connection']['country_code'] = "It" }
+
+      it_behaves_like "a succesful post to create"
+      specify { expect { assigns(:australia_post_api_connection).domestic }.to be_false }
+    end
+
+    context "when country code is domestic" do
+      let!(:domestic) do
+        post_params['australia_post_api_connection']['country_code'] = "AUS"
+        post_params['australia_post_api_connection']['to_postcode'] = "3000"
+      end
+
+      it_behaves_like "a succesful post to create"
+      specify { expect { assigns(:australia_post_api_connection).domestic }.to be_true }
+    end
+
+    context "when the postcode for a domestic request is missing" do
+      let!(:domestic) do
+        post_params['australia_post_api_connection']['country_code'] = "AUS"
+      end
+      before(:each) { post :create, post_params }
+
+      it { should render_template("_trouble") }
+    end
+
+    context "when the shop is not recognized" do
+      let!(:not_a_shop) { post_params['australia_post_api_connection']['shop'] = "www.example.com" }
+
+      specify { expect { post :create, post_params }.to raise_error(Preference::UnknownShopError)}
+    end
+
+    context "when weight is out of bounds" do
+      let!(:bad_weight) { post_params['australia_post_api_connection']['weight'] = 0 }
+      before(:each) { post :create, post_params }
+
+      it { should render_template("_trouble") }
+    end
+  end
 end

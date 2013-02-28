@@ -1,13 +1,7 @@
 class AustraliaPostApiConnectionsController < ApplicationController
+
   # GET /australia_post_api_connections/new
   # GET /australia_post_api_connections/new.json
-  #
-  # Initialize the API connection with dimensions
-  #   weight -- should have been received as a param
-  #   heigh, length, width -- should be supplied by prefs
-  # Perform an API call to get a list of country codes
-  # The form we present should contain a list of countries, as well as an option
-  #   to enter the postcode instead (for domestic).
   def new
     @weight = params[:weight]
     @blanks = params[:blanks]
@@ -38,10 +32,10 @@ class AustraliaPostApiConnectionsController < ApplicationController
     # merge the raw post data into the params
     params.merge!(Rack::Utils.parse_nested_query(request.raw_post))
 
-    @url = params[:australia_post_api_connection][:shop]
+    url = params[:australia_post_api_connection][:shop]
 
     #try to find the shop preference using url
-    preference = Preference.find_by_shop_url(@url)
+    preference = Preference.find_by_shop_url(url)
 
     #TODO
     #raise error if preference.nil?
@@ -62,6 +56,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
     })
 
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
+    puts @australia_post_api_connection.domestic
 
     # get country list from the API -- we'll format these if there were no errors
     @service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
@@ -106,18 +101,11 @@ class AustraliaPostApiConnectionsController < ApplicationController
           list
         end
 
-        # we won't do this stuff since we are doing ajax instead?
-        # format.html { render action: "new", layout: false }
-        # format.json { render json: @australia_post_api_connection, status: :created, location: @australia_post_api_connection }
-
-        # we'll render create.haml
         format.js { render content_type: 'text/html', layout: false }
         format.html { render content_type: 'text/html', layout: false }
       else
 
         # set the flash
-        puts "==================================================="
-        puts @australia_post_api_connection.api_errors.join(', ')
 
         flash.now[:error] = @australia_post_api_connection.api_errors.join(', ')
         # format.html { render action: "new" }
@@ -128,9 +116,6 @@ class AustraliaPostApiConnectionsController < ApplicationController
   end
 
   private
-
-  def parameters_supplied_by_preferences
-  end
 
   def get_country_list(api_connection)
     #see if list exist in cache
