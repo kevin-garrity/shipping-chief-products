@@ -48,17 +48,17 @@ class Preference < ActiveRecord::Base
     }
   end
 
-  def self.method_missing(name, *args, &block)
-    results = super(name, *args, &block)
+  #def self.method_missing(name, *args, &block)
+   # results = super(name, *args, &block)
 
-    if name.to_s == "find_by_shop_url" && results.nil?
+ #   if name.to_s == "find_by_shop_url" && results.nil?
       # if the results are completely empty, we can't proceed
-      raise UnknownShopError.new("Shipping Calculator has not been configured.")
-    else
-    end
+  #    raise UnknownShopError.new("Shipping Calculator has not been configured.")
+  #  else
+  #  end
 
-    return results
-  end
+  #  return results
+  #end
   
   def no_surcharge_percentage_and_amount
     if (surcharge_percentage > 0.0 && surcharge_amount > 0.0)

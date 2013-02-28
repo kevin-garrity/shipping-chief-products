@@ -15,6 +15,8 @@ WorldShippingCalculator::Application.routes.draw do
 
 
   resource 'preferences', only: [:show, :edit, :update]
+  match '/preferences/hide_welcome_note' => 'preferences#hide_welcome_note', :via=>[:get, :post]
+  
   match '/australia_post_api_connections' => 'australia_post_api_connections#new', :via => :get
 
   match '/webhooks/app/uninstalled' => 'webhooks#uninstall_app', :via => :post
