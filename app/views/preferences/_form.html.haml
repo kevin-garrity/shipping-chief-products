@@ -9,7 +9,7 @@
         - @preference.errors.full_messages.each do |msg|
           %li= msg          
   %fieldset
-    = f.label :origin_postal_code, "Enter the Australian Postal Code your items would be shipping from <span class='has-tip' data-width='280' title='This will be passed to Australia Post for calculation purpose.'>?</span>".html_safe
+    = f.label :origin_postal_code, "Enter the Australian Postcode your items would be shipping from <span class='has-tip' data-width='280' title='This will be passed to Australia Post for calculation purpose.'>?</span>".html_safe
     = f.text_field :origin_postal_code
     = f.label :default_weight, "Enter the default product weight to used in calculation when there is no weight stored for items <span class='has-tip' data-width='280' title='If you choose not to use weight in Shopify, enter a default weight to pass to Australia Post for calculation.'>?</span>".html_safe
     = f.text_field :default_weight
