@@ -15,7 +15,7 @@ The following files are copied into the theme autmatically.
 * snippets/webify-request-shipping-form.liquid
 * snippets/webify-shipping-items-hidden-price.liquid
 
-Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for @<\form>@, the HTML that closes the form element, and add this line after it.
+Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for proceed to checkout button and add the following line
 
 @{% include 'webify-request-shipping-form' %}@
 
