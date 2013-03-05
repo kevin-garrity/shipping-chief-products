@@ -19,7 +19,7 @@
   .row
     %div
       .field#country-select
-        = f.label :country_code, "Select country of shipping destination"
+        = f.label :country_code, "Select country of shipping destination", :style=>"font-weight:normal;"
         = f.select :country_code, @countries,  {:selected => "Australia"}, {:style=>"padding-top:5px;height:30px"}
       %br
       .field#postcode
