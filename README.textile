@@ -15,32 +15,40 @@ The following files are copied into the theme autmatically.
 * snippets/webify-request-shipping-form.liquid
 * snippets/webify-shipping-items-hidden-price.liquid
 
-Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for proceed to checkout button and add the following line
 
-@{% include 'webify-request-shipping-form' %}@
-
-Add the following to the bottom of assets/checkout.css.liquid. If you don't have a checkout.css.liquid file in your shop already, you should create it. add instruction to create it.
+Add the following to the bottom of assets/checkout.css.liquid if already exists  and add following styles. Otherwise continue to next step.
 
 bc. /* Webify Changes */
+
 #overview #thumbs h3[title^="Shipping"] + span {
   display: none;
 }
+
+#overview #thumbs tr td:first-child {
+ display: none;
+}
+
 #payment {
     display: none;
 }
 
-Wherever you find @{{ cart.item_count }}@ in the layout/theme.liquid file, replace it with:
+Wherever you find @{{ cart.item_count }}@ in the layout/theme.liquid file and layout/cart.liquid replace it with:
 
 @{% include 'webify-shipping-items-hidden-price' %}@
 
 This is so that the number of items displayed in the cart will not reflect the secret hidden shipping line items we use internally.
 
-Finally, in your store admin panel add a custom collection called 'shipping' with exactly 1 product, also called 'shipping'. Both of these names are case sensitive. The shipping product must have price $0.01. This is what is used by World Shipping Calculator to add the estimated cost of shipping to the shopper's cart. You must also give the shipping product a product-type, but that can be whatever you like (we don't use it).
+Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for proceed to checkout button and add the following line
+
+@{% include 'webify-request-shipping-form' %}@
+
 
 Add item class to each product tr in cart.liquid
 add @{% if item.title == 'Shipping' %}shipping{% endif %}@ to tr class
 add id="cartform" to form in cart.liquid
 add class="cart-total-price" to total price container in cart, look for cart.total_price
+
+For theme that does not use table for cart, add id="cart-subtotal" to the line that contains subtotal. If total is in a table row, create an empty div with the id cart-subtotal. Check if shipping charge is displayed before subtotal in the shop.
 
 Remember: when adding classes or id's to elements that already have a class of id set, leave a space between the different classes and ids. For example, @class='even item shipping'@ is OK, but clearly @class='evenitem shipping'@ will cause some problems.
 
