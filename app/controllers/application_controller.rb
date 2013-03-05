@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
           #place a recurring charge
         charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Australia Post Shipping", 
                                                            :price => 15, 
-                                                           :test=>(Rails.env == "production"),
+                                                           :test=>(Rails.env != "production"),
                                                            :trial_days => 30,
                                                            :return_url => "http://#{DOMAIN_NAMES[Rails.env]}/confirm_charge")
 

@@ -4,10 +4,10 @@
 </script>
 
 <style>
-  tr.item.shipping .quantity input {
+  .item.shipping .quantity input {
     visibility:hidden;
   }
-  tr.item.shipping .price {
+  .item.shipping .price {
     visibility:hidden;
   }
 </style>
@@ -35,6 +35,9 @@
 <!-- calculate the weight and grab us a calculator! -->
 <script>
 
+
+  webifyJQ(document).ready(function() {
+
   webifyJQ("#cartform").find('input[type=submit]').on('click', function (e) {
     if (webifyJQ(e.target).attr('name') == 'checkout') {
       if (webifyJQ('.item.shipping').length == 0) {
@@ -51,9 +54,7 @@
       //do something else
     }
   });
-
-
-  webifyJQ(document).ready(function() {
+  
 
     webifyJQ.when(remove_shipping_item()).done(function() {
       var total_weight = 0;
