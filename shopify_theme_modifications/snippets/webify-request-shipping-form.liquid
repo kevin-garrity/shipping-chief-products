@@ -1,8 +1,10 @@
+<!-- we are introducing our own jquery -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js" type="text/javascript"></script>
-<script>
-  var webifyJQ = jQuery.noConflict();
-</script>
 
+<!-- here we create the namespace we will be attaching all out functionality to -->
+<script>
+  var webifyJQ = jQuery;
+</script>
 <style>
   .item.shipping .quantity input {
     visibility:hidden;
@@ -12,10 +14,11 @@
   }
 </style>
 
+<!-- here we attach a bunch of functionality to webifyJQ -->
 {{ 'webify_update_loader_and_submit.js' | asset_url | script_tag }}
-{{ 'webify_inject_shipping_calculator.js' | asset_url | script_tag }}
 {{ 'webify.xdr.js' | asset_url | script_tag }}
 {{ 'webify.jquery.cookie.js' | asset_url | script_tag }}
+{{ 'webify_inject_shipping_calculator.js' | asset_url | script_tag }}
 
 <!-- These are our api overrides -->
 {{ 'webify.ajaxify-shop.js' | asset_url | script_tag }}
@@ -24,6 +27,11 @@
 
 <!-- This is foe debugging in IE during development -->
 {{ 'webify.consolelog.js' | asset_url | script_tag }}
+
+<!-- finally, we restore the original meanings of jQuery and $ before our overloads -->
+<script>
+  var webifyJQ = jQuery.noConflict(true);
+</script>
 
 {% include "webify-add-to-cart" %}
 
