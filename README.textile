@@ -68,7 +68,14 @@ bc. {% for line in line_items %}
 {% endfor %}
 
 ** shipping confirmation, shipping update
-End of manual installation steps.
+
+bc. {% for line in fulfillment.line_items %}
+{% if line.title !="Shipping" %}
+{{ line.quantity }}x {{ line.title }}
+{% endif %}
+{% endfor %}
+
+h2. End of manual installation steps.
 
 
 
