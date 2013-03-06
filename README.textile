@@ -8,7 +8,7 @@ Remember to back up your theme before you start installing this app.
 * Check both regular theme and mobile theme
 * Add the following to the bottom of assets/checkout.css.liquid if already exists  and add following styles. Otherwise continue to next step.
 
-** 
+** Copy the code
 bc. #overview #thumbs h3[title^="Shipping"] + span {
   display: none;
 }
