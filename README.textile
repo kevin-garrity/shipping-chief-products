@@ -48,7 +48,7 @@ add @{% if item.title == 'Shipping' %}shipping{% endif %}@ to tr class
 add id="cartform" to form in cart.liquid
 add class="cart-total-price" to total price container in cart, look for cart.total_price
 
-For theme that does not use table for cart, add id="cart-subtotal" to the line that contains subtotal. If total is in a table row, create an empty div with the id cart-subtotal. Check if shipping charge is displayed before subtotal in the shop.
+For theme that does not use table for cart, add class="cart-subtotal" to the line that contains subtotal. If total is in a table row, create an empty div with the class cart-subtotal. Check if shipping charge is displayed before subtotal in the shop.
 
 Remember: when adding classes or id's to elements that already have a class of id set, leave a space between the different classes and ids. For example, @class='even item shipping'@ is OK, but clearly @class='evenitem shipping'@ will cause some problems.
 

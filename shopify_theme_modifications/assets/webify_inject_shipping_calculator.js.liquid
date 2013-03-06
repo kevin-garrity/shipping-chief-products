@@ -212,7 +212,7 @@ remove_and_add_again_shipping_line_item = function() {
     item.after(line_item_template);
   }
   else { //cannot find a line to add. Add the line as a div
-    webifyJQ("cart-subtotal").before("<div class='item shipping' style='margin-bottom:10px;text-align:right;'>Shipping Charge: " + price_string+ "</div>");
+    webifyJQ(".cart-subtotal").before("<div class='item shipping' style='margin-bottom:10px;text-align:right;'>Shipping Charge: " + price_string+ "</div>");
   }
 }
 
