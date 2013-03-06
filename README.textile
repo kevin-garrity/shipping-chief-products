@@ -44,8 +44,7 @@ Remember: when adding classes or id's to elements that already have a class of i
 ** Order Confirmation email
 *** Make changes like this
 
-bc..
-{% for line in line_items %}
+bc. {% for line in line_items %}
 
 {% if line.title == 'Shipping' %}
   {% assign delivery_charge = line.line_price %}
@@ -54,8 +53,7 @@ bc..
 {% endif %}
 {% endfor %}
 
-bc..
-{% if delivery_charge %}
+bc. {% if delivery_charge %}
 
 Shipping charge included in subtotal: {{delivery_charge | money_with_currency }}
 {% else %}
@@ -64,8 +62,7 @@ Shipping  : {{ shipping_price | money_with_currency }}{% endif %}
 {% endif %}
 
 ** New order notification and New order notification(mobile)
-bc.. 
-{% for line in line_items %}
+bc. {% for line in line_items %}
 {% if line.title != 'Shipping' %}
 {{ line.quantity }}x {{line.title }}		(sku: {{ line.sku }})
 {% endif %}
