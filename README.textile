@@ -16,7 +16,7 @@ The following files are copied into the theme autmatically.
 * snippets/webify-shipping-items-hidden-price.liquid
 
 
-Add the following to the bottom of assets/checkout.css.liquid if already exists  and add following styles. Otherwise continue to next step.
+* Add the following to the bottom of assets/checkout.css.liquid if already exists  and add following styles. Otherwise continue to next step.
 
 bc. /* Webify Changes */
 
@@ -32,33 +32,30 @@ bc. /* Webify Changes */
     display: none;
 }
 
-Wherever you find @{{ cart.item_count }}@ in the layout/theme.liquid file and layout/cart.liquid replace it with:
-
-@{% include 'webify-shipping-items-hidden-price' %}@
+* Wherever you find @{{ cart.item_count }}@ in the layout/theme.liquid file and layout/cart.liquid replace it with: @{% include 'webify-shipping-items-hidden-price' %}@
 
 This is so that the number of items displayed in the cart will not reflect the secret hidden shipping line items we use internally.
 
-Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for proceed to checkout button and add the following line
+* Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for proceed to checkout button and add the following line
 
 @{% include 'webify-request-shipping-form' %}@
 
 
-Add item class to each product tr in cart.liquid
-add @{% if item.title == 'Shipping' %}shipping{% endif %}@ to tr class
-add id="cartform" to form in cart.liquid
-add class="cart-total-price" to total price container in cart, look for cart.total_price
-
-For theme that does not use table for cart, add class="cart-subtotal" to the line that contains subtotal. If total is in a table row, create an empty div with the class cart-subtotal. Check if shipping charge is displayed before subtotal in the shop.
+* Modify cart.liquid
+** Add @class="item"@  to each product tr in cart.liquid
+** add @{% if item.title == 'Shipping' %}shipping{% endif %}@ to tr class
+** add @id="cartform"@ to form in cart.liquid
+** add @class="cart-total-price"@ to total price container in cart, look for cart.total_price
+** For theme that does not use table for cart, add @class="cart-subtotal"@ to the line that contains subtotal. If total is in a table row, create an empty div with the class cart-subtotal. Check if shipping charge is displayed before subtotal in the shop.
+** tag td in the cart table with class name price, quantity, total, item
+** look for <input class="text quantity" type="text" size="4" id="updates_{{ item.id }}" name="updates[{{ item.id }}]" value="{{ item.quantity }}" class="replace" />
+and make sure name="updates[{{ item.id }}] is present.
 
 Remember: when adding classes or id's to elements that already have a class of id set, leave a space between the different classes and ids. For example, @class='even item shipping'@ is OK, but clearly @class='evenitem shipping'@ will cause some problems.
 
-look for <input class="text quantity" type="text" size="4" id="updates_{{ item.id }}" name="updates[{{ item.id }}]" value="{{ item.quantity }}" class="replace" />
-and make sure name="updates[{{ item.id }}] is present.
 
-tag td with class name price, quantity, total, item for calculator to work
+
 (TODO Ziggy thinks we should use 'sub-total' instead of 'total')
-
-edit selects at var selectors in webify.ajaxify-shop.js to find cart total
 
 
 Move to FAQ
