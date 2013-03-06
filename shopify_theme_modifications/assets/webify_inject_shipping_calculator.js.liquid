@@ -111,12 +111,11 @@ remove_and_add_again_shipping_line_item = function() {
     // money could come in as 12, 12.3 or 12.99
 
     shipping_quantity = String(flat_shipping_rate).replace(/\./, "")
-    log("|" + shipping_quantity + "|")
-    while(shipping_quantity.length < 4) {
-      log("inside " + shipping_quantity.length)
-      shipping_quantity = shipping_quantity.concat('0')
+    while (shipping_quantity.length < 4) {
+      shipping_quantity = shipping_quantity.concat('0');
     }
-      log("outside " + shipping_quantity.length)
+    price_string = (shipping_quantity/100).toFixed(2);
+    price_string = "$" + String(price_string);
     shipping_type = "default shipping type"
     shipping_product_id = webifyJQ('#shipping_product_id').text();
     line_item_properties = {
@@ -126,7 +125,6 @@ remove_and_add_again_shipping_line_item = function() {
     }
 
   } else {
-    log("NO")
     var line_item_properties = {
       shipping_type: encodeURIComponent(shipping_type),
       country_code: encodeURIComponent(request_params["australia_post_api_connection[country_code]"]),
