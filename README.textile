@@ -4,22 +4,11 @@ h2. Installation
 
 Remember to back up your theme before you start installing this app.
 
-The following files are copied into the theme autmatically.
-* assets/webify_inject_shipping_calculator.js.liquid
-* assets/webify_update_loader_and_submit.js.liquid
-* assets/webify.ajaxify-shop.js
-* assets/webify.api.jquery.js
-* assets/webify.xdr.js.liquid
-* assets/webify-ajax-loader.gif
-* snippets/webify-add-to-cart.liquid
-* snippets/webify-request-shipping-form.liquid
-* snippets/webify-shipping-items-hidden-price.liquid
 
-
+* Check both regular theme and mobile theme
 * Add the following to the bottom of assets/checkout.css.liquid if already exists  and add following styles. Otherwise continue to next step.
 
-bc. /* Webify Changes */
-
+** bc. /* Webify Changes */
 #overview #thumbs h3[title^="Shipping"] + span {
   display: none;
 }
@@ -34,11 +23,9 @@ bc. /* Webify Changes */
 
 * Wherever you find @{{ cart.item_count }}@ in the layout/theme.liquid file and layout/cart.liquid replace it with: @{% include 'webify-shipping-items-hidden-price' %}@
 
-This is so that the number of items displayed in the cart will not reflect the secret hidden shipping line items we use internally.
+** This is so that the number of items displayed in the cart will not reflect the secret hidden shipping line items we use internally.
 
-* Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for proceed to checkout button and add the following line
-
-@{% include 'webify-request-shipping-form' %}@
+* Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for proceed to checkout button and add the following line @{% include 'webify-request-shipping-form' %}@
 
 
 * Modify cart.liquid
@@ -52,6 +39,41 @@ This is so that the number of items displayed in the cart will not reflect the s
 and make sure name="updates[{{ item.id }}] is present.
 
 Remember: when adding classes or id's to elements that already have a class of id set, leave a space between the different classes and ids. For example, @class='even item shipping'@ is OK, but clearly @class='evenitem shipping'@ will cause some problems.
+
+* Modify the html emails that gets sent to filter out shipping product 
+** Order Confirmation email
+*** Make changes like this
+
+bc..
+{% for line in line_items %}
+
+{% if line.title == 'Shipping' %}
+  {% assign delivery_charge = line.line_price %}
+{% else %} 
+  {{ line.quantity }}x {{line.title }} for {{ line.price | money }} each
+{% endif %}
+{% endfor %}
+
+bc..
+{% if delivery_charge %}
+
+Shipping charge included in subtotal: {{delivery_charge | money_with_currency }}
+{% else %}
+{% if requires_shipping %}
+Shipping  : {{ shipping_price | money_with_currency }}{% endif %}
+{% endif %}
+
+** New order notification and New order notification(mobile)
+bc.. 
+{% for line in line_items %}
+{% if line.title != 'Shipping' %}
+{{ line.quantity }}x {{line.title }}		(sku: {{ line.sku }})
+{% endif %}
+
+{% endfor %}
+
+** shipping confirmation, shipping update
+End of manual installation steps.
 
 
 
