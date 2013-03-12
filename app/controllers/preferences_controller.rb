@@ -25,6 +25,7 @@ class PreferencesController < ApplicationController
       puts 'in edit ' + e.message
       @preference = Preference.new if @preference.nil?
     end
+    @preference = Preference.new if @preference.nil?
 
   end
 
