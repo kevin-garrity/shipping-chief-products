@@ -3,10 +3,12 @@ class PreferencesController < ApplicationController
   before_filter :check_payment
 
   def show
-    check_shipping_product_exists
-    check_shopify_files_present
+    
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
     @preference = Preference.new if @preference.nil?
+    
+    check_shipping_product_exists    
+    check_shopify_files_present
 
     respond_to do |format|
       format.html { render :action => "edit"}
@@ -16,8 +18,9 @@ class PreferencesController < ApplicationController
 
   # GET /preference/edit
   def edit
-    check_shipping_product_exists
-    check_shopify_files_present
+    @preference = Preference.new if @preference.nil?
+    
+
 
     begin
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
@@ -26,7 +29,10 @@ class PreferencesController < ApplicationController
       @preference = Preference.new if @preference.nil?
     end
     @preference = Preference.new if @preference.nil?
-
+    
+    check_shipping_product_exists    
+    check_shopify_files_present
+    
   end
 
   # PUT /preference
