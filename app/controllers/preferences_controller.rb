@@ -3,7 +3,7 @@ class PreferencesController < ApplicationController
   before_filter :check_payment
 
   def show
-    check_shipping_product_exists
+    #check_shipping_product_exists
   #  check_shopify_files_present
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
     @preference = Preference.new if @preference.nil?
