@@ -25,6 +25,7 @@ class PreferencesController < ApplicationController
       puts 'in edit ' + e.message
       @preference = Preference.new if @preference.nil?
     end
+    @preference = Preference.new if @preference.nil?
 
   end
 
@@ -142,7 +143,7 @@ class PreferencesController < ApplicationController
             "callback_url" => "http://localhost:3000/shipping-rates"
         }
     puts("xx register sevices")
-          carrier_service = ShopifyAPI::CarrierService.create(params)
+#          carrier_service = ShopifyAPI::CarrierService.create(params)
          # carrier_service.save!
           puts("xxxx done register sevices")
           
