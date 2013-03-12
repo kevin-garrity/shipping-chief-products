@@ -4,7 +4,7 @@ class PreferencesController < ApplicationController
 
   def show
     check_shipping_product_exists
-    check_shopify_files_present
+  #  check_shopify_files_present
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
     @preference = Preference.new if @preference.nil?
 
@@ -16,8 +16,8 @@ class PreferencesController < ApplicationController
 
   # GET /preference/edit
   def edit
-    check_shipping_product_exists
-    check_shopify_files_present
+   # check_shipping_product_exists
+  #  check_shopify_files_present
 
     begin
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
@@ -135,6 +135,18 @@ class PreferencesController < ApplicationController
   end
 
   def check_shipping_product_exists
+    
+      #set up carrier services
+        params = {
+            "name" => "Webify Custom Shipping Service",
+            "callback_url" => "http://localhost:3000/shipping-rates"
+        }
+    puts("xx register sevices")
+          carrier_service = ShopifyAPI::CarrierService.create(params)
+         # carrier_service.save!
+          puts("xxxx done register sevices")
+          
+          
     fields = "id,title, handle"
     search_params = {:fields=>fields, :limit => 1, :page=>1}      
     search_params = search_params.merge({:handle=>"webify-shipping-app-product"})
