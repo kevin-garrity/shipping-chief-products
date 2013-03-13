@@ -1,9 +1,9 @@
 class Preference < ActiveRecord::Base
   class UnknownShopError < StandardError; end
 
-  set_table_name 'preference'
+  self.table_name = 'preference'
   attr_accessible :origin_postal_code, :default_weight, :surcharge_percentage, :surcharge_amount, :height, :width, :length, :items_per_box, :default_charge, :shipping_methods_allowed_dom, :default_box_size,
-    :shipping_methods_allowed_int, :container_weight, :shipping_methods_desc_int, :shipping_methods_desc_dom
+    :shipping_methods_allowed_int, :container_weight, :shipping_methods_desc_int, :shipping_methods_desc_dom, :shop_url
   serialize   :shipping_methods_allowed_int, Hash
   serialize   :shipping_methods_allowed_dom, Hash
   serialize   :shipping_methods_desc_int, Hash
@@ -48,18 +48,18 @@ class Preference < ActiveRecord::Base
     }
   end
 
-  #def self.method_missing(name, *args, &block)
-   # results = super(name, *args, &block)
+  def self.method_missing(name, *args, &block)
+    results = super(name, *args, &block)
 
- #   if name.to_s == "find_by_shop_url" && results.nil?
+    if name.to_s == "find_by_shop_url" && results.nil?
       # if the results are completely empty, we can't proceed
-  #    raise UnknownShopError.new("Shipping Calculator has not been configured.")
-  #  else
-  #  end
+      raise UnknownShopError.new("Shipping Calculator has not been configured.")
+    else
+    end
 
-  #  return results
-  #end
-  
+    return results
+  end
+
   def no_surcharge_percentage_and_amount
     if (surcharge_percentage > 0.0 && surcharge_amount > 0.0)
       errors.add(:surcharge_percentage, "cannot be non-zero when there is surcharge amount.")
