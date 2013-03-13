@@ -73,7 +73,17 @@ class PreferencesController < ApplicationController
   def check_shopify_files_present    
     url = session[:shopify].url
     shop = Shop.find_by_url(url)
-    return if (shop.theme_modified)
+    if (shop.theme_modified)
+      
+      #check if need to upgrade theme files
+      if (shop.version != current_deployed_version)
+        upgrade_theme(shop.version)
+      end
+      return
+    end
+    
+    #first installation
+    
     themes = ShopifyAPI::Theme.find(:all)
 
     theme = themes.find { |t| t.role == 'main' }
@@ -188,5 +198,17 @@ class PreferencesController < ApplicationController
       field = ShopifyAPI::Metafield.new({:namespace =>'AusPostShipping',:key=>'default_charge', :value=>default_charge, :value_type=>'string' })
     end
     shop.add_metafield(field)        
+  end
+  
+  private
+  
+  def current_deployed_version
+    2
+  end
+  
+  def upgrade_theme(version)
+    if (version == 1)
+      #changes for theme
+    end
   end
 end

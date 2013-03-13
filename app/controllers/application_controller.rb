@@ -4,15 +4,17 @@ class ApplicationController < ActionController::Base
   private
     def check_payment
 
-      unless ShopifyAPI::RecurringApplicationCharge.current
-          #place a recurring charge
-        charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Australia Post Shipping", 
-                                                           :price => 15, 
-                                                           :test=>(Rails.env != "production"),
-                                                           :trial_days => 30,
-                                                           :return_url => "http://#{DOMAIN_NAMES[Rails.env]}/confirm_charge")
+      if (Rails.env == "production")
+        unless (ShopifyAPI::RecurringApplicationCharge.current)
+            #place a recurring charge
+          charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Australia Post Shipping", 
+                                                             :price => 15, 
+                                                             :test=>(Rails.env != "production"),
+                                                             :trial_days => 30,
+                                                             :return_url => "http://#{DOMAIN_NAMES[Rails.env]}/confirm_charge")
 
-        redirect_to charge.confirmation_url
+          redirect_to charge.confirmation_url
+        end
       end
     end  
     
@@ -26,7 +28,7 @@ class ApplicationController < ActionController::Base
         if hooks.size > 0
           hooks[0].destrory()
         end
-        puts("+++++ adding webhook" + "http://#{DOMAIN_NAMES[Rails.env]}/webhooks/#{topic}")
+        logger.debug("+++++ adding webhook" + "http://#{DOMAIN_NAMES[Rails.env]}/webhooks/#{topic}")
         webhook = ShopifyAPI::Webhook.create(:format => "json", :topic => topic, :address => "http://#{DOMAIN_NAMES[Rails.env]}/webhooks/#{topic}")
         raise "======Webhook invalid: #{webhook.errors.to_s}" unless webhook.valid?
       end
