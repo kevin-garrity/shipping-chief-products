@@ -1,11 +1,11 @@
 %hr
 = form_tag "/shipping_calculations", :method => "get" do
-  .title(style="margin:10px 0px 10px 10px;font-weight:bold;") Please select from the following list of shipping options 
+  .title(style="margin:10px 0px 10px 10px;font-weight:normal;") Please select from the following list of shipping options 
   %br
   - @service_list.each_with_index do |service, index|
     - checked = true if index == 0
     .option-price-radio(style="margin-bottom:10px;padding-left:10px;")
       = radio_button_tag(:shipping_type, service[:code], checked)
-      = label_tag(:"shipping_type_#{service[:code]}", service[:name], :style=>"float:none;min-width:150px;display:inline-block;")
+      = label_tag(:"shipping_type_#{service[:code]}", service[:name], :style=>"float:none;min-width:150px;display:inline-block;font-weight:normal;")
       %div.option-price(style="display:inline;")  $#{service[:price].to_s.gsub(/(\.[0-9]{1}$)/) do $1 + "0" end }
       %br

@@ -19,13 +19,13 @@
   .row
     %div
       .field#country-select
-        = f.label :country_code, "Select country of shipping destination"
+        = f.label :country_code, "Select country of shipping destination", :style=>"font-weight:normal;"
         = f.select :country_code, @countries,  {:selected => "Australia"}, {:style=>"padding-top:5px;height:30px"}
       %br
       .field#postcode
         = f.label :"Please enter a postcode", { :class => "error" }
         %span(style="") Enter your Australia Postcode
-        = f.number_field :to_postcode
+        = f.text_field :to_postcode
       %br  
       .actions
         = f.submit 'Calculate', :style=>"padding:10px;font-size:15px;font-weight:bold;"

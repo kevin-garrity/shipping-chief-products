@@ -4,8 +4,9 @@
     %p To configure the application properly for your store, we will need to modify your    Shopify theme.
     %p< See instruction #{link_to "here", "http://support.shopify.com/customer/portal/articles/75308-can-i-download-my-theme", :target=>"_new"} to download your theme. 
     %p It will also be great to get a list of your products (just a few is enough) so we can do some testing with your products. You can export product to csv files in Shopify Admin page. See instruction #{link_to "here.", "http://www.shopify.com/blog/3030212-product-import-export#axzz2M8sGv0Rk", :target=>"_new"}
-    %p Once you have your theme and product csv file, please email the files to info@webifytechnology.com with the name of your store.
-    %p I have done the above steps, #{link_to "hide this notice.", "/preferences/hide_welcome_note", :remote=>true, :class=>"hide_node"}
+    %p Once you have your theme and product csv file, please email the files to <a href="mailto:info@webifytechnology.com">info@webifytechnology.com</a> with the name of your store.
+    -unless @preference.origin_postal_code.nil?
+      %p I have done the above steps, #{link_to "hide this notice.", "/preferences/hide_welcome_note", :remote=>true, :class=>"hide_node"}    
 = form_for @preference, :url=>preferences_path(), :method => :put do |f|
   - unless (flash[:notice].nil?)
     %div(class="alert-box") 
@@ -58,7 +59,7 @@
   %br    
   %h3 The list of shipping methods you want to offer to international customers
   %br
-  %table(class="twelve")
+  %table
     %tr 
       %td Aus. Post Shipping Methods
       %td Description to show to customer <span class='has-tip' data-width='280' title='Provide a shorter description for your customers and include estimated delivery time ideally.'>?</span>

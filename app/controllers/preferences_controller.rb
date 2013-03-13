@@ -25,6 +25,7 @@ class PreferencesController < ApplicationController
       puts 'in edit ' + e.message
       @preference = Preference.new if @preference.nil?
     end
+    @preference = Preference.new if @preference.nil?
 
   end
 
@@ -76,6 +77,10 @@ class PreferencesController < ApplicationController
     themes = ShopifyAPI::Theme.find(:all)
 
     theme = themes.find { |t| t.role == 'main' }
+    
+    mobile_theme = themes.find { |t| t.role == 'mobile' }
+
+    
     asset_files = [
       "assets/webify.consolelog.js",
       "assets/webify_inject_shipping_calculator.js.liquid",
@@ -90,25 +95,38 @@ class PreferencesController < ApplicationController
       "snippets/webify-add-to-cart.liquid",   
       "snippets/webify-shipping-items-hidden-price.liquid"
     ]
-    asset_files.each do |asset_file|  
-      begin        
-        asset = ShopifyAPI::Asset.find(asset_file, :params => { :theme_id => theme.id})
-      rescue ActiveResource::ResourceNotFound 
-        #add asset
-        data = File.read(Dir.pwd + "/shopify_theme_modifications/" + asset_file)
-        if (asset_file.include?(".gif"))
-          data = Base64.encode64(data)          
-          f = ShopifyAPI::Asset.new(
-            :key =>asset_file,
-            :attachment => data
-          )
-          f.save!          
-        else
-          f = ShopifyAPI::Asset.new(
-            :key =>asset_file,
-            :value => data
-          )
-          f.save!
+    
+    themes = Array.new
+    
+    themes << theme
+    themes <<  mobile_theme unless mobile_theme.nil?
+    
+    themes.each do |t|
+      puts('####### theme is' + t.id.to_s)
+      
+      asset_files.each do |asset_file|  
+        begin        
+          asset = ShopifyAPI::Asset.find(asset_file, :params => { :theme_id => t.id})
+        rescue ActiveResource::ResourceNotFound 
+          #add asset
+          data = File.read(Dir.pwd + "/shopify_theme_modifications/" + asset_file)
+          if (asset_file.include?(".gif"))
+            data = Base64.encode64(data)          
+            f = ShopifyAPI::Asset.new(
+              :key =>asset_file,
+              :attachment => data,
+              :theme_id => t.id
+            )
+            f.save!          
+          else
+            puts("######adding " + asset_file)
+            f = ShopifyAPI::Asset.new(
+              :key =>asset_file,
+              :value => data,
+              :theme_id => t.id
+            )
+            f.save!
+          end
         end
       end
     end
