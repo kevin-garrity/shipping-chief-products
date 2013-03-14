@@ -5,7 +5,7 @@ class RatesController < ApplicationController
     #fedex = FedexRate.new()
     #fedex.get_rates
     rates = {
-      "rates": [
+      :rates:=> [
              {
                  'service_name': 'canadapost-overnight',
                  'service_code': 'ON',
