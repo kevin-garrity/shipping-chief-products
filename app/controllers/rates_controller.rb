@@ -38,7 +38,8 @@ class RatesController < ApplicationController
     end
     puts("--rate from fedex is " + rates_array.values.to_s)
         
+
     #puts("----- returning " + rates.to_json)
     render :json => {:rates => rates_array.values}
   end
-end  
+end
