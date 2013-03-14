@@ -3,8 +3,8 @@ class PreferencesController < ApplicationController
   before_filter :check_payment
 
   def show
-    check_shipping_product_exists
-    check_shopify_files_present
+    #check_shipping_product_exists
+  #  check_shopify_files_present
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
     @preference = Preference.new if @preference.nil?
 
@@ -16,8 +16,8 @@ class PreferencesController < ApplicationController
 
   # GET /preference/edit
   def edit
-    check_shipping_product_exists
-    check_shopify_files_present
+   check_shipping_product_exists
+  #  check_shopify_files_present
 
     begin
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
@@ -135,7 +135,31 @@ class PreferencesController < ApplicationController
 
   end
 
-  def check_shipping_product_exists
+  def register_custom_shipping_service
+     #set up carrier services
+    params = {
+        "name" => "Webify Custom Shipping Service",
+        "callback_url" => "http://shipping-staging.herokuapp.com/shipping-rates",
+            "service_discovery" => false,
+            "format" => "json"
+     }  
+
+    services = ShopifyAPI::CarrierService.find(:all, params => {:"name"=>"Webify Custom Shipping Service"})
+    #ShopifyAPI::CarrierService.delete(s[0].id)
+    
+    if (services.length == 0)
+      carrier_service = ShopifyAPI::CarrierService.create(params)
+      logger.debug("Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
+    else
+      ShopifyAPI::CarrierService.delete(services[0].id)
+      carrier_service = ShopifyAPI::CarrierService.create(params)
+      logger.debug("Readding Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0      
+    end
+         
+  end
+  
+  def check_shipping_product_exists     
+    register_custom_shipping_service                    
     fields = "id,title, handle"
     search_params = {:fields=>fields, :limit => 1, :page=>1}      
     search_params = search_params.merge({:handle=>"webify-shipping-app-product"})
