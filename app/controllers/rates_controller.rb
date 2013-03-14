@@ -41,7 +41,7 @@ class RatesController < ApplicationController
     rates = fedex.get_rates(origin, destination, packages)
     puts("--rate from fedex is " + rates.to_s)
         
-    puts("----- returning " + rate_array.to_json)
-    render :json => {:rates => rate_array}
+    #puts("----- returning " + rates.to_json)
+    render :json => {:rates => rates}
   end
 end  
