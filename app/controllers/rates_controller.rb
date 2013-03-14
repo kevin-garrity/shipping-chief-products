@@ -4,7 +4,6 @@ include ActiveMerchant::Shipping
 class RatesController < ApplicationController
 
   def shipping_rates
-    puts("-------request is" + params.to_s)
 
     in_origin = params[:rate][:origin]
     in_dest = params[:rate][:destination]
@@ -30,6 +29,7 @@ class RatesController < ApplicationController
     rates_array.each do |rate|
       rate.each do |r|
         if (find_rates.has_key?(r["service_name"]))     
+          logger.info('adding rate' + (r["total_price"].to_i + find_rates[r["service_name"]]["total_price"].to_i).to_s)
           find_rates[r["service_name"]] = { "service_name" =>r["service_name"], 
                                             "service_code"=>r["service_code"], 
                                             "total_price" => r["total_price"].to_i + find_rates[r["service_name"]]["total_price"].to_i, 
@@ -44,7 +44,6 @@ class RatesController < ApplicationController
         end
       end
     end
-    puts("--rate from fedex is " + find_rates.values.to_s)
         
     #puts("----- returning " + rates.to_json)
     render :json => {:rates => find_rates.values}
