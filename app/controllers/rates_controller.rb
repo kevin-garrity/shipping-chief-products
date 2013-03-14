@@ -11,7 +11,7 @@ class RatesController < ApplicationController
        'service_name' => 'canadapost-overnight',
        'service_code' => 'ON',
        'total_price' =>  '12.95',
-        'currency' => 'USD'
+        'currency' => 'CAD'
     }
     
     rate_array << 
@@ -19,7 +19,7 @@ class RatesController < ApplicationController
        'service_name' => 'canadapost-2dayground',
        'service_code' => '1D',
        'total_price' => '29.34',
-        'currency' => 'USD'
+        'currency' => 'CAD'
     }
     puts("----- returning " + rate_array.to_json)
     render :json => {:rates => rate_array.to_json}
