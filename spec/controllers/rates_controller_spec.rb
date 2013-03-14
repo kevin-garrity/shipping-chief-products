@@ -69,7 +69,26 @@ describe RatesController do
       it "should render NOTHING" do
         post :shipping_rates
 
-        response.should render_nothing
+        response.body.strip.should be_empty
+      end
+    end
+
+    context "when shopify passes us incomplete params" do
+
+      it "should render NOTHING when origin is missing" do
+        invalid_params = valid_parameters_from_shopify
+        invalid_params["rate"]["origin"] = {}
+        post :shipping_rates, invalid_params
+
+        response.body.strip.should be_empty
+      end
+
+      it "should render NOTHING when destination is missing" do
+        invalid_params = valid_parameters_from_shopify
+        invalid_params["rate"]["destination"] = {}
+        post :shipping_rates, invalid_params
+
+        response.body.strip.should be_empty
       end
     end
   end
