@@ -13,28 +13,32 @@ class RatesController < ApplicationController
     destination = Location.new( in_dest)
                                 
     items = params[:rate][:items]
-    packages = Array.new
+    
+    total = 0
+    rates_array = Array.new
     items.each do |item|
+      # treat each item as seperate 
+      packages = Array.new      
       packages << Package.new(item[:grams], [])
+      fedex = FedexRate.new()
+      rates = fedex.get_rates(origin, destination, packages)
+      rates_array << rates
     end
-   
-   # packages = [
-  #    Package.new(  100,                        # 100 grams
-  #                  [93,10],                    # 93 cm long, 10 cm diameter
-  #                  :cylinder => true),         # cylinders have different volume calculations
-
-  #    Package.new(  (7.5 * 16),                 # 7.5 lbs, times 16 oz/lb.
-  #                  [15, 10, 4.5],              # 15x10x4.5 inches
-  #                  :units => :imperial)        # not grams, not centimetres
-  #  ] 
-  
-  puts("--packages is " + packages.to_s)
-  
-    fedex = FedexRate.new()
-    rates = fedex.get_rates(origin, destination, packages)
-    puts("--rate from fedex is " + rates.to_s)
+    
+    find_rates = Hash.new
+    #go through all the rates and total them up
+    rates_array.each do |rate|
+      rate.each do |r|
+        if (find_rates[rate[:service_name])
+          find_rates[rate.service_name] = {:service_name =>rate[:service_name], :service_code=>rate[:service_code], :total_price => rate[:total_price] + find_rates[rate.service_name][:total_price]  , :currency => rate[:currency]}
+        else
+          find_rates[rate.service_name] = {:service_name =>rate[:service_name], :service_code=>rate[:service_code], :total_price => rate[:total_price], :currency => rate[:currency]}
+        end
+      end
+    end
+    puts("--rate from fedex is " + rates_array.values.to_s)
         
     #puts("----- returning " + rates.to_json)
-    render :json => {:rates => rates}
+    render :json => {:rates => rates_array.values}
   end
 end  
