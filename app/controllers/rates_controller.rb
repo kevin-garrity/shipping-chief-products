@@ -22,6 +22,6 @@ class RatesController < ApplicationController
         'currency' => 'CAD'
     }
     puts("----- returning " + rate_array.to_json)
-    render :json => {:rates => rate_array.to_json}
+    render :json => {:rates => rate_array}
   end
 end  
