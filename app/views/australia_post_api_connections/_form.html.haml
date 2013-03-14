@@ -25,7 +25,7 @@
       .field#postcode
         = f.label :"Please enter a postcode", { :class => "error" }
         %span(style="") Enter your Australia Postcode
-        = f.number_field :to_postcode
+        = f.text_field :to_postcode
       %br  
       .actions
         = f.submit 'Calculate', :style=>"padding:10px;font-size:15px;font-weight:bold;"

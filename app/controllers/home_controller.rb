@@ -9,7 +9,7 @@ class HomeController < ApplicationController
   end
   
   def index
-    redirect_to edit_preferences_path()
+    redirect_to preferences_path()
   end
 
   def confirm_charge
