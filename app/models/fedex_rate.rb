@@ -27,7 +27,7 @@ class FedexRate
     fedex = FedEx.new(:login=>"104912167", :password =>"rZvWzz9UKKC4ugVdPX1iLkJ90", :account=>"277964333", :key =>"ns3hABMGvoAxjJrN")
     response = fedex.find_rates(origin, destination, packages)
     rates = response.rates.sort_by(&:price).collect do |rate| 
-      puts ("f rate is " + rate.to_s) 
+      puts ("f rate is " + rate.inspect.to_s) 
       {"service_name" => rate.service_name, 'total_price' => rate.price, 'currency' => 'USD'}
     end
   end
