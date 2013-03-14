@@ -19,7 +19,7 @@ class RatesController < ApplicationController
     items.each do |item|
       # treat each item as seperate 
       packages = Array.new      
-      packages << Package.new(item[:grams], [])
+      packages << Package.new(item[:grams].to_i, [])
       fedex = FedexRate.new()
       rates = fedex.get_rates(origin, destination, packages)
       rates_array << rates
@@ -29,17 +29,24 @@ class RatesController < ApplicationController
     #go through all the rates and total them up
     rates_array.each do |rate|
       rate.each do |r|
-        if (find_rates[rate[:service_name])
-          find_rates[rate.service_name] = {:service_name =>rate[:service_name], :service_code=>rate[:service_code], :total_price => rate[:total_price] + find_rates[rate.service_name][:total_price]  , :currency => rate[:currency]}
-        else
-          find_rates[rate.service_name] = {:service_name =>rate[:service_name], :service_code=>rate[:service_code], :total_price => rate[:total_price], :currency => rate[:currency]}
+        if (find_rates.has_key?(r["service_name"]))     
+          find_rates[r["service_name"]] = { "service_name" =>r["service_name"], 
+                                            "service_code"=>r["service_code"], 
+                                            "total_price" => r["total_price"].to_i + find_rates[r["service_name"]]["total_price"].to_i, 
+                                            "currency" => r["currency"] 
+                                            }
+        else          
+          find_rates[r["service_name"]] = { "service_name" =>r["service_name"], 
+                                            "service_code" =>r["service_code"], 
+                                            "total_price" => r["total_price"].to_i, 
+                                            "currency" => r["currency"]
+                                          }                                            
         end
       end
     end
-    puts("--rate from fedex is " + rates_array.values.to_s)
+    puts("--rate from fedex is " + find_rates.values.to_s)
         
-
     #puts("----- returning " + rates.to_json)
-    render :json => {:rates => rates_array.values}
+    render :json => {:rates => find_rates.values}
   end
 end

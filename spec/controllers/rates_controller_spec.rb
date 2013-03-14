@@ -45,7 +45,18 @@ describe RatesController do
                      "requires_shipping": true,
                      "taxable": true,
                      "fulfillment_service": "manual"
-                 }
+                 },
+                 {
+                      "name": "My Product 4",
+                      "sku": "",
+                      "quantity": 1,
+                      "grams": 2000,
+                      "price": 3000,
+                      "vendor": "TestVendor",
+                      "requires_shipping": true,
+                      "taxable": true,
+                      "fulfillment_service": "manual"
+                  }
              ],
              "currency": "CAD"
          }
