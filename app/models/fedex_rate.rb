@@ -31,5 +31,4 @@ class FedexRate
     end
   end
   
-  
 end

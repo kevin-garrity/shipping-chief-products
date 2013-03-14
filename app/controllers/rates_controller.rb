@@ -15,7 +15,7 @@ class RatesController < ApplicationController
     items = params[:rate][:items]
     packages = Array.new
     items.each do |item|
-      packages << Package.new(item[:grams])
+      packages << Package.new(item[:grams], [])
     end
    
    # packages = [
