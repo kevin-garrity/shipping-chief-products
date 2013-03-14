@@ -1,11 +1,17 @@
+require 'active_shipping'
+include ActiveMerchant::Shipping
+
 class RatesController < ApplicationController
 
   def shipping_rates
     puts("-------request is" + params.to_s)
 
-    origin = params[:rate][:origin]
-    destination = params[:rate][:destination]
+    in_origin = params[:rate][:origin]
+    in_dest = params[:rate][:destination]
 
+    origin = Location.new( in_origin)
+    destination = Location.new( in_dest)
+                                
     rate_array = Array.new
     rate_array << 
     {
