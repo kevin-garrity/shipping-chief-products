@@ -63,6 +63,15 @@ describe RatesController do
       expect(response).to be_success
       expect(response.code).to eq("200")
     end
+
+    context "when 'rates' is missing from request params" do
+
+      it "should render NOTHING" do
+        post :shipping_rates
+
+        response.should render_nothing
+      end
+    end
   end
 end
 
