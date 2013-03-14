@@ -13,7 +13,7 @@ WorldShippingCalculator::Application.routes.draw do
   match "help" => 'help#index'
   match "confirm_charge" => "home#confirm_charge"
   
-  match "/rates" => "rates#shipping_rates", :via => :post #Consider removing the external
+  match "/shipping-rates" => "rates#shipping_rates", :via => :post 
   
 
   resource 'preferences', only: [:show, :edit, :update]
