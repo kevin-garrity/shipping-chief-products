@@ -18,13 +18,13 @@ class FedexRate
     end
   end
   
-  def get_rates()
+  def get_rates(origin, destination, packages)
     # :key is your developer API key
     # :password is your API password
     # :account is your FedEx account number
     # :login is your meter number
     
-    fedex = FedEx.new(:login=>"", :password =>"", :account=>"", :key =>"")
+    fedex = FedEx.new(:login=>"104912167", :password =>"rZvWzz9UKKC4ugVdPX1iLkJ90", :account=>"277964333", :key =>"ns3hABMGvoAxjJrN")
     response = fedex.find_rates(origin, destination, packages)
     rates = response.rates.sort_by(&:price).collect {|rate| [rate.service_name, rate.price]}
   end
