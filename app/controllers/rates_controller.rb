@@ -4,9 +4,14 @@ include ActiveMerchant::Shipping
 class RatesController < ApplicationController
 
   def shipping_rates
+    rate = params[:rate]
+    if rate.nil?
+      render nothing: true
+      return
+    end
 
-    in_origin = params[:rate][:origin]
-    in_dest = params[:rate][:destination]
+    in_origin = rate[:origin]
+    in_dest = rate[:destination]
 
     origin = Location.new( in_origin)
     destination = Location.new( in_dest)
@@ -47,5 +52,8 @@ class RatesController < ApplicationController
         
     #puts("----- returning " + rates.to_json)
     render :json => {:rates => find_rates.values}
+  rescue ActiveMerchant::Shipping::ResponseError => e
+    puts e.message
+    render nothing: true
   end
 end
