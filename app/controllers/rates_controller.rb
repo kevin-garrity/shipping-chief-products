@@ -9,6 +9,8 @@ class RatesController < ApplicationController
       render nothing: true
       return
     end
+    
+    puts("shipping origin is" + rate[:origin].to_s)
 
     in_origin = rate[:origin]
     in_dest = rate[:destination]
@@ -23,9 +25,22 @@ class RatesController < ApplicationController
     items.each do |item|
       # treat each item as seperate 
       packages = Array.new      
-      packages << Package.new(item[:grams].to_i, [])
       fedex = FedexRate.new()
-      rates = fedex.get_rates(origin, destination, packages)
+      # get the number of items being ordered
+      if (item[:sku].start_with?("SAM/")) #shipped together
+        packages << Package.new(item[:grams].to_i, [])
+        rates = fedex.get_rates(origin, destination, packages)
+      else
+        # look up one package and multiple by quantity
+        quan = item[:quantity].to_i
+        puts("quan is " + quan.to_s)
+        packages << Package.new(item[:grams].to_i/quan, [])
+        single_rate = fedex.get_rates(origin, destination, packages) 
+        rates = single_rate.collect do | rate|
+          {"service_name" => rate["service_name"], 'service_code'=> rate["service_code"], 'total_price' => rate["price"].to_i * quan, 'currency' => rate["currency"]}
+        end
+        puts ("multiple rates is " + rates.to_s)
+      end
       rates_array << rates
     end
     
