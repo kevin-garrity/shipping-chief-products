@@ -11,6 +11,8 @@ class RatesController < ApplicationController
     end
     
     puts("shipping origin is" + rate[:origin].to_s)
+    puts("shipping destination is" + rate[:origin].to_s)
+    puts("shipping items is" + rate[:items].to_s)
 
     in_origin = rate[:origin]
     in_dest = rate[:destination]
