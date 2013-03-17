@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130228205930) do
+ActiveRecord::Schema.define(:version => 20130317040431) do
 
   create_table "preference", :force => true do |t|
     t.string  "shop_url"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20130228205930) do
     t.text    "shipping_methods_desc_dom"
     t.decimal "surcharge_amount"
     t.boolean "hide_welcome_note"
+    t.string  "carrier"
   end
 
   create_table "shops", :force => true do |t|
@@ -43,6 +44,7 @@ ActiveRecord::Schema.define(:version => 20130228205930) do
     t.string   "charge_id"
     t.string   "status"
     t.boolean  "theme_modified"
+    t.integer  "version"
   end
 
 end

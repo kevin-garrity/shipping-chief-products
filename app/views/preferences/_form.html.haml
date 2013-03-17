@@ -7,139 +7,27 @@
       %div(class="alert-box alert")= "#{pluralize(@preference.errors.count, "error")}. Your change is not saved."
       %ul
         - @preference.errors.full_messages.each do |msg|
-          %li= msg          
-  %fieldset
-    = f.label :origin_postal_code, "Enter the Australian Postcode your items would be shipping from <span class='has-tip' data-width='280' title='This will be passed to Australia Post for calculation purpose.'>?</span>".html_safe
-    = f.text_field :origin_postal_code
-    = f.label :default_weight, "Enter the default product weight to used in calculation when there is no weight stored for items <span class='has-tip' data-width='280' title='If you choose not to use weight in Shopify, enter a default weight to pass to Australia Post for calculation.'>?</span>".html_safe
-    = f.text_field :default_weight
-    %span(class="postfix") kg
-    %br 
-    = f.label :default_charge, "Enter the fallback price to charge for shipping if Australia Post is not available <span class='has-tip' data-width='380' title='If Australia Post is down for whatever reason, we need to keep checkout working so we do not stop customers from purchasing. Enter a default shipping amount to charge. Specify an amount that you think will cover your cost most of the time.'>?</span>".html_safe
-    = f.text_field :default_charge
-  %br
-  %fieldset
-
-    = f.label :height, "Approximate dimensions of your parcel <br/>(Length, Width, Height)<br/>See <a href='http://auspost.com.au/parcels-mail/size-and-weight-guidelines.html' target='_blank'>parcel dimensions</a> for Dimension restrictions.<span class='has-tip' data-width='280' title='Enter the size of your container. We assume you will use the same box for all your items.'>?</span>".html_safe
-    = f.select :default_box_size,  options_for_select(AusDefBoxSize(), selected = @preference.default_box_size)
-    %br
-    %span(class="prefix") L
-    = f.text_field :length
-    %span(class="postfix") cm
-    %br 
-    = f.label :width, "", :class=>"hidden-prefix"
-    %span(class="prefix") W
-    = f.text_field :width
-    %span(class="postfix") cm
-    %br
-    = f.label :height, " ", :class=>"hidden-prefix"
-    %span(class="prefix") H  
-    = f.text_field :height
-    %span(class="postfix") cm
-    %br
-    = f.label :container_weight, "Enter the weight of your shipping container in kg<span class='has-tip' data-width='300' title='The weight of the container will be included when calculating shipping.'>?</span>".html_safe
-    = f.text_field :container_weight
-    %span(class="postfix") kg
-  %br  
-  %fieldset
-    = f.label :surcharge_percentage, "Enter the surcharge percentage<br/> to add on top of shipping<span class='has-tip' data-width='280' title='If you want to add a charge on top of the shipping cost, enter the percentage here.'>?</span>".html_safe
-    = f.text_field :surcharge_percentage
-    %span(class="postfix") %    
-    = f.label :surcharge_amount, "<b>Or</b> enter a fixed amount<br/> to add on top of shipping<span class='has-tip' data-width='280' title='If you want to add a charge on top of the shipping cost, enter the amount here. You can enter an amount or a percentage.'>?</span>".html_safe    
-    = f.text_field :surcharge_amount
-  %br    
-  %h3 The list of shipping methods you want to offer to international customers
-  %br
-  %table
-    %tr 
-      %td Aus. Post Shipping Methods
-      %td Description to show to customer <span class='has-tip' data-width='280' title='Provide a shorter description for your customers and include estimated delivery time ideally.'>?</span>
-      %td Offer this choice to customer<span class='has-tip' data-width='280' title='Allow customers to pick this option'>?</span>
-    - Preference.AusPostParcelServiceListInt.each {|key, value|
-    %tr 
-      %td 
-        = value
-      %td
-        = text_field_tag("shipping_methods_desc_int[#{key}]", @preference.shipping_methods_desc_int[key.to_s].nil? ? value : @preference.shipping_methods_desc_int[key.to_s])        
-      %td
-        = check_box_tag("shipping_methods_int[#{key}]", value=1, @preference.shipping_methods_allowed_int[key.to_s])
-    -}    
-  %br 
-  %h3 The list of shipping methods you want to offer to domestic customers
-  %br
-  %table(class="twelve")
-    %tr 
-      %td Aus. Post Shipping Methods
-      %td Description to show to customer<span class='has-tip' data-width='280' title='Provide a shorter description for your customers and include estimated delivery time ideally.'>?</span>
-      %td Offer this choice to customer <span class='has-tip' data-width='280' title='Allow customers to pick this option'>?</span>  
-    - Preference.AusPostParcelServiceListDom.each {|key, value|
-    %tr 
-      %td 
-        = value
-      %td
-        = text_field_tag("shipping_methods_desc_dom[#{key}]", @preference.shipping_methods_desc_dom[key.to_s].nil? ? value : @preference.shipping_methods_desc_dom[key.to_s])        
-      %td
-        = check_box_tag("shipping_methods_dom[#{key}]", value=1, @preference.shipping_methods_allowed_dom[key.to_s])
-    -}    
-  .actions
-    = f.submit 'Save', :class=>"button"
-    = link_to 'Cancel', preferences_path
+          %li= msg
+  = f.label :carrier, "Select the shipping carrier to use for calculation"
+  = f.select(:carrier, options_from_collection_for_select(@supported_carriers, :first, :last, @preference.carrier), {}, :onchange=>"carrier_selected(this.value)" )
+  #main-body
+    - unless @preference.carrier.blank?
+      = render :partial => @preference.carrier.to_s.downcase + "_form"
 
 :javascript
-  $(document).ready( function() {
-    $('#preference_default_box_size').change(function() {
-     switch(this.value)
-     {
-      case "0":
-        break;
-      case "1":
-        $('#preference_length').val("22.0");
-        $('#preference_width').val("16.0");
-        $('#preference_height').val("7.7");
-        break;
-      
-      case "2":
-        $('#preference_length').val("31.0");
-        $('#preference_width').val("22.5");
-        $('#preference_height').val("10.2");
-        break;
-      case "3":
-        $('#preference_length').val("40.0");
-        $('#preference_width').val("20.0");
-        $('#preference_height').val("18.0");
-        break;
-      case "4":
-        $('#preference_length').val("43.0");
-        $('#preference_width').val("30.5");
-        $('#preference_height').val("14.0");
-        break;             
-      case "5":
-        $('#preference_length').val("40.5");
-        $('#preference_width').val("30.0");
-        $('#preference_height').val("25.5");
-        break;
-      case "6":
-        $('#preference_length').val("22.0");
-        $('#preference_width').val("14.5");
-        $('#preference_height').val("3.5");
-        break;         
-      case "7":
-        $('#preference_length').val("14.5");
-        $('#preference_width').val("12.7");
-        $('#preference_height').val("1.0");
-        break;
-      case "8":
-        $('#preference_length').val("36.3");
-        $('#preference_width').val("21.2");
-        $('#preference_height').val("6.5");
-        break;                                        
-     }
-    });
+  function carrier_selected(select_carrier) 
+  {
+  if (select_carrier =="") return;
 
+    jQuery.ajax({
+        url: "/preferences/carrier_selected",
+        type: "POST",
+        data: {"carrier" : $("#preference_carrier").val()},
+        dataType: "html",
+        success: function(data) {
       
-    $('.hide_node').bind('ajax:success', function(){
-       $('.welcome_note').hide();
-    });
-      
-  });
-  
+          jQuery("#main-body").html(data);
+        }
+      });  
+  }
+

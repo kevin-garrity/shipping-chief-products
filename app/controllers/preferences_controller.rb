@@ -1,10 +1,11 @@
+include ApplicationHelper
 class PreferencesController < ApplicationController
   around_filter :shopify_session
   before_filter :check_payment
 
   def show
-    #check_shipping_product_exists
-    #  check_shopify_files_present
+    @supported_carriers = get_supported_carriers
+    
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
     @preference = Preference.new if @preference.nil?
 
@@ -16,48 +17,53 @@ class PreferencesController < ApplicationController
 
   # GET /preference/edit
   def edit
-    check_shipping_product_exists
-    #  check_shopify_files_present
+    @supported_carriers = get_supported_carriers
 
-    begin
-      @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
-    rescue Preference::UnknownShopError => e
-      puts 'in edit ' + e.message
-      @preference = Preference.new if @preference.nil?
-    end
-    @preference = Preference.new if @preference.nil?
-
+    @preference = get_preference    
   end
 
   # PUT /preference
   # PUT /preference
   def update
-    begin
-      @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
-    rescue Preference::UnknownShopError => e
-      puts 'in update ' + e.message
-      @preference = Preference.new if @preference.nil?
-    end
-    @preference = Preference.new if @preference.nil?
+    @preference = get_preference()
 
     @preference.shop_url = session[:shopify].shop.domain
 
     respond_to do |format|
       @preference.attributes = params[:preference]
-      @preference.shipping_methods_allowed_int = params[:shipping_methods_int]
-      @preference.shipping_methods_allowed_dom = params[:shipping_methods_dom]
-      @preference.shipping_methods_desc_dom = params[:shipping_methods_desc_dom]
-      @preference.shipping_methods_desc_int = params[:shipping_methods_desc_int]
-
+      
+      if (@preference.carrier == "AusPost")
+        @preference.shipping_methods_allowed_int = params[:shipping_methods_int]
+        @preference.shipping_methods_allowed_dom = params[:shipping_methods_dom]
+        @preference.shipping_methods_desc_dom = params[:shipping_methods_desc_dom]
+        @preference.shipping_methods_desc_int = params[:shipping_methods_desc_int]
+      end
+      
       if @preference.save
         #store default charge in shop metafields
-        update_shop_metafield(@preference.default_charge)
+        if (@preference.carrier == "AusPost")
+          update_shop_metafield(@preference.default_charge)
+          
+          check_shipping_product_exists
+          check_shopify_files_present          
+        end
         format.html { redirect_to preferences_url, notice: 'Preference was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
         format.json { render json: @preference.errors, status: :unprocessable_entity }
       end
+    end
+  end
+  
+  def carrier_selected
+    @preference = get_preference
+    
+    puts("preference is " + @preference.to_s)
+    if (params[:carrier].blank?)
+      render :text => ""
+    else
+      render :partial => params[:carrier].downcase + "_form" 
     end
   end
 
@@ -70,6 +76,13 @@ class PreferencesController < ApplicationController
 
   private
 
+  def get_preference
+    preference = Preference.find_by_shop_url(session[:shopify].shop.domain)    
+    preference = Preference.new if preference.nil?    
+    
+    preference
+  end
+  
   def check_shopify_files_present
     url = session[:shopify].url
     shop = Shop.find_by_url(url)
@@ -102,8 +115,6 @@ class PreferencesController < ApplicationController
     themes <<  mobile_theme unless mobile_theme.nil?
 
     themes.each do |t|
-      puts('####### theme is' + t.id.to_s)
-
       asset_files.each do |asset_file|
         begin
           asset = ShopifyAPI::Asset.find(asset_file, :params => { :theme_id => t.id})
@@ -119,7 +130,6 @@ class PreferencesController < ApplicationController
             )
             f.save!
           else
-            puts("######adding " + asset_file)
             f = ShopifyAPI::Asset.new(
               :key =>asset_file,
               :value => data,
@@ -136,10 +146,13 @@ class PreferencesController < ApplicationController
   end
 
   def register_custom_shipping_service
+    
+    url = session[:shopify].url
+    
     #set up carrier services
     params = {
       "name" => "Webify Custom Shipping Service",
-      "callback_url" => "http://shipping-staging.herokuapp.com/shipping-rates",
+      "callback_url" => "http://shipping-staging.herokuapp.com/shipping-rates?shop_url="+ url,
       "service_discovery" => false,
       "format" => "json"
     }
@@ -151,6 +164,7 @@ class PreferencesController < ApplicationController
       carrier_service = ShopifyAPI::CarrierService.create(params)
       logger.debug("Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
     else
+ 
       ShopifyAPI::CarrierService.delete(services[0].id)
       carrier_service = ShopifyAPI::CarrierService.create(params)
       logger.debug("Readding Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
