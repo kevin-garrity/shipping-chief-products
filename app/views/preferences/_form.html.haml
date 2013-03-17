@@ -10,6 +10,8 @@
           %li= msg
   = f.label :carrier, "Select the shipping carrier to use for calculation"
   = f.select(:carrier, options_from_collection_for_select(@supported_carriers, :first, :last, @preference.carrier), {}, :onchange=>"carrier_selected(this.value)" )
+  %p(id="more-carriers")
+    %b More carrier support coming soon!
   #main-body
     - unless @preference.carrier.blank?
       = render :partial => @preference.carrier.to_s.downcase + "_form"

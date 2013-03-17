@@ -42,10 +42,11 @@ class PreferencesController < ApplicationController
       if @preference.save
         #store default charge in shop metafields
         if (@preference.carrier == "AusPost")
-          update_shop_metafield(@preference.default_charge)
-          
+          update_shop_metafield(@preference.default_charge)          
           check_shipping_product_exists
-          check_shopify_files_present          
+          check_shopify_files_present
+        elsif (@preference.carrier == "Fedex")
+          register_custom_shipping_service
         end
         format.html { redirect_to preferences_url, notice: 'Preference was successfully updated.' }
         format.json { head :no_content }
