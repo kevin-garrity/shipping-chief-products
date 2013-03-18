@@ -1,6 +1,7 @@
 March 17, 2013
+v1
+
 #	modified:   shopify_theme_modifications/assets/webify_inject_shipping_calculator.js.liquid
 #	modified:   shopify_theme_modifications/assets/webify_update_loader_and_submit.js.liquid
 #	modified:   shopify_theme_modifications/snippets/webify-add-to-cart.liquid
-#	modified:   shopify_theme_modifications/snippets/webify-request-shipping-form.liquid
 
