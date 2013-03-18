@@ -87,7 +87,16 @@ class PreferencesController < ApplicationController
   def check_shopify_files_present
     url = session[:shopify].url
     shop = Shop.find_by_url(url)
-    return if (shop.theme_modified)
+    if (shop.theme_modified)      
+      #check if need to upgrade theme files
+      if (shop.version != current_deployed_version)
+        upgrade_theme(shop.version, shop)
+      end
+      return
+    end
+    
+    #first installation
+    
     themes = ShopifyAPI::Theme.find(:all)
 
     theme = themes.find { |t| t.role == 'main' }
@@ -226,5 +235,59 @@ class PreferencesController < ApplicationController
       field = ShopifyAPI::Metafield.new({:namespace =>'AusPostShipping',:key=>'default_charge', :value=>default_charge, :value_type=>'string' })
     end
     shop.add_metafield(field)
+  end
+  
+  private
+  
+  def current_deployed_version
+    2
+  end
+  
+  def replace_theme_files(asset_files, themes)
+    themes.each do |t|
+      asset_files.each do |asset_file|
+        asset = ShopifyAPI::Asset.find(asset_file, :params => { :theme_id => t.id})
+        #add asset
+        data = File.read(Dir.pwd + "/shopify_theme_modifications/" + asset_file)
+        logger.info("Repacing " + asset_file)
+        if (asset_file.include?(".gif"))
+          data = Base64.encode64(data)
+          f = ShopifyAPI::Asset.new(
+            :key =>asset_file,
+            :attachment => data,
+            :theme_id => t.id
+          )
+          f.save!
+        else
+          f = ShopifyAPI::Asset.new(
+            :key =>asset_file,
+            :value => data,
+            :theme_id => t.id
+          )
+          f.save!
+        end
+
+      end #end each asset_files
+    end # end each theme
+  end
+  
+  def upgrade_theme(version, shop)
+    if (version == 1)
+      themes = ShopifyAPI::Theme.find(:all)
+      theme = themes.find { |t| t.role == 'main' }
+      mobile_theme = themes.find { |t| t.role == 'mobile' }
+      themes = Array.new
+      themes << theme
+      themes <<  mobile_theme unless mobile_theme.nil?
+      #changes for theme
+      asset_files = [
+            "assets/webify_inject_shipping_calculator.js.liquid",
+            "assets/webify_update_loader_and_submit.js.liquid",
+            "snippets/webify-add-to-cart.liquid"
+          ]
+      replace_theme_files(asset_files, themes)
+      shop.version = 2
+      shop.save!
+    end
   end
 end

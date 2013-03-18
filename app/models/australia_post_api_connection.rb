@@ -8,7 +8,7 @@ class AustraliaPostApiConnection
 
   attr_accessor :attributes, :api_errors
 
-  attr_accessor :height, :length, :weight, :width, :blanks
+  attr_accessor :height, :length, :weight, :width, :blanks, :thickness #for letter mail
   attr_accessor :country_code, :air_mail_price, :sea_mail_price
   attr_accessor :domestic, :from_postcode, :to_postcode
   attr_accessor :regular_price, :priority_price, :express_price

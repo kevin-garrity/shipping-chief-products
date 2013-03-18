@@ -15,7 +15,6 @@
   #main-body
     - unless @preference.carrier.blank?
       = render :partial => @preference.carrier.to_s.downcase + "_form"
-
 :javascript
   function carrier_selected(select_carrier) 
   {

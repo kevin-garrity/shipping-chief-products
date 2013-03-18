@@ -1,4 +1,4 @@
-//Version 1
+//Version 2
 
 // Code to fetch the request form
 // TODO this info should live somewhere
@@ -39,7 +39,7 @@ update_loader_and_submit = function(method, dataHash, callback, fallback) {
         }
       }
       else
-        alert("fallback is "+fallback)
+        callback(data, query_string);
                   
     },
     error: function(request, text_status, error_thrown) {
