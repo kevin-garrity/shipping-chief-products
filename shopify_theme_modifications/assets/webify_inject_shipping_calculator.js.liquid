@@ -94,7 +94,12 @@ submit_calculation_request = function(dataHash) {
     if (webifyJQ('#results .alert').length > 0) {
       remove_shipping_item();
     }
-  });
+  },
+  function(data) { 
+  var default_charge = webifyJQ('input[name=default_shipping_charge]').attr('value');
+  
+  use_flat_shipping(default_charge); }
+  );
 
 }
 
