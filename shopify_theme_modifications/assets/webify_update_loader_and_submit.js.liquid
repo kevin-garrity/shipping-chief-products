@@ -31,7 +31,15 @@ update_loader_and_submit = function(method, dataHash, callback, fallback) {
     crossDomain: true,
     success: function(data, text_status, jqXHR) {
       var query_string = $(this).attr('data')
-      callback(data, query_string);
+      if (data == "api_error")
+      {
+        if ((typeof fallback) === 'function') {
+           fallback(data);
+        }
+      }
+      else
+        alert("fallback is "+fallback)
+                  
     },
     error: function(request, text_status, error_thrown) {
       if ((typeof fallback) === 'function') {
