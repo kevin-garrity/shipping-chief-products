@@ -1,10 +1,11 @@
+include ApplicationHelper
 class PreferencesController < ApplicationController
   around_filter :shopify_session
   before_filter :check_payment
 
   def show
-    check_shipping_product_exists
-    check_shopify_files_present
+    @supported_carriers = get_supported_carriers
+    
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
     @preference = Preference.new if @preference.nil?
 
@@ -16,42 +17,37 @@ class PreferencesController < ApplicationController
 
   # GET /preference/edit
   def edit
-    check_shipping_product_exists
-    check_shopify_files_present
+    @supported_carriers = get_supported_carriers
 
-    begin
-    @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
-    rescue Preference::UnknownShopError => e
-      puts 'in edit ' + e.message
-      @preference = Preference.new if @preference.nil?
-    end
-    @preference = Preference.new if @preference.nil?
-
+    @preference = get_preference    
   end
 
   # PUT /preference
   # PUT /preference
   def update
-    begin
-      @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
-    rescue Preference::UnknownShopError => e
-      puts 'in update ' + e.message
-      @preference = Preference.new if @preference.nil?
-    end
-    @preference = Preference.new if @preference.nil?
-    
+    @preference = get_preference()
+
     @preference.shop_url = session[:shopify].shop.domain
 
     respond_to do |format|
       @preference.attributes = params[:preference]
-      @preference.shipping_methods_allowed_int = params[:shipping_methods_int]
-      @preference.shipping_methods_allowed_dom = params[:shipping_methods_dom]
-      @preference.shipping_methods_desc_dom = params[:shipping_methods_desc_dom]
-      @preference.shipping_methods_desc_int = params[:shipping_methods_desc_int]
-
+      
+      if (@preference.carrier == "AusPost")
+        @preference.shipping_methods_allowed_int = params[:shipping_methods_int]
+        @preference.shipping_methods_allowed_dom = params[:shipping_methods_dom]
+        @preference.shipping_methods_desc_dom = params[:shipping_methods_desc_dom]
+        @preference.shipping_methods_desc_int = params[:shipping_methods_desc_int]
+      end
+      
       if @preference.save
         #store default charge in shop metafields
-        update_shop_metafield(@preference.default_charge)
+        if (@preference.carrier == "AusPost")
+          update_shop_metafield(@preference.default_charge)          
+          check_shipping_product_exists
+          check_shopify_files_present
+        elsif (@preference.carrier == "Fedex")
+          register_custom_shipping_service
+        end
         format.html { redirect_to preferences_url, notice: 'Preference was successfully updated.' }
         format.json { head :no_content }
       else
@@ -61,6 +57,17 @@ class PreferencesController < ApplicationController
     end
   end
   
+  def carrier_selected
+    @preference = get_preference
+    
+    puts("preference is " + @preference.to_s)
+    if (params[:carrier].blank?)
+      render :text => ""
+    else
+      render :partial => params[:carrier].downcase + "_form" 
+    end
+  end
+
   def hide_welcome_note
     @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
     @preference.hide_welcome_note = true
@@ -68,19 +75,26 @@ class PreferencesController < ApplicationController
     render :json =>{:result => "ok"}
   end
 
-  private 
+  private
 
-  def check_shopify_files_present    
+  def get_preference
+    preference = Preference.find_by_shop_url(session[:shopify].shop.domain)    
+    preference = Preference.new if preference.nil?    
+    
+    preference
+  end
+  
+  def check_shopify_files_present
     url = session[:shopify].url
     shop = Shop.find_by_url(url)
     return if (shop.theme_modified)
     themes = ShopifyAPI::Theme.find(:all)
 
     theme = themes.find { |t| t.role == 'main' }
-    
+
     mobile_theme = themes.find { |t| t.role == 'mobile' }
 
-    
+
     asset_files = [
       "assets/webify.consolelog.js",
       "assets/webify_inject_shipping_calculator.js.liquid",
@@ -88,38 +102,35 @@ class PreferencesController < ApplicationController
       "assets/webify.api.jquery.js",
       "assets/webify.xdr.js.liquid",
       "assets/webify.jquery.cookie.js",
-      "assets/checkout.css.liquid",      
+      "assets/checkout.css.liquid",
       "assets/webify_update_loader_and_submit.js.liquid",
       "assets/webify-ajax-loader.gif",
       "snippets/webify-request-shipping-form.liquid",
-      "snippets/webify-add-to-cart.liquid",   
+      "snippets/webify-add-to-cart.liquid",
       "snippets/webify-shipping-items-hidden-price.liquid"
     ]
-    
+
     themes = Array.new
-    
+
     themes << theme
     themes <<  mobile_theme unless mobile_theme.nil?
-    
+
     themes.each do |t|
-      puts('####### theme is' + t.id.to_s)
-      
-      asset_files.each do |asset_file|  
-        begin        
+      asset_files.each do |asset_file|
+        begin
           asset = ShopifyAPI::Asset.find(asset_file, :params => { :theme_id => t.id})
-        rescue ActiveResource::ResourceNotFound 
+        rescue ActiveResource::ResourceNotFound
           #add asset
           data = File.read(Dir.pwd + "/shopify_theme_modifications/" + asset_file)
           if (asset_file.include?(".gif"))
-            data = Base64.encode64(data)          
+            data = Base64.encode64(data)
             f = ShopifyAPI::Asset.new(
               :key =>asset_file,
               :attachment => data,
               :theme_id => t.id
             )
-            f.save!          
+            f.save!
           else
-            puts("######adding " + asset_file)
             f = ShopifyAPI::Asset.new(
               :key =>asset_file,
               :value => data,
@@ -135,9 +146,37 @@ class PreferencesController < ApplicationController
 
   end
 
+  def register_custom_shipping_service
+    
+    url = session[:shopify].url
+    
+    #set up carrier services
+    params = {
+      "name" => "Webify Custom Shipping Service",
+      "callback_url" => "http://shipping-staging.herokuapp.com/shipping-rates?shop_url="+ url,
+      "service_discovery" => false,
+      "format" => "json"
+    }
+
+    services = ShopifyAPI::CarrierService.find(:all, params => {:"name"=>"Webify Custom Shipping Service"})
+    #ShopifyAPI::CarrierService.delete(s[0].id)
+
+    if (services.length == 0)
+      carrier_service = ShopifyAPI::CarrierService.create(params)
+      logger.debug("Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
+    else
+ 
+      ShopifyAPI::CarrierService.delete(services[0].id)
+      carrier_service = ShopifyAPI::CarrierService.create(params)
+      logger.debug("Readding Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
+    end
+
+  end
+
   def check_shipping_product_exists
+    register_custom_shipping_service
     fields = "id,title, handle"
-    search_params = {:fields=>fields, :limit => 1, :page=>1}      
+    search_params = {:fields=>fields, :limit => 1, :page=>1}
     search_params = search_params.merge({:handle=>"webify-shipping-app-product"})
 
     @products = ShopifyAPI::Product.find(:all, :params => search_params)
@@ -150,7 +189,7 @@ class PreferencesController < ApplicationController
         :product_type=>"product",
         :variants => ShopifyAPI::Variant.new(:price => 0.01)
       )
-      prod.save!      
+      prod.save!
     else
       prod = @products[0]
     end
@@ -165,7 +204,7 @@ class PreferencesController < ApplicationController
       fields = shop.metafields
       field = fields.find { |f| f.key == 'product_id' && f.namespace ='AusPostShipping'}
 
-      if field.nil?      
+      if field.nil?
         field = ShopifyAPI::Metafield.new({:namespace =>'AusPostShipping',:key=>'product_id', :value=>@vars[0].id, :value_type=>'string' })
         field.save
       elsif (field.value.to_s != @vars[0].id.to_s) #only save if variant id has changed
@@ -187,6 +226,6 @@ class PreferencesController < ApplicationController
       field.destroy
       field = ShopifyAPI::Metafield.new({:namespace =>'AusPostShipping',:key=>'default_charge', :value=>default_charge, :value_type=>'string' })
     end
-    shop.add_metafield(field)        
+    shop.add_metafield(field)
   end
 end
