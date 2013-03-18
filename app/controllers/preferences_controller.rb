@@ -174,7 +174,6 @@ class PreferencesController < ApplicationController
   end
 
   def check_shipping_product_exists
-    register_custom_shipping_service
     fields = "id,title, handle"
     search_params = {:fields=>fields, :limit => 1, :page=>1}
     search_params = search_params.merge({:handle=>"webify-shipping-app-product"})
