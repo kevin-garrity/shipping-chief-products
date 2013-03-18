@@ -111,7 +111,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
         flash.now[:error] = @australia_post_api_connection.api_errors.join(', ')
         # format.html { render action: "new" }
         # format.json { render json: @australia_post_api_connection.errors, status: :unprocessable_entity }
-        format.html { render partial: "trouble", layout: false }
+        format.html { render :text => "api_error" }
       end
     end
   end
