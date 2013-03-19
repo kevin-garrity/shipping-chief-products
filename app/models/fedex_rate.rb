@@ -27,10 +27,10 @@ class FedexRate
     fedex = FedEx.new(:login=>"104912167", :password =>"rZvWzz9UKKC4ugVdPX1iLkJ90", :account=>"277964333", :key =>"ns3hABMGvoAxjJrN")
     response = fedex.find_rates(origin, destination, packages)
     
-    rates = response.rates.select do |rate|
-      service_name = rate.service_name
-      service_name == "FedEx Ground"|| service_name == "FedEx Standard Overnight" || service_name == "FedEx 2 Day"|| service_name == "FedEx 3 Day Freight"
-    end
+   # rates = response.rates.select do |rate|
+  #    service_name = rate.service_name
+  #    service_name == "FedEx Ground"|| service_name == "FedEx Standard Overnight" || service_name == "FedEx 2 Day"|| service_name == "FedEx 3 Day Freight"
+  #  end
       
     rates = rates.sort_by(&:price).collect do |rate|
         {"service_name" => rate.service_name, 'service_code'=> 'NA', 'total_price' => rate.price.to_i, 'currency' => rate.currency}
