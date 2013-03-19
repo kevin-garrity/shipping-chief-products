@@ -18,7 +18,7 @@ class RatesController < ApplicationController
     in_dest = rate[:destination]
 
     origin = Location.new( in_origin)
-    in_dest.merge({ :address_type =>'residential'})
+    #in_dest.merge({ :address_type =>'residential')
     destination = Location.new(in_dest )
                                 
     items = params[:rate][:items]
