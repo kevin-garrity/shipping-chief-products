@@ -25,6 +25,8 @@ class PreferencesController < ApplicationController
   # PUT /preference
   # PUT /preference
   def update
+    @supported_carriers = get_supported_carriers
+    
     @preference = get_preference()
 
     @preference.shop_url = session[:shopify].shop.domain

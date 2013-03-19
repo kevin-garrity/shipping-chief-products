@@ -99,9 +99,17 @@ class AustraliaPostApiConnectionsController < ApplicationController
                         code: service['code'],
                         price: price_to_charge})
           end
+       
           list
         end
 
+       puts('-----adding free option')
+        # check if need to add free shipping option
+        if (preference.free_shipping_option)
+           @service_list.append({ name: preference.free_shipping_description,
+                        code: "Free",
+                        price: "0.00"})
+        end
         format.js { render content_type: 'text/html', layout: false }
         format.html { render content_type: 'text/html', layout: false }
       else
@@ -111,7 +119,11 @@ class AustraliaPostApiConnectionsController < ApplicationController
         flash.now[:error] = @australia_post_api_connection.api_errors.join(', ')
         # format.html { render action: "new" }
         # format.json { render json: @australia_post_api_connection.errors, status: :unprocessable_entity }
-        format.html { render :text => "api_error" }
+      #  if (flash.now[:error].blank?)
+       #   format.html { render :text => "api_error" }
+      #  else
+          format.html { render partial: "trouble", layout: false }
+       # end
       end
     end
   end

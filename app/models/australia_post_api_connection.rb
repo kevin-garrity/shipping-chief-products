@@ -217,11 +217,12 @@ class AustraliaPostApiConnection
 
       command = Thread.new do
         begin
+       
         Thread.current["httparty_response"] = HTTParty.get("#{self.api_root}/#{method}",
                                                              :query => self.attributes,
                                                              :timeout => 10, # sec
                                                              :headers => { 'auth-key' => credentials['api-key']})
-        rescue Timeout::Error => e
+        rescue Timeout::Error => e        
           self.api_errors.append("Sorry, we couldn't connect to Australia Post API. Try again in a moment.")
         rescue Exception => e
           # anything else
