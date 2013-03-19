@@ -62,7 +62,7 @@ class Preference < ActiveRecord::Base
   end
   
   def shopify_pro_shop
-    carrier == 'fedex'
+    carrier != 'AusPost'
   end
   
   def no_surcharge_percentage_and_amount
