@@ -79,9 +79,6 @@ WorldShippingCalculator::Application.configure do
     password: ENV["GMAIL_PASSWORD"]
   }
 
-   # Shopify API connection credentials:
-  config.shopify.api_key = 'd534bde6e312394f4418ae0b7005b35a'
-  config.shopify.secret = '005faee0fa6a0e20c6eae6adc8c3ba75'
 
 
   # Log the query plan for queries taking more than this (works

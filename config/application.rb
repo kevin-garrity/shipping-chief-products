@@ -13,8 +13,8 @@ module WorldShippingCalculator
   class Application < Rails::Application
     
      # Shopify API connection credentials:
-    config.shopify.api_key = '8eca7ab7c1c9209d1a78baa3f28363c8'
-    config.shopify.secret = '885758621b1a7cda8418e104cd36911c'
+     config.shopify.api_key = ENV['SHOPIFY_API_KEY']
+     config.shopify.secret = ENV['SHOPIFY_API_SECRET']
 
     # don't generate RSpec tests for views and helpers
     config.generators do |g|

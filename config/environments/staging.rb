@@ -80,8 +80,6 @@ WorldShippingCalculator::Application.configure do
   }
 
    # Shopify API connection credentials:
-  config.shopify.api_key = 'aa15f9d458b5ba22cc1a2cada18a82ee'
-  config.shopify.secret = '8ae24b198d9fe8dfc7bc8dfb55dec7b1'
 
 
   # Log the query plan for queries taking more than this (works
