@@ -42,7 +42,7 @@ class RatesController < ApplicationController
         packages << Package.new(item[:grams].to_i, [])
         single_rate = fedex.get_rates(origin, destination, packages) 
         rates = single_rate.collect do | rate|
-          {"service_name" => rate["service_name"], 'service_code'=> rate["service_code"], 'total_price' => rate["total_price"].to_i * quan, 'currency' => rate["currency"]}
+          {"service_name" => rate["service_name"].gsub(/(FedEx)/, ''), 'service_code'=> rate["service_code"], 'total_price' => rate["total_price"].to_i * quan, 'currency' => rate["currency"]}
         end
         puts ("multiple rates is " + rates.to_s)
       end
