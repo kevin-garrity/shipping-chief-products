@@ -35,7 +35,6 @@ class FedexRate
     end
       
     rates = rates.sort_by(&:price).collect do |rate|
-      puts("rate.service_name.gsub(/(FedEx )/, ''), " + rate.service_name.gsub(/(FedEx )/, ''),)
         {"service_name" => rate.service_name.gsub(/(FedEx )/, ''), 'service_code'=> 'NA', 'total_price' => rate.price.to_i, 'currency' => rate.currency}
     end
 

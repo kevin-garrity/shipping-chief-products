@@ -164,7 +164,7 @@ class PreferencesController < ApplicationController
     #set up carrier services
     params = {
       "name" => "Webify Custom Shipping Service",
-      "callback_url" => "http://shipping-staging.herokuapp.com/shipping-rates?shop_url="+ url,
+      "callback_url" => "http://foldaboxusa.herokuapp.com/shipping-rates?shop_url="+ url,
       "service_discovery" => false,
       "format" => "json"
     }
