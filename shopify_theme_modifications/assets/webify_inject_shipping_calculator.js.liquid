@@ -110,9 +110,10 @@ remove_and_add_again_shipping_line_item = function() {
   var shipping_quantity = Number(price.replace(/[^0-9]+/g,""));
   var shipping_type = webifyJQ(this).siblings('label').text() + " " + price;
   var shipping_product_id = webifyJQ('#shipping_product_id').text();
-  var line_item_properties = {}
+  var line_item_properties = {};
 
-  log("webify unavailable? ")
+
+  
   if (webify_unavailable === true) {
     // money could come in as 12, 12.3 or 12.99
 
@@ -140,13 +141,24 @@ remove_and_add_again_shipping_line_item = function() {
 
   // remove the existing line item
   remove_shipping_item(function() {
-    // once the item is removed spaghetti add the line item back in!
-    // we do this to change the line item property
-    //webifyJQ('input#quantity').attr('value', shipping_quantity);
-    //webifyJQ('input#shipping-type').val(shipping_type);
-
-    Webify.addItem(shipping_product_id, shipping_quantity, line_item_properties, Webify.onItemAdded);
-    //webifyJQ('form#world-shipping-cartform input#shipping').click(); // add the logical shipping item
+  
+  log("Free option selected ");  
+  
+    if (price_string == "$0.00" )
+    {
+      log("Free option selected ");  
+      //do not add 0 dollar line to cart as it is not allowed shopify will add 1 cent to the price
+      
+      Webify.updateCartAttributes("attributes[shipping-option]='Free option selected'");
+      
+       //trigger a card update to have new total reflected.
+       Webify.getCart();
+    }
+    else
+    {
+      
+      Webify.addItem(shipping_product_id, shipping_quantity, line_item_properties, Webify.onItemAdded);
+    }
   });
 
   var headers = {};
@@ -223,25 +235,7 @@ remove_and_add_again_shipping_line_item = function() {
 }
 
 
-// once we are able to change line item properties from the api
-// we will use this create or modify method instead
-modify_or_update_shipping_line_item = function() {
-  var price = webifyJQ(this).siblings('.option-price').text();
-  var shipping_quantity = Number(price.replace(/[^0-9\.]+/g,"")) * 100;
-  var shipping_type = webifyJQ(this).attr('value');
 
-  // create or modify the Shipping line item
-  // further, add the relevant shipping into to the line item properties
-  if ( webifyJQ('input#quantity').attr('value') === '0' ) {
-    webifyJQ('input#quantity').attr('value', shipping_quantity);
-    webifyJQ('input#shipping-type').val(shipping_type);
-    webifyJQ('input#Shipping').click();
-  } else {
-    webifyJQ('input#quantity').attr('value', shipping_quantity);
-    webifyJQ('input#shipping-type').val(shipping_type);
-    webifyJQ('.change-quantity a').click();
-  }
-}
 
 remove_shipping_item = function(callback) {
   var html_shipping_line_item = webifyJQ('.item.shipping');

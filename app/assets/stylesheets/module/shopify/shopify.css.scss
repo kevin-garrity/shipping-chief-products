@@ -103,6 +103,11 @@ form span.has-tip {
 
 #error_explanation ul {
   margin-left:30px;
+
+}
+
+#error_explanation ul li {
+  font-weight:bold;
 }
 
 #preference_origin_postal_code {
@@ -171,4 +176,36 @@ form .prefix {
 
 table .header {
   background-color: #E6E6E6;
+}
+
+#offers_flat_rate_label {
+  width:140px;
+  float:left;
+  clear:both;  
+}
+
+#flat_rate_kg {
+  margin-top:8px;
+  float:left;
+  width: 20px;
+  padding-left:5px;
+}
+
+#float_rate_charge_label {
+  width:140px;
+  margin-top:8px;
+  margin-left: 70px;
+}
+
+#preference_under_weight {
+ display:inline;
+ margin:0;
+ float:left;
+ width:50px;
+}
+#offers_flat_rate_label {
+ margin-top:8px;
+ width:210px;
+ float:left;
+ clear:both;
 }

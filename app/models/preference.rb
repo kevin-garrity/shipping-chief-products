@@ -3,7 +3,7 @@ class Preference < ActiveRecord::Base
 
   self.table_name = 'preference'
   attr_accessible :origin_postal_code, :default_weight, :surcharge_percentage, :surcharge_amount, :height, :width, :length, :items_per_box, :default_charge, :shipping_methods_allowed_dom, :default_box_size,
-    :shipping_methods_allowed_int, :container_weight, :shipping_methods_desc_int, :shipping_methods_desc_dom, :shop_url, :carrier, :free_shipping_option, :free_shipping_description
+    :shipping_methods_allowed_int, :container_weight, :shipping_methods_desc_int, :shipping_methods_desc_dom, :shop_url, :carrier, :free_shipping_option, :free_shipping_description, :offers_flat_rate, :under_weight, :flat_rate
   serialize   :shipping_methods_allowed_int, Hash
   serialize   :shipping_methods_allowed_dom, Hash
   serialize   :shipping_methods_desc_int, Hash
@@ -12,6 +12,12 @@ class Preference < ActiveRecord::Base
   validates :origin_postal_code, :length => { :is => 4 }, :unless => :shopify_pro_shop
   validates :origin_postal_code, :numericality  => { :only_integer => true }, :unless => :shopify_pro_shop
   validates :surcharge_percentage, :numericality => {:greater_than_or_equal_to => 0 }, :unless => :shopify_pro_shop
+
+  validates :free_shipping_description, :length => { :minimum => 1 } , :allow_nil=>true, :unless =>  Proc.new { |a| !a.free_shipping_option }
+
+  validates :under_weight, numericality: { greater_than_or_equal_to: 0.01 }, :unless => Proc.new { |a| !a.offers_flat_rate }
+  validates :flat_rate, numericality: { greater_than_or_equal_to: 0.01 }, :unless => Proc.new { |a| !a.offers_flat_rate }
+
 
   validates :default_weight, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 20 }, :unless => :shopify_pro_shop
   validates :default_charge, :numericality => true, :allow_nil => true, :unless => :shopify_pro_shop

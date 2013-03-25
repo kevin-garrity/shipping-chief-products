@@ -45,6 +45,22 @@ class AustraliaPostApiConnectionsController < ApplicationController
     calculated_weight += params[:australia_post_api_connection][:weight].to_f
     params[:australia_post_api_connection][:blanks] = '0'
     params[:australia_post_api_connection][:weight] = calculated_weight.to_s
+    
+    if (preference.offers_flat_rate)
+      if (calculated_weight <= preference.under_weight)
+        @service_list = Array.new
+        @service_list.append({ name: "Shipping",
+                      code: "Shipping",
+                      price: preference.flat_rate.to_s})    
+        puts("++++++++++++++++++flat rat" + calculated_weight.to_s)
+        respond_to do |format|        
+          format.js { render content_type: 'text/html', layout: false }
+          format.html { render content_type: 'text/html', layout: false }                          
+        end
+        return
+      end
+    end
+    
 
     @australia_post_api_connection = AustraliaPostApiConnection.new({:weight=> params[:australia_post_api_connection][:weight],
                                                                     :blanks => params[:australia_post_api_connection][:blanks],
@@ -56,7 +72,6 @@ class AustraliaPostApiConnectionsController < ApplicationController
     })
 
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
-    puts @australia_post_api_connection.domestic
 
     # get country list from the API -- we'll format these if there were no errors
     @service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
@@ -103,7 +118,6 @@ class AustraliaPostApiConnectionsController < ApplicationController
           list
         end
 
-       puts('-----adding free option')
         # check if need to add free shipping option
         if (preference.free_shipping_option)
            @service_list.append({ name: preference.free_shipping_description,
@@ -112,8 +126,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
         end
         format.js { render content_type: 'text/html', layout: false }
         format.html { render content_type: 'text/html', layout: false }
-      else
-
+      else //   if @australia_post_api_connection.save
         # set the flash
 
         flash.now[:error] = @australia_post_api_connection.api_errors.join(', ')

@@ -285,7 +285,8 @@ class PreferencesController < ApplicationController
       asset_files = [
             "assets/webify_inject_shipping_calculator.js.liquid",
             "assets/webify_update_loader_and_submit.js.liquid",
-            "snippets/webify-add-to-cart.liquid"
+            "snippets/webify-add-to-cart.liquid",
+            "assets/webify.api.jquery.js"
           ]
       replace_theme_files(asset_files, themes)
       shop.version = 2

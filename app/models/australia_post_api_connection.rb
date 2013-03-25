@@ -166,11 +166,8 @@ class AustraliaPostApiConnection
 
           original_price = hash["price"].to_f
           puts "  original_price: " + original_price.to_s
-          # gsub so that the price will be in dollars and cents yo
           modified_price = ( original_price * number_of_packages).to_f
 
-          puts "  modified price: " + modified_price.to_s
-          puts "---------------------------------------"
           hash["price"] = modified_price
           hash
         end
@@ -190,14 +187,9 @@ class AustraliaPostApiConnection
 
         services.to_enum.with_index(0) do |hash, i|
           original_price = hash["price"].to_f
-          puts "  original_price: " + original_price.to_s
           excess_weight_price = response_services[i]["price"].to_f
-          puts "  excess_weight_price: " + excess_weight_price.to_s
-
           modified_price = original_price + excess_weight_price
 
-          puts "  modified price: " + modified_price.to_s
-          puts "---------------------------------------"
           hash["price"] = modified_price.to_f
         end
 

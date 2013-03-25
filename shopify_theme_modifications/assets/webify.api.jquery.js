@@ -78,6 +78,27 @@ Webify.removeItem = function(variant_id, callback) {
   webifyJQ.ajax(params);
 };
 
+Webify.updateCartAttributes= function(data, callback) {
+  var params = {
+    type: 'POST',
+    url: '/cart/update.js',
+    data: data,
+    dataType: 'json',
+    success: function(cart) {
+      if ((typeof callback) === 'function') {
+        callback(cart);
+      }
+      else {
+        Webify.onCartUpdate(cart);
+      }
+    },
+    error: function(XMLHttpRequest, textStatus) {
+      Webify.onError(XMLHttpRequest, textStatus);
+    }
+  }; 
+  webifyJQ.ajax(params);
+};
+
 // -------------------------------------------------------------------------------------
 // POST to cart/add.js returns the JSON of the line item associated with the added item.
 // -------------------------------------------------------------------------------------
