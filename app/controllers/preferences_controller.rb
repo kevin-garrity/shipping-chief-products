@@ -162,12 +162,23 @@ class PreferencesController < ApplicationController
     url = session[:shopify].url
     
     #set up carrier services
-    params = {
-      "name" => "Webify Custom Shipping Service",
-      "callback_url" => "http://foldaboxusa.herokuapp.com/shipping-rates?shop_url="+ url,
-      "service_discovery" => false,
-      "format" => "json"
-    }
+    
+    if (Rails.env == "production")
+      params = {
+        "name" => "Webify Custom Shipping Service",
+        "callback_url" => "http://foldaboxusa.herokuapp.com/shipping-rates?shop_url="+ url,
+        "service_discovery" => false,
+        "format" => "json"
+      }
+    else 
+        params = {
+          "name" => "Webify Custom Shipping Service Staging",
+          "callback_url" => "http://shipping-staging.herokuapp.com/shipping-rates?shop_url="+ url,
+          "service_discovery" => false,
+          "format" => "json"
+        }     
+      
+    end
 
     services = ShopifyAPI::CarrierService.find(:all, params => {:"name"=>"Webify Custom Shipping Service"})
     #ShopifyAPI::CarrierService.delete(s[0].id)
