@@ -25,28 +25,55 @@ class RatesController < ApplicationController
     
     total = 0
     rates_array = Array.new
+    all_samples = true
+    #check if all items are of sample
     items.each do |item|
-      # treat each item as seperate 
-      packages = Array.new      
-      fedex = FedexRate.new()
-      quan = item[:quantity].to_i
-      
-      # get the number of items being ordered
-      if (item[:sku].start_with?("SAM/")) #shipped together
-        packages << Package.new(item[:grams].to_i * quan, [])
-        rates = fedex.get_rates(origin, destination, packages)
-      else
-        # look up one package and multiple by quantity
-        puts("quan is " + quan.to_s)
-
-        packages << Package.new(item[:grams].to_i, [])
-        single_rate = fedex.get_rates(origin, destination, packages) 
-        rates = single_rate.collect do | rate|
-          {"service_name" => rate["service_name"], 'service_code'=> rate["service_code"], 'total_price' => rate["total_price"].to_i * quan, 'currency' => rate["currency"]}
-        end
-        puts ("multiple rates is " + rates.to_s)
+      if (!item[:sku].include?("SAM/")) #shipped together
+        all_samples = false        
       end
+    end
+    
+    if (all_samples)
+      
+      puts("all samples packages")
+      
+      weight = 0
+      items.each do |item|
+        #total all weight
+        quan = item[:quantity].to_i
+        
+        weight = weight + item[:grams].to_i * quan
+      end
+      # one big package
+      packages << Package.new(weight, [])
+    
+      rates = fedex.get_rates(origin, destination, packages)
       rates_array << rates
+      
+    else    
+      items.each do |item|
+        # treat each item as seperate 
+        packages = Array.new      
+        fedex = FedexRate.new()
+        quan = item[:quantity].to_i
+      
+        # get the number of items being ordered
+        if (item[:sku].include?("SAM/")) #shipped together
+          packages << Package.new(item[:grams].to_i * quan, [])
+          rates = fedex.get_rates(origin, destination, packages)
+        else
+          # look up one package and multiple by quantity
+          puts("quan is " + quan.to_s)
+
+          packages << Package.new(item[:grams].to_i, [])
+          single_rate = fedex.get_rates(origin, destination, packages) 
+          rates = single_rate.collect do | rate|
+            {"service_name" => rate["service_name"], 'service_code'=> rate["service_code"], 'total_price' => rate["total_price"].to_i * quan, 'currency' => rate["currency"]}
+          end
+          puts ("multiple rates is " + rates.to_s)
+        end
+        rates_array << rates
+      end
     end
     
     find_rates = Hash.new
