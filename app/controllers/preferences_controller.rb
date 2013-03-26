@@ -47,7 +47,7 @@ class PreferencesController < ApplicationController
           update_shop_metafield(@preference.default_charge)          
           check_shipping_product_exists
           check_shopify_files_present
-        elsif (@preference.carrier == "Fedex")
+        elsif (@preference.carrier == "Private_FABUSA")
           register_custom_shipping_service
         end
         format.html { redirect_to preferences_url, notice: 'Preference was successfully updated.' }
