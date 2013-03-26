@@ -34,7 +34,8 @@ class RatesController < ApplicationController
     end
     
     if (all_samples)
-      packages = Array.new      
+      packages = Array.new
+      fedex = FedexRate.new()
       
       puts("all samples packages")
       
