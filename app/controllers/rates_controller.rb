@@ -34,6 +34,7 @@ class RatesController < ApplicationController
     end
     
     if (all_samples)
+      packages = Array.new      
       
       puts("all samples packages")
       
