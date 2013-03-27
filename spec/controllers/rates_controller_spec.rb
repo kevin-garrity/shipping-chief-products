@@ -3,16 +3,34 @@ require 'json'
 
 describe RatesController do
 
+  def json_ca_dest 
+    '{
+    
+         "country": "CA",
+         "postal_code": "K1P 1J1",
+         "province": "ON",
+         "city": "Ottawa",
+         "name": "Jason Normore",
+         "address1": "520 Cambridge Street South Apt. 5",
+         "address2": "",
+         "address3": "",
+         "phone": "7097433959",
+         "fax": "",
+         "address_type": "",
+         "company_name": ""
+    }'
+  end
+  
   def json_shopify_params
     '{
          "rate": {
              "origin": {
-                 "country": "CA",
-                 "postal_code": "K1S4J3",
-                 "province": "ON",
-                 "city": "Ottawa",
+                 "country": "US",
+                 "postal_code": "49686",
+                 "province": "MI",
+                 "city": "Traverse City",
                  "name": "",
-                 "address1": "520 Cambridge Street South",
+                 "address1": "807 Airport Access Road",
                  "address2": "",
                  "address3": "",
                  "phone": "",
@@ -21,12 +39,12 @@ describe RatesController do
                  "company_name": ""
              },
              "destination": {
-                 "country": "CA",
-                 "postal_code": "K1S 3T7",
-                 "province": "ON",
-                 "city": "Ottawa",
+                 "country": "US",
+                 "postal_code": "06854",
+                 "province": "CT",
+                 "city": "Norwalk",
                  "name": "Jason Normore",
-                 "address1": "520 Cambridge Street South Apt. 5",
+                 "address1": "999 Cambridge Street",
                  "address2": "",
                  "address3": "",
                  "phone": "7097433959",
@@ -37,7 +55,7 @@ describe RatesController do
              "items": [
                  {
                      "name": "My Product 3",
-                     "sku": "",
+                     "sku": "x1",
                      "quantity": 1,
                      "grams": 1000,
                      "price": 2000,
@@ -48,7 +66,7 @@ describe RatesController do
                  },
                  {
                       "name": "My Product 4",
-                      "sku": "",
+                      "sku": "x2",
                       "quantity": 1,
                       "grams": 2000,
                       "price": 3000,
@@ -75,6 +93,17 @@ describe RatesController do
       expect(response.code).to eq("200")
     end
 
+    context "when shipping cross countries" do
+      it "should return rate" do
+      
+        param = valid_parameters_from_shopify
+        param["rate"]["destination"] = JSON.parse(json_ca_dest)
+        post :shipping_rates, param
+        expect(response).to be_success
+        expect(response.code).to eq("200")
+      end
+    end
+    
     context "when 'rates' is missing from request params" do
 
       it "should render NOTHING" do

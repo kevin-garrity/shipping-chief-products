@@ -23,10 +23,11 @@ class RatesController < ApplicationController
     destination = Location.new(in_dest )
     
     #determine if to use UPS or fedex
+    puts('country is' + in_dest[:country])
     if (in_dest[:country] == 'US')
-      calculator = Fedex.new
+      calculator = FedexRate.new
     else
-      calculator = UPS.new
+      calculator = UpsRate.new
       puts('UPS!!!1')
     end
                                 
