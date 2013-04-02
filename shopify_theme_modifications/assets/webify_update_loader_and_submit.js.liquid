@@ -31,7 +31,7 @@ update_loader_and_submit = function(method, dataHash, callback, fallback) {
     data: dataHash,
     crossDomain: true,
     success: function(data, text_status, jqXHR) {
-      var query_string = $(this).attr('data')
+      var query_string = webifyJQ(this).attr('data')
       if (data == "api_error")
       {
         if ((typeof fallback) === 'function') {
