@@ -8,7 +8,7 @@ Remember to back up your theme before you start installing this app.
 * Check both regular theme and mobile theme
 * Add the following to the bottom of assets/checkout.css.liquid if already exists  and add following styles. Otherwise continue to next step.
 
-** Copy the code
+** Copy the code to checkout.css
 
 #overview #thumbs h3[title^="Shipping"] + span {
   display: none;
@@ -24,14 +24,23 @@ Remember to back up your theme before you start installing this app.
 
 ** This is so that the number of items displayed in the cart will not reflect the secret hidden shipping line items we use internally.
 
-* Add the following to templates/cart.liquid, after the cart form near the bottom of the file. Look for proceed to checkout button and add the following line @{% include 'webify-request-shipping-form' %}@
+* Add the following to templates/cart.liquid, after the cart form near the bottom of the file.
+ Look for proceed to checkout button @<input type="submit" name="checkout" class="button checkout")@ and add the following line @{% include 'webify-request-shipping-form' %}@ before the div that surrounds the checkout buttons
+If you are not sure where to put it, look for </form> and put the line in front of it
+like   @{% include 'webify-request-shipping-form' %}@ </form> 
 
 
 * Modify cart.liquid
 ** Add @class="item"@  to each product tr in cart.liquid
-** add @{% if item.title == 'Shipping' %}shipping{% endif %}@ to tr class
+** Look for lines like this <tr class="{% cycle "odd", "even" %} ">
+and replace with this 	<tr class="{% cycle "odd", "even" %} item {% if item.title == 'Shipping' %}shipping{% endif %}">
+** add @class="cart-total-price"@ to total price container in cart, look for <span>{{ cart.total_price | money }}</span>
+  replace with <span class="cart-total-price">{{ cart.total_price | money }}</span>
+
 ** add @id="cartform"@ to form in cart.liquid
-** add @class="cart-total-price"@ to total price container in cart, look for cart.total_price
+
+end mandatory steps
+
 ** For theme that does not use table for cart, add @class="cart-subtotal"@ to the line that contains subtotal. If total is in a table row, create an empty div with the class cart-subtotal. Check if shipping charge is displayed before subtotal in the shop.
 ** tag td in the cart table with class name price, quantity, total, item
 ** look for <input class="text quantity" type="text" size="4" id="updates_{{ item.id }}" name="updates[{{ item.id }}]" value="{{ item.quantity }}" class="replace" />
