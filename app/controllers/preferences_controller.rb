@@ -253,7 +253,7 @@ class PreferencesController < ApplicationController
   private
   
   def current_deployed_version
-    2
+    3
   end
   
   def replace_theme_files(asset_files, themes)
@@ -302,6 +302,23 @@ class PreferencesController < ApplicationController
       replace_theme_files(asset_files, themes)
       shop.version = 2
       shop.save!
-    end
+    elsif (version == 2)
+        themes = ShopifyAPI::Theme.find(:all)
+        theme = themes.find { |t| t.role == 'main' }
+        mobile_theme = themes.find { |t| t.role == 'mobile' }
+        themes = Array.new
+        themes << theme
+        themes <<  mobile_theme unless mobile_theme.nil?
+        #changes for theme
+        asset_files = [
+              "assets/webify_inject_shipping_calculator.js.liquid",
+              "assets/webify_update_loader_and_submit.js.liquid",
+              "snippets/webify-request-shipping-form.liquid",
+            ]
+        replace_theme_files(asset_files, themes)
+        shop.version = 2
+        shop.save!
+      end
+    
   end
 end
