@@ -91,6 +91,7 @@ class PreferencesController < ApplicationController
     shop = Shop.find_by_url(url)
     if (shop.theme_modified)      
       #check if need to upgrade theme files
+
       if (shop.version != current_deployed_version)
         upgrade_theme(shop.version, shop)
       end
@@ -252,9 +253,7 @@ class PreferencesController < ApplicationController
   
   private
   
-  def current_deployed_version
-    3
-  end
+
   
   def replace_theme_files(asset_files, themes)
     themes.each do |t|
@@ -285,7 +284,8 @@ class PreferencesController < ApplicationController
   end
   
   def upgrade_theme(version, shop)
-    if (version == 1)
+    if (version == 1 || version.nil?)
+      logger.info("upgrading #{shop.url} to version 2")      
       themes = ShopifyAPI::Theme.find(:all)
       theme = themes.find { |t| t.role == 'main' }
       mobile_theme = themes.find { |t| t.role == 'mobile' }
@@ -302,7 +302,10 @@ class PreferencesController < ApplicationController
       replace_theme_files(asset_files, themes)
       shop.version = 2
       shop.save!
-    elsif (version == 2)
+      version = 2
+     end
+     if (version == 2)
+        logger.info("upgrading #{shop.url} to version 3")
         themes = ShopifyAPI::Theme.find(:all)
         theme = themes.find { |t| t.role == 'main' }
         mobile_theme = themes.find { |t| t.role == 'mobile' }
@@ -316,7 +319,7 @@ class PreferencesController < ApplicationController
               "snippets/webify-request-shipping-form.liquid",
             ]
         replace_theme_files(asset_files, themes)
-        shop.version = 2
+        shop.version = 3
         shop.save!
       end
     

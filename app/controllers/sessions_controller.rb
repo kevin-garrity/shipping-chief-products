@@ -16,6 +16,7 @@ class SessionsController < ApplicationController
         shop = Shop.new
         shop.url = params[:shop]
         shop.token = sess.token
+        shop.version = current_deployed_version
         shop.save!
       else
         #update token
