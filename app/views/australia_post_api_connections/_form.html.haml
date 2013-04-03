@@ -35,7 +35,7 @@
 
       / these are calculated in yaml and returned to us
       / so these fields can remain hidden
-      .field.hidden(style='display:none')
+      .field.hidden(style='display:none', step="any")
         = f.label :weight
         = f.number_field :weight
 
@@ -43,15 +43,15 @@
         = f.label :blanks
         = f.number_field :blanks
 
-      .field.hidden(style='display:none')
+      .field.hidden(style='display:none', step="any")
         = f.label :height
         = f.number_field :height
 
-      .field.hidden(style='display:none')
+      .field.hidden(style='display:none', step="any")
         = f.label :width
         = f.number_field :width
 
-      .field.hidden(style='display:none')
+      .field.hidden(style='display:none', step="any")
         = f.label :length
         = f.number_field :length
 
