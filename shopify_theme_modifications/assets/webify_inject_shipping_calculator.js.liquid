@@ -168,7 +168,7 @@ remove_and_add_again_shipping_line_item = function() {
   var found = false;
 
   // find the first row with product information
-  row = first_item_line;
+  /* row = first_item_line;
   children = row.children();
   for (var i = 0; i < children.length; i++)
   {
@@ -195,7 +195,7 @@ remove_and_add_again_shipping_line_item = function() {
       headers["total"] = i;
       found = true;
     }
-  }
+  }*/
 
   if (found)
   {
@@ -230,7 +230,7 @@ remove_and_add_again_shipping_line_item = function() {
     item.after(line_item_template);
   }
   else { //cannot find a line to add. Add the line as a div
-    webifyJQ(".cart-subtotal").before("<div class='item shipping' style='margin-bottom:10px;text-align:right;'>Shipping Charge: " + price_string+ "</div>");
+    webifyJQ(":submit").last().after("<div class='item shipping' style='height:0px;visibility:hidden;text-align:right;'>Shipping Charge: " + price_string+ "</div>");
   }
 }
 
