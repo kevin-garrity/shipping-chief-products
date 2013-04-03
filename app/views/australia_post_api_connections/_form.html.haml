@@ -35,25 +35,25 @@
 
       / these are calculated in yaml and returned to us
       / so these fields can remain hidden
-      .field.hidden(style='display:none', step="any")
+      .field.hidden(style='display:none')
         = f.label :weight
-        = f.number_field :weight
+        = f.number_field :weight, step: "any"
 
       .field.hidden(style='display:none')
         = f.label :blanks
         = f.number_field :blanks
 
-      .field.hidden(style='display:none', step="any")
+      .field.hidden(style='display:none')
         = f.label :height
-        = f.number_field :height
+        = f.number_field :height, step: "any"
 
-      .field.hidden(style='display:none', step="any")
+      .field.hidden(style='display:none')
         = f.label :width
-        = f.number_field :width
+        = f.number_field :width, step: "any"
 
-      .field.hidden(style='display:none', step="any")
+      .field.hidden(style='display:none')
         = f.label :length
-        = f.number_field :length
+        = f.number_field :length, step: "any"
 
       .field.hidden(style='display:none')
         = f.label :from_postcode
