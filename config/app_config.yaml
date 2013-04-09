@@ -1,0 +1,26 @@
+clients:
+  default:
+    menus:
+    access:
+      all_except: []
+    carriers:
+      - :aus_post
+  webifytechnology.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+carriers:
+  aus_post: 
+    public: true
+    description: Australia Post
+    service: false
+  red_pepper:
+    public: false
+    description: Custom Rules - Red Pepper
+    service: true
+    service_discovery: false
+  fabusa:
+    public: false
+    description: Custom Rules - FABUSA
+    service: true
+    service_discovery: false
