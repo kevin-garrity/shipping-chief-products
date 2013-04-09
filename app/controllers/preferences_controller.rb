@@ -31,7 +31,6 @@ class PreferencesController < ApplicationController
     respond_to do |format|
       @preference.attributes = params[:preference]
 
-      Rails.logger.info("@preference.carrier: #{@preference.carrier.inspect}")
       installer_class = carrier_installer_class_for(@preference.carrier)
       installer = installer_class.new( session[:shopify].shop, @preference)
 
