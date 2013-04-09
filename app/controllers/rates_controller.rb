@@ -1,17 +1,18 @@
 class RatesController < ApplicationController
+  include CarrierHelper
 
   #this is the rules for foldaboxUSA store only
   def shipping_rates    
-    preference = Preference.find_by_shop_url(params[:shop_url])    
+    preference = Preference.find_by_shop_url(params[:shop_url]) 
+    Rails.logger.info("preference: #{preference.inspect}")
     return nothing unless params[:rate] && preference
 
     log_params
 
-    service_class = carrier_service_class_for(@preference.carrier)
-    service = service_class.new(params[:rate])
+    service_class = carrier_service_class_for(preference.carrier)
+    service = service_class.new(preference, params[:rate])
 
     rates = service.fetch_rates
-
         
     #Rails.logger.debug("----- returning " + rates.to_json)
     render :json => {:rates => rates}
@@ -22,9 +23,9 @@ class RatesController < ApplicationController
 
   private
   def log_params
-    Rails.logger.debug("shipping origin is" + rate[:origin].to_s)
-    Rails.logger.debug("shipping destination is" + rate[:destination].to_s)
-    Rails.logger.debug("shipping items is" + rate[:items].to_s)
+    Rails.logger.debug("shipping origin is" + params[:rate][:origin].to_s)
+    Rails.logger.debug("shipping destination is" + params[:rate][:destination].to_s)
+    Rails.logger.debug("shipping items is" + params[:rate][:items].to_s)
   end
 
   def nothing

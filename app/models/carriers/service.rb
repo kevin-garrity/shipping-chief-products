@@ -4,9 +4,10 @@ include ActiveMerchant::Shipping
 
 module Carriers
   class Service
-    attr_accessor :params
+    attr_accessor :preference, :params
 
-    def initialize(params)
+    def initialize(preference, params)
+      @preference = preference
       @params = params
     end
 
@@ -20,6 +21,16 @@ module Carriers
 
     def items
       params[:items]
+    end
+
+    def shop
+      shop ||= Shop.find_by_url(preference.shop_url)
+    end
+
+    def withShopify
+      ShopifyAPI::Session.temp(shop.url, shop.token) do
+        yield
+      end
     end
 
     def fetch_rates

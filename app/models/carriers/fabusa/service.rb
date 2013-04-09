@@ -80,13 +80,14 @@ module Carriers
       end
 
       def calculator
-        case destination.country
+        @calculator ||= case destination.country
         when 'US'
-          calculator = FedexRate.new
+          FedexRate.new
         else
-          calculator = UpsRate.new
+          UpsRate.new
         end
-      end      
+      end
+      
     end    
   end
 end
