@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  before_filter :logging, if: Rails.env.development?
   def new
     authenticate if params[:shop].present?
   end
@@ -9,12 +10,12 @@ class SessionsController < ApplicationController
   
   def show
     if response = request.env['omniauth.auth']
-      sess = ShopifyAPI::Session.new(params[:shop], response['credentials']['token'])
-      
-     shop = Shop.find_by_url(params[:shop])
+      token = response['credentials']['token']
+      sess = ShopifyAPI::Session.new(params[:shop], token)
+      shop = Shop.find_by_url(params[:shop])
       if shop.nil?
         shop = Shop.new
-        shop.url = params[:shop]
+        shop.myshopify_domain = params[:shop]
         shop.token = sess.token
         shop.version = current_deployed_version
         shop.save!
@@ -58,7 +59,12 @@ class SessionsController < ApplicationController
       init_webhooks
 
       if sess.valid?
-        ShopifyAPI::Base.activate_session(sess)        
+        ShopifyAPI::Base.activate_session(sess) 
+        shopify_api_shop = ShopifyAPI::Shop.current
+        shop.update_attributes(
+          domain: shopify_api_shop.domain,
+          myshopify_domain: shopify_api_shop.myshopify_domain
+        )
         session[:shopify] = sess        
         flash[:notice] = "Logged in"
         redirect_to return_address
@@ -82,6 +88,10 @@ class SessionsController < ApplicationController
     name = params[:shop].to_s.strip
     name += '.myshopify.com' if !name.include?("myshopify.com") && !name.include?(".")
     name.sub('https://', '').sub('http://', '')
+  end
+
+  def logging
+      Rails.logger.debug("request.headers['HTTP_X_SHOPIFY_SHOP_DOMAIN']: #{request.headers['HTTP_X_SHOPIFY_SHOP_DOMAIN'].inspect}")
   end
   
 end

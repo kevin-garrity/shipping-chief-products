@@ -92,7 +92,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
         #filter out unwanted methods more efficiently?
 
         @service_list = Array.wrap( @service_list[1]['service'] ).inject([]) do |list, service|
-          logger.debug("service code is " + service['code'])
+          Rails.logger.debug("service code is " + service['code'])
           if shipping_methods[service['code']]
             price_to_charge = service['price'].to_f
             shipping_name = shipping_desc[service['code']].blank? ? service['name'] : shipping_desc[service['code']]

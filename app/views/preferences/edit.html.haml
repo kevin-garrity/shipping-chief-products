@@ -2,5 +2,8 @@
   .panel.rounded-corners
     = render :partial => '/layouts/side_navigation', :locals=>{:active_link => "setting"}
 %h2 Preferences
-
 = render 'form'
+
+- if Rails.env.development?
+  %h2 Console
+  = render 'console'
