@@ -1,0 +1,22 @@
+clients:
+  schumm-durgan-and-lang94.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :aus_post
+      - :fabusa
+  red-pepper.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :aus_post
+      - :red_pepper
+  shop.redpepper.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :aus_post
+      - :red_pepper
