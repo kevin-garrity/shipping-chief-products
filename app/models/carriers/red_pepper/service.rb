@@ -31,6 +31,7 @@ module Carriers
           
           
           rates_array = Array.new
+          total_cooler_charge = 0
           
           # shipping rate is calculated at a per collection level.
           # item in the food collection is shipped individually
@@ -50,7 +51,8 @@ module Carriers
                 Rails.logger.info("rates: #{rates.inspect}")
 
                 rates = overnight_only(rates)
-                addCoolerCharge(rates)       
+ 
+                total_cooler_charge = total_cooler_charge + 2700
                 rates_array << rates
                  
               end # end each collect_items
@@ -71,8 +73,10 @@ module Carriers
            
           end # end each collection_sku_prefixs
           
-          consolidate_rates(rates_array)          
+          rates = consolidate_rates(rates_array)          
           
+          rates = addCoolerCharge(rates, total_cooler_charge) if total_cooler_charge > 0 
+          return rates
         end # end with shopify
       end
 
@@ -108,10 +112,11 @@ module Carriers
         @calculator ||= FedexRate.new
       end      
 
-      def addCoolerCharge(rates)
+      def addCoolerCharge(rates, total_charge)
         rates.each do|rate|
-          rate['total_price'] = rate['total_price'] .to_i + 2700           
-          rate['service_name'] =  rate['service_name'] + " (includes $27 refundable cooler deposit for each item)"          
+          rate['total_price'] = rate['total_price'] .to_i + total_charge      
+          total_charge_dollar = total_charge / 100     
+          rate['service_name'] =  rate['service_name'] + " (includes $#{total_charge_dollar} refundable cooler deposit)"          
         end
         rates
         
