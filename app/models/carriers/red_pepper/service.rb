@@ -42,7 +42,9 @@ module Carriers
             if (coll_prefix == 'FOOD-')
                collect_items.each do |item|
                 packages = Array.new
+               
                 quan = item[:quantity].to_i
+               
                 weight = item[:grams].to_i * quan
 
                 packages << Package.new(weight, [])
@@ -51,8 +53,10 @@ module Carriers
                 Rails.logger.info("rates: #{rates.inspect}")
 
                 rates = overnight_only(rates)
+                #each item is shipped seperately
+                rates = multiple_charge(rates, quan) if quan > 1
  
-                total_cooler_charge = total_cooler_charge + 2700
+                total_cooler_charge = total_cooler_charge + 2700 * quan
                 rates_array << rates
                  
               end # end each collect_items
@@ -111,6 +115,13 @@ module Carriers
         rates.select { |rate| rate["service_name"].downcase.include?('overnight') }
       end
 
+      def multiple_charge(rates, multiplier)
+        rates.each do|rate|
+          rate['total_price'] = rate['total_price'] .to_i * multiplier      
+        end
+        rates
+      end
+          
       def calculator
         @calculator ||= FedexRate.new
       end      

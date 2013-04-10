@@ -42,7 +42,7 @@ class FedexRate
     #end
       
     rates = rates.sort_by(&:price).collect do |rate|
-        {"service_name" => rate.service_name, 'service_code'=> 'NA', 'total_price' => rate.price.to_i, 'currency' => rate.currency}
+        {"service_name" => rate.service_name, 'service_code'=> rate.service_name, 'total_price' => rate.price.to_i, 'currency' => rate.currency}
     end
 
 
