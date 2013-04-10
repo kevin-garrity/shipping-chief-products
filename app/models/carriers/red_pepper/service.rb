@@ -7,15 +7,18 @@ module Carriers
         Rails.logger.info("#{self.class.name}#fetch_rates")
         withShopify do
           
-          only_giftcards = true
+          has_non_food_items = false
+          has_food_item = false
           #only giftcards
           
           collection_sku_prefixs = Array.new
 
           items.each do |item|
             sku = item[:sku]
-            if (!sku.start_with?("GC-")) #found giftcard
-              only_giftcards = false
+            if (sku.start_with?("FOOD-")) 
+              has_food_item = true
+            else
+              has_non_food_items = true
             end
             # get all the collections by looking at pattern XXX-
             match = sku.match('[^-]*-')
@@ -26,6 +29,18 @@ module Carriers
             end
           end
           
+          weight = 0
+          # if there is no food item, only need to query once
+          if (has_non_food_items && !has_food_item)
+            #make one query to fedex
+            items.each do |item|
+              quan = item[:quantity].to_i               
+              weight = weight + item[:grams].to_i * quan
+            end
+            
+            rates = calculator.get_rates(origin, destination, packages)
+            return rates;
+          end
           # flat shipping if only giftcards
 #          return [] if (only_giftcards) 
           
@@ -33,6 +48,7 @@ module Carriers
           rates_array = Array.new
           total_cooler_charge = 0
           extra_charge = 0
+          
           
           # shipping rate is calculated at a per collection level.
           # item in the food collection is shipped individually
@@ -61,14 +77,14 @@ module Carriers
                  
               end # end each collect_items
             else  # if not food items
-              #ignore giftcards items as they can be shipped together with other items
-              unless (coll_prefix == 'GC-')
+              if (has_food_item && has_non_food_items)
+                # giftcards items can be shipped together with other items                
                 packages = Array.new
                 weight = 0
                 collect_items.each do |item|                 
                   extra_charge = extra_charge + 500 #assume all other itmems wil cost 5 dollar to ship
-                end # end each                
-              end
+                end # end each                              
+              end  
             end 
            
           end # end each collection_sku_prefixs
