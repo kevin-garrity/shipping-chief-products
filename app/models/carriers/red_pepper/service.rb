@@ -27,7 +27,12 @@ module Carriers
       def addCoolerCharge(rates)
         rates.each do|rate|
           rate['total_price'] = rate['total_price'] .to_i + 2700 
-          rate['service_name'] << " (includes $27 refundable deposit for the cooler)"
+          Rails.logger.info("rates before is : #{ rate['service_name']}")
+          
+          rate['service_name'] =  rate['service_name'] + " (includes $27 refundable deposit for the cooler)"
+          
+          Rails.logger.info("rates after is : #{ rate['service_name']}")
+          
         end
         rates
         
