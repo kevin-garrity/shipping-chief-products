@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
-  before_filter :logging, if: Rails.env.development?
+  before_filter :logging
+
   def new
     authenticate if params[:shop].present?
   end
@@ -91,7 +92,7 @@ class SessionsController < ApplicationController
   end
 
   def logging
-      Rails.logger.debug("request.headers['HTTP_X_SHOPIFY_SHOP_DOMAIN']: #{request.headers['HTTP_X_SHOPIFY_SHOP_DOMAIN'].inspect}")
+      Rails.logger.debug("request.headers['HTTP_X_SHOPIFY_SHOP_DOMAIN']: #{request.headers['HTTP_X_SHOPIFY_SHOP_DOMAIN'].inspect}") if Rails.env.development?
   end
   
 end
