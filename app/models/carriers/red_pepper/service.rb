@@ -28,7 +28,9 @@ module Carriers
         rates.each do|rate|
           rate['total_price'] = rate['total_price'] .to_i + 2700 
           rate['service_name'] << " (includes $27 refundable deposit for the cooler)"
+        end
         rates
+        
       end
 
       def packages
