@@ -30,7 +30,7 @@ class UpsRate
     rates = response.rates
     
     rates = rates.sort_by(&:price).collect do |rate|
-        {"service_name" => "INT'L " +  rate.service_name.gsub(/(UPS )/, '').gsub(/(Home )/, ''), 'service_code'=> 'NA', 'total_price' => rate.price.to_i, 'currency' => rate.currency}
+        {"service_name" => rate.service_name, 'service_code'=> 'NA', 'total_price' => rate.price.to_i, 'currency' => rate.currency}
     end
 
 
