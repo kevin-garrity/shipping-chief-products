@@ -2,6 +2,11 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   
   private
+    def current_shop
+      return nil unless session[:shopify]
+      @shop ||= Shop.find_by_url(session[:shopify].shop.domain)
+    end
+    
     def check_payment
 
 
