@@ -30,6 +30,15 @@ class Preference < ActiveRecord::Base
   
   validate :no_surcharge_percentage_and_amount, :unless => :shopify_pro_shop
 
+  def self.find_by_shop(shop)
+    preference = Preference.arel_table
+    Preference.where(
+      preference[:shop_url].eq( shop.domain ).
+      or(
+      preference[:shop_url].eq( shop.myshopify_domain ))
+    ).first
+  end
+
   def self.AusPostParcelServiceListInt
     {:INTL_SERVICE_ECI_M =>"Express Courier International Merchandise",
       :INTL_SERVICE_ECI_D => "Express Courier International Documents",

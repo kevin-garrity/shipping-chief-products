@@ -60,12 +60,12 @@ module Carriers
 
       if (services.length == 0)
         carrier_service = ShopifyAPI::CarrierService.create(params)
-        logger.debug("Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
+        Rails.logger.debug("Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
       else
    
         ShopifyAPI::CarrierService.delete(services[0].id)
         carrier_service = ShopifyAPI::CarrierService.create(params)
-        logger.debug("Readding Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
+        Rails.logger.debug("Readding Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
       end
 
       Rails.logger.info("Installed CarrierService: #{carrier_service.inspect}")

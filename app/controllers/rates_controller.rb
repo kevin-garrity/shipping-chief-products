@@ -2,8 +2,10 @@ class RatesController < ApplicationController
   include CarrierHelper
 
   #this is the rules for foldaboxUSA store only
-  def shipping_rates    
-    preference = Preference.find_by_shop_url(params[:shop_url]) 
+  def shipping_rates 
+    shop_domain = request.headers['HTTP_X_SHOPIFY_SHOP_DOMAIN']
+    shop = Shop.find_by_url(shop_domain)
+    preference = Preference.find_by_shop(shop) 
     Rails.logger.info("preference: #{preference.inspect}")
     return nothing unless params[:rate] && preference
 
