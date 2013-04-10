@@ -37,6 +37,9 @@ module Carriers
               quan = item[:quantity].to_i               
               weight = weight + item[:grams].to_i * quan
             end
+            packages = Array.new
+            
+            packages << Package.new(weight, [])
             
             rates = calculator.get_rates(origin, destination, packages)
             return rates;
