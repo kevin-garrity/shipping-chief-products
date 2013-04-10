@@ -12,7 +12,9 @@ module Carriers
           Rails.logger.info("rates: #{rates.inspect}")
 
           rates = overnight_only(rates)
-          addCoolerCharge(rates)
+          if (contains_food?)
+            addCoolerCharge(rates)
+          end
         end
       end
 
