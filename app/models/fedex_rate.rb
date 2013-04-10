@@ -24,7 +24,11 @@ class FedexRate
     # :account is your FedEx account number
     # :login is your meter number
 
-    fedex = FedEx.new(:login=>"104912167", :password =>"rZvWzz9UKKC4ugVdPX1iLkJ90", :account=>"277964333", :key =>"ns3hABMGvoAxjJrN")
+    #foldabox accoount
+    #fedex = FedEx.new(:login=>"104912167", :password =>"rZvWzz9UKKC4ugVdPX1iLkJ90", :account=>"277964333", :key =>"ns3hABMGvoAxjJrN")
+    #redpepper account
+    fedex = FedEx.new(:login=>"104815909", :password =>"2oT7FGzP1uYCOKFF5D4gcu3aw", :account=>"235252228", :key =>"snaJqa9ORKG4x0LD")
+    
     response = fedex.find_rates(origin, destination, packages)
     
     rates = response.rates
@@ -35,7 +39,7 @@ class FedexRate
     end
       
     rates = rates.sort_by(&:price).collect do |rate|
-        {"service_name" => rate.service_name.gsub(/(FedEx )/, '').gsub(/(Home )/, ''), 'service_code'=> 'NA', 'total_price' => rate.price.to_i, 'currency' => rate.currency}
+        {"service_name" => rate.service_name, 'service_code'=> 'NA', 'total_price' => rate.price.to_i, 'currency' => rate.currency}
     end
 
 
