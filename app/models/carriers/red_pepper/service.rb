@@ -45,7 +45,7 @@ module Carriers
                 packages = Array.new
                
                 quan = item[:quantity].to_i               
-                weight = item[:grams].to_i * quan
+                weight = item[:grams].to_i
 
                 packages << Package.new(weight, [])
                   
