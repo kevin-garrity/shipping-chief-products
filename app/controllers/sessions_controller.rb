@@ -12,11 +12,10 @@ class SessionsController < ApplicationController
     if response = request.env['omniauth.auth']
       token = response['credentials']['token']
       sess = ShopifyAPI::Session.new(params[:shop], token)
-      url =       
       shop = Shop.find_by_url(params[:shop])
       if shop.nil?
         shop = Shop.new
-        shop.url = shop_url
+        shop.myshopify_domain = params[:shop]
         shop.token = sess.token
         shop.version = current_deployed_version
         shop.save!
@@ -60,7 +59,12 @@ class SessionsController < ApplicationController
       init_webhooks
 
       if sess.valid?
-        ShopifyAPI::Base.activate_session(sess)        
+        ShopifyAPI::Base.activate_session(sess) 
+        shopify_api_shop = ShopifyAPI::Shop.current
+        shop.update_attributes(
+          domain: shopify_api_shop.domain,
+          myshopify_domain: shopify_api_shop.myshopify_domain
+        )
         session[:shopify] = sess        
         flash[:notice] = "Logged in"
         redirect_to return_address

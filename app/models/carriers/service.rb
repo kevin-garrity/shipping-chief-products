@@ -28,7 +28,7 @@ module Carriers
     end
 
     def withShopify
-      ShopifyAPI::Session.temp(shop.url, shop.token) do
+      ShopifyAPI::Session.temp(shop.myshopify_domain, shop.token) do
         yield
       end
     end

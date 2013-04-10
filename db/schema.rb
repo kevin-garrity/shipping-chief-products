@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130325055023) do
+ActiveRecord::Schema.define(:version => 20130410052929) do
 
   create_table "preference", :force => true do |t|
     t.string  "shop_url"
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(:version => 20130325055023) do
   end
 
   create_table "shops", :force => true do |t|
-    t.string   "url"
+    t.string   "domain"
     t.string   "token"
     t.boolean  "active_subscriber"
     t.datetime "signup_date"
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(:version => 20130325055023) do
     t.string   "status"
     t.boolean  "theme_modified"
     t.integer  "version"
+    t.string   "myshopify_domain"
   end
 
 end
