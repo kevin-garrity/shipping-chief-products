@@ -30,6 +30,7 @@ module Carriers
           rate['service_name'] << " (includes $27 refundable deposit for the cooler)"
         end
         rates
+        
       end
 
       def packages
