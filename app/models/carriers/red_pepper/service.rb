@@ -36,7 +36,7 @@ module Carriers
           # item in the food collection is shipped individually
           # items in other collections can be shipped together
           collection_sku_prefixs.each do |coll_prefix|
-            collect_items = items.collect {|item| item[:sku].starts_with?(coll_prefix)}
+            collect_items = items.collect {|item| item if item[:sku].starts_with?(coll_prefix)}
             #all items are shipped seperately
             if (coll_prefix == 'FOOD-')
                collect_items.each do |item|
