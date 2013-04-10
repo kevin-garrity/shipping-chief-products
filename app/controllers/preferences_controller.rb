@@ -60,7 +60,7 @@ class PreferencesController < ApplicationController
   end
 
   def hide_welcome_note
-    @preference = Preference.find_by_shop_url(session[:shopify].shop.domain)
+    @preference = get_preference
     @preference.hide_welcome_note = true
     @preference.save
     render :json =>{:result => "ok"}
@@ -69,7 +69,7 @@ class PreferencesController < ApplicationController
   private
 
   def get_preference
-    preference = Preference.find_by_shop_url(session[:shopify].shop.domain)    
+    preference = Preference.find_by_shop(current_shop)    
     preference ||= Preference.new
   end
   
