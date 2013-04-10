@@ -35,7 +35,7 @@ module Carriers
           # shipping rate is calculated at a per collection level.
           # item in the food collection is shipped individually
           # items in other collections can be shipped together
-          collection_sku_prefixs each do |coll_prefix|
+          collection_sku_prefixs.each do |coll_prefix|
             collect_items = items.collect {|item| item[:sku].starts_with?(coll_prefix)}
             #all items are shipped seperately
             if (coll_prefix == 'FOOD-')
