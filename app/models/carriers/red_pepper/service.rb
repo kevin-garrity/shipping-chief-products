@@ -32,6 +32,7 @@ module Carriers
           
           rates_array = Array.new
           total_cooler_charge = 0
+          extra_charge = 0
           
           # shipping rate is calculated at a per collection level.
           # item in the food collection is shipped individually
@@ -43,8 +44,7 @@ module Carriers
                collect_items.each do |item|
                 packages = Array.new
                
-                quan = item[:quantity].to_i
-               
+                quan = item[:quantity].to_i               
                 weight = item[:grams].to_i * quan
 
                 packages << Package.new(weight, [])
@@ -66,12 +66,8 @@ module Carriers
                 packages = Array.new
                 weight = 0
                 collect_items.each do |item|                 
-                  quan = item[:quantity].to_i
-                  weight = weight + item[:grams].to_i * quan
-                end # end each
-                packages << Package.new(weight, [])
-                rates = calculator.get_rates(origin, destination, packages)
-                rates_array << rates                
+                  extra_charge = extra_charge + 500 #assume all other itmems wil cost 5 dollar to ship
+                end # end each                
               end
             end 
            
@@ -80,6 +76,7 @@ module Carriers
           rates = consolidate_rates(rates_array)          
           
           rates = addCoolerCharge(rates, total_cooler_charge) if total_cooler_charge > 0 
+          rates = addExtraCharge(rates, extra_charge) if extra_charge > 0 
           
           Rails.logger.info('final rate is ' + rates.inspect)
           
@@ -135,6 +132,16 @@ module Carriers
         rates
         
       end
+      
+      
+      def addExtraCharge(rates, total_charge)
+        rates.each do|rate|
+          rate['total_price'] = rate['total_price'] .to_i + total_charge      
+          total_charge_dollar = total_charge / 100         
+        end
+        rates
+        
+      end      
 
       def packages
         weight = items.inject(0) { |w, item| w += item[:grams].to_i * item[:quantity].to_i }
