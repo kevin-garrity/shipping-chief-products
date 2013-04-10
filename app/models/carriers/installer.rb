@@ -21,10 +21,11 @@ module Carriers
 
     def register_custom_shipping_service
       Rails.logger.info("register_custom_shipping_service")
-      url = shop.domain
+      url = preference.shop_url
       
       #set up carrier services
-      
+      services = []
+
       case Rails.env
       when "production"
         params = {
@@ -33,6 +34,7 @@ module Carriers
           "service_discovery" => false,
           "format" => "json"
         }
+        services = ShopifyAPI::CarrierService.find(:all, params => {:"name"=>"Webify Custom Shipping Service"})
       when "development" 
           my_ip = Webify::Dev.get_ip
            params = {
@@ -40,18 +42,20 @@ module Carriers
             "callback_url" => "http://#{my_ip}:#{port}/shipping-rates?shop_url="+ url,
             "service_discovery" => false,
             "format" => "json"
-          }     
-     else
+          } 
+          services = ShopifyAPI::CarrierService.find(:all, params => {:"name"=>"Webify Custom Shipping Service Development"})
+        else
           params = {
-            "name" => "Webify Custom Shipping Service Staging",
-            "callback_url" => "http://shipping-staging.herokuapp.com/shipping-rates?shop_url="+ url,
-            "service_discovery" => false,
-            "format" => "json"
-          }     
-        
+              "name" => "Webify Custom Shipping Service Staging",
+              "callback_url" => "http://shipping-staging.herokuapp.com/shipping-rates?shop_url="+ url,
+              "service_discovery" => false,
+              "format" => "json"
+            }     
+          services = ShopifyAPI::CarrierService.find(:all, params => {:"name"=>"Webify Custom Shipping Service Development"})
+
       end
 
-      services = ShopifyAPI::CarrierService.find(:all, params => {:"name"=>"Webify Custom Shipping Service"})
+
       #ShopifyAPI::CarrierService.delete(s[0].id)
 
       if (services.length == 0)

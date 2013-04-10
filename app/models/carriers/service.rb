@@ -24,7 +24,7 @@ module Carriers
     end
 
     def shop
-      shop ||= Shop.find_by_url(preference.shop_url)
+      @shop ||= Shop.find_by_url(preference.shop_url)
     end
 
     def withShopify

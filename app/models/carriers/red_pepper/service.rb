@@ -25,7 +25,7 @@ module Carriers
       end      
 
       def addCoolerCharge(rates)
-        # rates.map{ |rate| rate['total_price'] = rate['total_price'] .to_i + 27 }
+        rates.map{ |rate| rate['total_price'] = rate['total_price'] .to_i + 2700 }
         rates
       end
 
@@ -50,11 +50,12 @@ module Carriers
             variant = ShopifyAPI::Variant.find(:all, params:{limit: 250, fields: :sku, product_id: product.id})
             skus << variant.sku
           end
+          skus
         end
       end
 
       def food_collection
-        @food_collection ||= ShopifyAPI::Collect.find(:first, params: {handle: 'Food'})
+        @food_collection ||= ShopifyAPI::CustomCollection.find(:first, params: {handle: 'food'})
       end
 
     end    

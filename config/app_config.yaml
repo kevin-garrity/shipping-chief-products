@@ -14,7 +14,7 @@ carriers:
     public: true
     description: Australia Post
     service: false
-    legacy_name: Private_FABUSA
+    legacy_name: Auspost
   red_pepper:
     public: false
     description: Custom Rules - Red Pepper
@@ -25,3 +25,4 @@ carriers:
     description: Custom Rules - FABUSA
     service: true
     service_discovery: false
+    legacy_name: Private_FABUSA
