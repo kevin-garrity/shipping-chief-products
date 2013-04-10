@@ -4,6 +4,8 @@ class RatesController < ApplicationController
   #this is the rules for foldaboxUSA store only
   def shipping_rates 
     shop_domain = request.headers['HTTP_X_SHOPIFY_SHOP_DOMAIN']
+    Rails.logger.info("shop_domain: #{shop_domain}")
+    
     shop = Shop.find_by_url(shop_domain)
     preference = Preference.find_by_shop(shop) 
     Rails.logger.info("preference: #{preference.inspect}")
