@@ -6,7 +6,6 @@ module Carriers
       def fetch_rates
         Rails.logger.info("#{self.class.name}#fetch_rates")
         withShopify do
-          return [] unless contains_food?
 
           rates = calculator.get_rates(origin, destination, packages)
           Rails.logger.info("rates: #{rates.inspect}")
@@ -15,6 +14,7 @@ module Carriers
           if (contains_food?)
             addCoolerCharge(rates)
           end
+          rates
         end
       end
 
