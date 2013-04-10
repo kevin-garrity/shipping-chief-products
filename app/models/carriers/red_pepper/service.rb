@@ -49,7 +49,7 @@ module Carriers
 
                 packages << Package.new(weight, [])
                   
-                rates = calculator.get_rates(origin, destination, packages)ov
+                rates = calculator.get_rates(origin, destination, packages)
                 Rails.logger.info("rates: #{rates.inspect}")
 
                 rates = overnight_only(rates)
