@@ -27,7 +27,7 @@ module Carriers
           end
           
           # flat shipping if only giftcards
-          return [] if (only_giftcards) 
+#          return [] if (only_giftcards) 
           
           
           rates_array = Array.new
@@ -49,7 +49,7 @@ module Carriers
 
                 packages << Package.new(weight, [])
                   
-                rates = calculator.get_rates(origin, destination, packages)
+                rates = calculator.get_rates(origin, destination, packages)ov
                 Rails.logger.info("rates: #{rates.inspect}")
 
                 rates = overnight_only(rates)
