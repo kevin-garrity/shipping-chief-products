@@ -11,7 +11,7 @@ module Carriers
           rates = calculator.get_rates(origin, destination, packages)
           Rails.logger.info("rates: #{rates.inspect}")
 
-          rates = overnight_only(rates)
+          #rates = overnight_only(rates)
           addCoolerCharge(rates)
         end
       end
