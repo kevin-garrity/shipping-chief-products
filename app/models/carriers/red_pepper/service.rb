@@ -76,6 +76,9 @@ module Carriers
           rates = consolidate_rates(rates_array)          
           
           rates = addCoolerCharge(rates, total_cooler_charge) if total_cooler_charge > 0 
+          
+          Rails.logger.info('final rate is ' + rates.inspect)
+          
           return rates
         end # end with shopify
       end
