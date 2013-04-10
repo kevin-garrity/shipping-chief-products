@@ -52,7 +52,7 @@ module Carriers
                 
                 #remove fedex or ups brand name
                 service_name = service_name.gsub(/(FedEx )/, '').gsub(/(Home )/, '')
-                service_name = service_name.gsub(/(UPS )/, 'INT'L ')
+                service_name = service_name.gsub(/(UPS )/, "INT'L ")
                 
                 {"service_name" => rate["service_name"], 'service_code'=> rate["service_code"], 'total_price' => rate["total_price"].to_i * quan, 'currency' => rate["currency"]}
               end
