@@ -7,16 +7,16 @@ module CarrierHelper
 
   def carrier_installer_class_for(name)
     return nil if name.blank?
-    "carriers/#{name}/installer".camelize.constantize
+    "carriers/#{carrier_name_for(name)}/installer".camelize.constantize
   end
 
   def carrier_service_class_for(name)
     return nil if name.blank?
-    "carriers/#{name}/service".camelize.constantize
+    "carriers/#{carrier_name_for(name)}/service".camelize.constantize
   end
 
   def carrier_partial_for(name)
-    "carriers/#{name.to_s}_form"
+    "carriers/#{carrier_name_for(name).to_s}_form"
   end
 
   def client_carrier_choices
