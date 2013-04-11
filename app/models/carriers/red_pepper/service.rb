@@ -3,24 +3,31 @@ module Carriers
     class Service < ::Carriers::Service
       
 
+      def checkForFoodItems
+        has_non_food_items = has_food_item = false
+         items.each do |item|
+          sku = item[:sku]
+          if (sku.start_with?("FOOD-")) 
+            has_food_item = true
+          else
+            has_non_food_items = true
+          end
+        end
+        [has_non_food_items, has_food_item]
+      end
+
       def fetch_rates
         Rails.logger.info("#{self.class.name}#fetch_rates")
         withShopify do
           
-          has_non_food_items = false
-          has_food_item = false
+          has_non_food_items, has_food_item = checkForFoodItems
           #only giftcards
           
           collection_sku_prefixs = Array.new
 
-          items.each do |item|
-            sku = item[:sku]
-            if (sku.start_with?("FOOD-")) 
-              has_food_item = true
-            else
-              has_non_food_items = true
-            end
+
             # get all the collections by looking at pattern XXX-
+          items.each do |item|
             match = sku.match('[^-]*-')
             unless match.nil?  
               if (!collection_sku_prefixs.include?(match[0]))
