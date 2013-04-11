@@ -28,7 +28,7 @@ module Carriers
 
             # get all the collections by looking at pattern XXX-
           items.each do |item|
-            match = sku.match('[^-]*-')
+            match = item[:sku].match('[^-]*-')
             unless match.nil?  
               if (!collection_sku_prefixs.include?(match[0]))
                 collection_sku_prefixs << match[0]
