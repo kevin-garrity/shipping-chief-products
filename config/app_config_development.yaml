@@ -17,3 +17,11 @@ clients:
     carriers:
       - :aus_post
       - :red_pepper
+  shop.redpepper.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :aus_post
+      - :red_pepper
+    service_host: shipping-staging.herokuapp.com

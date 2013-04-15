@@ -1,7 +1,7 @@
 module CarrierHelper
   def carrier_name_for(name)
-    name = client_config.carriers.detect { |key| 
-      name.to_s == key.to_s || ( AppConfig.carriers[key].legacy_name && (client_config.carriers[key].legacy_name == name.to_s ))
+    name = client_config.carriers.detect { |key|
+      name.to_s == key.to_s || ( AppConfig.carriers[key].legacy_name && (AppConfig.carriers[key].legacy_name == name.to_s ))
     }.to_s
   end
 
