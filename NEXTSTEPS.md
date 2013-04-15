@@ -34,3 +34,15 @@ CarrierInstaller.for(preference)
 * views:
   * app/views/carriers/auspost
   * app/views/carriers/foldabox
+
+* canonicalize names. tell ziggy rationale -- there are these kinds of names:
+  - under_score
+  - camelCaseLower
+  - CamelCaseUpper
+  - Modularized::NameSpace
+  - modularized/name_space
+  - "Title Case"
+  - multiplied by singular / plural
+if you only use these in code, rails has methods to exchange between them
+
+* Fedex_rate needs credentials factored out. Are fedex credentials per client?

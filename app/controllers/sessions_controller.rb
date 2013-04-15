@@ -49,20 +49,20 @@ class SessionsController < ApplicationController
     shop_name = sanitize_shop_param(params)
     #looking shop name and see if token is present
     if ShopifyAPI::Session.validate_signature(params)
-      shop = Shop.find_by_url(shop_name)
+      @shop = Shop.find_by_url(shop_name)
     end
-    unless shop.nil?
+    unless @shop.nil?
       #check signature
       #try to log in
       
-      sess = ShopifyAPI::Session.new(shop_name, shop.token, params)      
+      sess = ShopifyAPI::Session.new(shop_name, @shop.token, params)      
     
       init_webhooks
 
       if sess.valid?
         ShopifyAPI::Base.activate_session(sess) 
         shopify_api_shop = ShopifyAPI::Shop.current
-        shop.update_attributes(
+        @shop.update_attributes(
           domain: shopify_api_shop.domain,
           myshopify_domain: shopify_api_shop.myshopify_domain
         )
