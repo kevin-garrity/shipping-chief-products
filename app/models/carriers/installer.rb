@@ -28,9 +28,13 @@ module Carriers
 
       case Rails.env
       when "production"
+        
+        app_url = ENV['APP_URL']
+        app_url ||= "http://foldaboxusa.herokuapp.com/shipping-rates"
+        
         params = {
           "name" => "Webify Custom Shipping Service",
-          "callback_url" => "http://foldaboxusa.herokuapp.com/shipping-rates?shop_url="+ url,
+          "callback_url" => "#{app_url}?shop_url="+ url,
           "service_discovery" => false,
           "format" => "json"
         }
@@ -65,7 +69,7 @@ module Carriers
    
         ShopifyAPI::CarrierService.delete(services[0].id)
         carrier_service = ShopifyAPI::CarrierService.create(params)
-        Rails.logger.debug("Readding Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
+        Rails.logger.debug("Reading Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
       end
 
       Rails.logger.info("Installed CarrierService: #{carrier_service.inspect}")
