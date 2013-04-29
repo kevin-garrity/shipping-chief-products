@@ -13,7 +13,7 @@ class RatesController < ApplicationController
 
     log_params
 
-    service_class = carrier_service_class_for(preference.carrier)
+    service_class = carrier_service_class_for(preference.carrier, preference.client_config)
     service = service_class.new(preference, params[:rate])
 
     rates = service.fetch_rates
