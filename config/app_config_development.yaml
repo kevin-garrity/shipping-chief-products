@@ -24,4 +24,3 @@ clients:
     carriers:
       - :aus_post
       - :red_pepper
-    service_host: shipping-staging.herokuapp.com
