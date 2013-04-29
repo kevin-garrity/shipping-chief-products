@@ -7,6 +7,7 @@ class PreferencesController < ApplicationController
 
   def show
     @preference = get_preference
+    installer.install
 
     Rails.logger.info("session[:shopify].url: #{session[:shopify].url.inspect}")
     respond_to do |format|
