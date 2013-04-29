@@ -7,11 +7,11 @@ class PreferencesController < ApplicationController
 
   def show
     @preference = get_preference
-    installer_class = carrier_installer_class_for(@preference.carrier)
-    installer = installer_class.new( session[:shopify].shop, @preference)
-    installer.port = request.port if Rails.env.development?
-    installer.configure
-    installer.install
+#    installer_class = carrier_installer_class_for(@preference.carrier)
+#    installer = installer_class.new( session[:shopify].shop, @preference)
+#    installer.port = request.port if Rails.env.development?
+#    installer.configure
+#    installer.install
 
     Rails.logger.info("session[:shopify].url: #{session[:shopify].url.inspect}")
     respond_to do |format|
