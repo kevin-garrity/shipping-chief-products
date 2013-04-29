@@ -88,7 +88,12 @@ module Carriers
       def calculator
         @calculator ||= case destination.country
         when 'US'
-          FedexRate.new
+          case destination.province
+           when 'AS', 'GU', 'MP', 'PR', 'VI', 'UM', 'FM', 'MH', 'PW', 'AA', 'AE', 'AP', 'CM'
+             UpsRate.new
+           else
+             FedexRate.new             
+          end
         else
           UpsRate.new
         end
