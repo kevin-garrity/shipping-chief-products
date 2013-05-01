@@ -70,7 +70,7 @@ module Carriers
       end
 
       def check_shopify_files_present
-        url = @shop.url
+        url = @shop.domain
         app_shop = Shop.find_by_url(url)
         if (app_shop.theme_modified)      
           #check if need to upgrade theme files
