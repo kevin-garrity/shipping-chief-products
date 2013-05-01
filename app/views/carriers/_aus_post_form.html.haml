@@ -1,7 +1,10 @@
 -unless @preference.hide_welcome_note
   %div(class="welcome_note panel cd")
-    %p To configure the application properly for your store, we will need to modify your Shopify theme.
-    %p< See instruction #{link_to "here", "http://support.shopify.com/customer/portal/articles/75308-can-i-download-my-theme", :target=>"_new"} to download your theme.
+    %p To configure the application properly for your store, You will need to modify your Shopify theme.
+    %p See instruction #{link_to "here", "http://support.webifytechnology.com/customer/portal/articles/1078699-how-to-set-up-australia-post-calculator-for-your-shop", :target=>"_new"} on how to modify the theme if you are comfortable doing this yourself.
+    
+    %p If you do not want to change the theme yourself. Please follow the instruction below to send us your theme as a zip file    
+    %p See instruction #{link_to "here", "http://support.shopify.com/customer/portal/articles/75308-can-i-download-my-theme", :target=>"_new"} to download your theme.
     %p It will also be great to get a list of your products (just a few is enough) so we can do some testing with your products. You can export product to csv files in Shopify Admin page. See instruction #{link_to "here.", "http://www.shopify.com/blog/3030212-product-import-export#axzz2M8sGv0Rk", :target=>"_new"}
     %p Once you have your theme and product csv file, please email the files to <a href="mailto:info@webifytechnology.com">info@webifytechnology.com</a> with the name of your store.
     -unless @preference.origin_postal_code.nil?
