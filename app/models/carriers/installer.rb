@@ -11,7 +11,7 @@ module Carriers
       @port || "3000"
     end
 
-    def configure
+    def configure(params=nil)
       # implement in subclasses
     end
 
