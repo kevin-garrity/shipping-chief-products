@@ -136,8 +136,8 @@ module Carriers
             end
           end
         end
-        shop.theme_modified = true
-        shop.save!
+        app_shop.theme_modified = true
+        app_shop.save!
 
       end
 
