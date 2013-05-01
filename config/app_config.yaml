@@ -14,7 +14,7 @@ carriers:
     public: true
     description: Australia Post
     service: false
-    legacy_name: Auspost
+    legacy_name: AusPost
   red_pepper:
     public: false
     description: Custom Rules - Red Pepper
