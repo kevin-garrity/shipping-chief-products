@@ -34,7 +34,7 @@ class PreferencesController < ApplicationController
       installer_class = carrier_installer_class_for(@preference.carrier)
       installer = installer_class.new( session[:shopify].shop, @preference)
       installer.port = request.port if Rails.env.development?
-      installer.configure
+      installer.configure(params)
 
       if @preference.save
         installer.install
