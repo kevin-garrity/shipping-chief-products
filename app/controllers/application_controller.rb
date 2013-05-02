@@ -10,18 +10,18 @@ class ApplicationController < ActionController::Base
     def check_payment
 
 
-      if (Rails.env == "production")
-       # unless (ShopifyAPI::RecurringApplicationCharge.current)
+      #if (Rails.env == "production")
+        if (!ShopifyAPI::RecurringApplicationCharge.current && default_client?)
             #place a recurring charge
-      #    charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Foldabox USA Private App", 
-      ##                                                       :price => 15, 
-      #                                                       :test=>(Rails.env != "production"),
-      #                                                       :trial_days => 30,
-      #                                                       :return_url => "http://#{DOMAIN_NAMES[Rails.env]}/confirm_charge")
+          charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Shipping Calculator Application", 
+                                                             :price => 15, 
+                                                             :test=>(Rails.env != "production"),
+                                                             :trial_days => 30,
+                                                             :return_url => "http://#{DOMAIN_NAMES[Rails.env]}/confirm_charge")
 
-      #    redirect_to charge.confirmation_url
-      #  end
-      end
+          redirect_to charge.confirmation_url
+        end
+      #end
 
     end  
     
