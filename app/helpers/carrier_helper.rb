@@ -18,8 +18,6 @@ module CarrierHelper
 
   def carrier_partial_for(name, config=nil)    
     name = "carriers/#{carrier_name_for(name, config).to_s}_form"
-    
-    puts("+++++++name is #{name}")
     name
   end
 
