@@ -32,6 +32,11 @@ class Preference < ActiveRecord::Base
 
   def self.find_by_shop(shop)
     preference = Preference.arel_table
+    
+    #avoid exception when either field is nil
+    shop.domain = "" if shop.domain.nil?
+    shop.myshopify_domain = "" if shop.myshopify_domain.nil?
+    
     Preference.where(
       preference[:shop_url].eq( shop.domain ).
       or(
