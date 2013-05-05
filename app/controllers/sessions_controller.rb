@@ -16,7 +16,6 @@ class SessionsController < ApplicationController
       shop = Shop.find_by_url(params[:shop])
       if shop.nil?
         shop = Shop.new
-        shop.domain = sess.shop.domain
         shop.myshopify_domain = params[:shop]
         shop.token = sess.token
         shop.version = current_deployed_version
