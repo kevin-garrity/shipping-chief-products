@@ -181,6 +181,11 @@ module Carriers
           shop.save!
         end    
       end
+      
+        # return the version of theme currently deployed
+      def current_deployed_version
+        3
+      end      
 
       def replace_theme_files(asset_files, themes)
         themes.each do |t|
