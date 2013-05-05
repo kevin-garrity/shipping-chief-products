@@ -127,6 +127,7 @@ class AustraliaPostApiConnection
     # the difference
     api_max_weight = 20
     container_weight = self.attributes[:container_weight]
+    container_weight = 0 if container_weight.nil?
     contents_weight = api_max_weight - container_weight
 
     if total_weight <= contents_weight
