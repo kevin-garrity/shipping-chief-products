@@ -1,24 +1,32 @@
+---
 clients:
   schumm-durgan-and-lang94.myshopify.com:
-    access: 
+    access:
       all_except: []
     menus: []
     carriers:
-      - :aus_post
-      - :fabusa
+    - :aus_post
+    - :fabusa
   red-pepper.myshopify.com:
-    access: 
+    access:
       all_except: []
     menus: []
     carriers:
-      - :aus_post
-      - :red_pepper
+    - :aus_post
+    - :red_pepper
     service_host: shipping-staging.herokuapp.com
   shop.redpepper.com:
-    access: 
+    access:
       all_except: []
     menus: []
     carriers:
-      - :aus_post
-      - :red_pepper
+    - :aus_post
+    - :red_pepper
+    service_host: shipping-staging.herokuapp.com
+  lifemap_science.myshopify.com:
+    access:
+      all_except: []
+    menus: []
+    carriers:
+    - :lifemap_science
     service_host: shipping-staging.herokuapp.com
