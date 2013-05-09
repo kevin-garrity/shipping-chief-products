@@ -40,3 +40,5 @@ gem "activerecord-postgresql-adapter"
 gem "httparty"
 gem "rack-cors", :require => 'rack/cors'
 gem 'shopifydev', :git => "git://github.com/variousauthors/shopifydev.git", :branch => "GLI_commandline_suite" ,:group => :development
+
+gem "rufus-decision"
