@@ -14,6 +14,7 @@ class Webify::CarrierGenerator < Rails::Generators::NamedBase
     empty_directory carrier_dir
     template "installer.rb.erb", "#{carrier_dir}/installer.rb"
     template "service.rb.erb", "#{carrier_dir}/service.rb"
+    template "_form.html.haml.erb", "app/views/carriers/_#{name.underscore}_form.html.haml"
   end
 
   def add_config
