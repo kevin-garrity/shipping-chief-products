@@ -8,6 +8,7 @@ clients:
     - :red_pepper
     - :lifemap_science
     - :fabusa
+    - :debug
   schumm-durgan-and-lang94.myshopify.com:
     access: 
       all_except: []
@@ -17,6 +18,7 @@ clients:
     - :fabusa
     - :red_pepper
     - :lifemap_science
+    - :debug
   red-pepper.myshopify.com:
     access: 
       all_except: []
