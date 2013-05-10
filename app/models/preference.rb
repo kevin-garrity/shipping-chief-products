@@ -86,8 +86,4 @@ class Preference < ActiveRecord::Base
     end
   end
 
-  def client_config
-    AppConfig.clients[shop_url]
-  end
-  
 end

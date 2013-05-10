@@ -1,7 +1,7 @@
 module Carriers
   module AusPost
     class Installer < ::Carriers::Installer
-      def configure
+      def configure(params)
         @preference.shipping_methods_allowed_int = params[:shipping_methods_int]
         @preference.shipping_methods_allowed_dom = params[:shipping_methods_dom]
         @preference.shipping_methods_desc_dom = params[:shipping_methods_desc_dom]
@@ -50,7 +50,7 @@ module Carriers
         @vars = ShopifyAPI::Variant.find(:all, :params=>{:product_id => prod.id})
 
         #save product id in shop metafield for liquid template to consume
-        shop = session[:shopify].shop
+        shop = @shop
 
 
         if (@vars.length > 0)
@@ -70,13 +70,13 @@ module Carriers
       end
 
       def check_shopify_files_present
-        url = session[:shopify].url
-        shop = Shop.find_by_url(url)
-        if (shop.theme_modified)      
+        url = @shop.domain
+        app_shop = Shop.find_by_url(url)
+        if (app_shop.theme_modified)      
           #check if need to upgrade theme files
 
-          if (shop.version != current_deployed_version)
-            upgrade_theme(shop.version, shop)
+          if (app_shop.version != current_deployed_version)
+            upgrade_theme(app_shop.version, app_shop)
           end
           return
         end
@@ -136,8 +136,8 @@ module Carriers
             end
           end
         end
-        shop.theme_modified = true
-        shop.save!
+        app_shop.theme_modified = true
+        app_shop.save!
 
       end
 
