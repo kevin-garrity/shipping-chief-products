@@ -32,10 +32,14 @@ class Preference < ActiveRecord::Base
 
   def self.find_by_shop(shop)
     preference = Preference.arel_table
+    
+    domain = shop.domain || ""
+    myshopify_domain = shop.myshopify_domain || ""
+    
     Preference.where(
-      preference[:shop_url].eq( shop.domain ).
+      preference[:shop_url].eq( domain ).
       or(
-      preference[:shop_url].eq( shop.myshopify_domain ))
+      preference[:shop_url].eq( myshopify_domain ))
     ).first
   end
 
@@ -86,4 +90,8 @@ class Preference < ActiveRecord::Base
     end
   end
 
+  def client_config
+    AppConfig.clients[shop_url]
+  end
+  
 end

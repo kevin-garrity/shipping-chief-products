@@ -50,7 +50,7 @@ module Carriers
         @vars = ShopifyAPI::Variant.find(:all, :params=>{:product_id => prod.id})
 
         #save product id in shop metafield for liquid template to consume
-        shop = @shop
+        shop = session[:shopify].shop
 
 
         if (@vars.length > 0)
@@ -70,13 +70,13 @@ module Carriers
       end
 
       def check_shopify_files_present
-        url = @shop.domain
-        app_shop = Shop.find_by_url(url)
-        if (app_shop.theme_modified)      
+        url = session[:shopify].url
+        shop = Shop.find_by_url(url)
+        if (shop.theme_modified)      
           #check if need to upgrade theme files
 
-          if (app_shop.version != current_deployed_version)
-            upgrade_theme(app_shop.version, app_shop)
+          if (shop.version != current_deployed_version)
+            upgrade_theme(shop.version, shop)
           end
           return
         end
@@ -136,8 +136,8 @@ module Carriers
             end
           end
         end
-        app_shop.theme_modified = true
-        app_shop.save!
+        shop.theme_modified = true
+        shop.save!
 
       end
 

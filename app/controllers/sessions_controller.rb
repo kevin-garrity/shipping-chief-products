@@ -13,16 +13,9 @@ class SessionsController < ApplicationController
     if response = request.env['omniauth.auth']
       token = response['credentials']['token']
       sess = ShopifyAPI::Session.new(params[:shop], token)
-      
-      ShopifyAPI::Base.activate_session(sess) 
-            
       shop = Shop.find_by_url(params[:shop])
       if shop.nil?
         shop = Shop.new
-        shopify_api_shop = ShopifyAPI::Shop.current
-        
-        shop.domain = shopify_api_shop.domain
-        
         shop.myshopify_domain = params[:shop]
         shop.token = sess.token
         shop.version = current_deployed_version

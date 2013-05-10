@@ -1,41 +1,41 @@
----
 clients:
   schumm-durgan-and-lang94.myshopify.com:
-    access:
+    access: 
       all_except: []
     menus: []
     carriers:
-    - :aus_post
-    - :fabusa
-    - :debug
+      - :aus_post
+      - :fabusa
   red-pepper.myshopify.com:
-    access:
+    access: 
       all_except: []
     menus: []
     carriers:
-    - :aus_post
-    - :red_pepper
+      - :aus_post
+      - :red_pepper
     service_host: red-pepper-shipping.herokuapp.com
   shop.redpepper.com:
-    access:
+    access: 
       all_except: []
     menus: []
     carriers:
-    - :aus_post
-    - :red_pepper
+      - :aus_post
+      - :red_pepper
     service_host: red-pepper-shipping.herokuapp.com
   shop.littleveggiepatchco.com.au:
     access:
       all_except: []
     menus: []
     carriers:
-    - :aus_post
+      - :aus_post
+    service_host: shipping.webifytechnology.com
   littlevegpatch.myshopify.com:
-    access:
+    access: 
       all_except: []
     menus: []
     carriers:
-    - :aus_post
+      - :aus_post
+    service_host: shipping.webifytechnology.com      
   lifemap_science.myshopify.com:
     access:
       all_except: []

@@ -7,6 +7,8 @@ module Carriers
       @preference = preference
     end
 
+    delegate :client_config, to: :preference
+
     def port
       @port || "3000"
     end
@@ -19,60 +21,52 @@ module Carriers
       # implement in subclasses
     end
 
-    def register_custom_shipping_service
-      Rails.logger.info("register_custom_shipping_service")
-      url = preference.shop_url
-      
-      #set up carrier services
-      services = []
+    def service_host
+      client_config.service_host || "foldaboxusa.herokuapp.com"
+    end
 
+    def service_url
+      case Rails.env
+      when "production", "staging"
+        "http://#{service_host}/shipping-rates?shop_url=#{preference.shop_url}"
+      when "development"
+        my_ip = Webify::Dev.get_ip
+        "http://#{my_ip}:#{port}/shipping-rates?shop_url=#{preference.shop_url}"
+      end
+    end
+
+    def service_name
       case Rails.env
       when "production"
-        
-        app_url = ENV['APP_URL']
-        app_url ||= "http://foldaboxusa.herokuapp.com/shipping-rates"
-        
-        params = {
-          "name" => "Webify Custom Shipping Service",
-          "callback_url" => "#{app_url}?shop_url="+ url,
-          "service_discovery" => false,
-          "format" => "json"
-        }
-        services = ShopifyAPI::CarrierService.find(:all, params => {:"name"=>"Webify Custom Shipping Service"})
-      when "development" 
-          my_ip = Webify::Dev.get_ip
-           params = {
-            "name" => "Webify Custom Shipping Service Development",
-            "callback_url" => "http://#{my_ip}:#{port}/shipping-rates?shop_url="+ url,
-            "service_discovery" => false,
-            "format" => "json"
-          } 
-          services = ShopifyAPI::CarrierService.find(:all, params => {:"name"=>"Webify Custom Shipping Service Development"})
-        else
-          params = {
-              "name" => "Webify Custom Shipping Service Staging",
-              "callback_url" => "http://shipping-staging.herokuapp.com/shipping-rates?shop_url="+ url,
-              "service_discovery" => false,
-              "format" => "json"
-            }     
-          services = ShopifyAPI::CarrierService.find(:all, params => {:"name"=>"Webify Custom Shipping Service Development"})
-
+        client_config.service_name || "Webify Custom Shipping Service"
+      when "staging", "development"
+        (client_config.service_name || "Webify Custom Shipping Service") + " " + Rails.env.capitalize
       end
+    end
 
+    def register_custom_shipping_service
+      Rails.logger.info("register_custom_shipping_service")
 
-      #ShopifyAPI::CarrierService.delete(s[0].id)
+      params = {
+        name: service_name,
+        callback_url: service_url,
+        service_discovery: false,
+        format: "json"
+      }
 
-      if (services.length == 0)
-        carrier_service = ShopifyAPI::CarrierService.create(params)
-        Rails.logger.debug("Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
+      services = ShopifyAPI::CarrierService.find(:all, params:
+        {name: service_name})
+
+      Rails.logger.info("destroying #{services.length} existing services")
+      services.each{ |service| service.destroy }
+      carrier_service = ShopifyAPI::CarrierService.create(params)
+      if carrier_service.errors.size > 0
+        Rails.logger.debug("Error creating CarrierService " + carrier_service.errors.to_s)
+        Rails.logger.debug carrier_service.inspect
       else
-   
-        ShopifyAPI::CarrierService.delete(services[0].id)
-        carrier_service = ShopifyAPI::CarrierService.create(params)
-        Rails.logger.debug("Reading Error is " + carrier_service.errors.to_s) if carrier_service.errors.size > 0
+        Rails.logger.info("Installed CarrierService: #{carrier_service.inspect}")
       end
 
-      Rails.logger.info("Installed CarrierService: #{carrier_service.inspect}")
     end
 
 
