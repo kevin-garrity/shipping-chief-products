@@ -1,7 +1,7 @@
 module Carriers
   module LifemapScience
     class Installer < ::Carriers::Installer
-      def configure
+      def configure(params=nil)
         Rails.logger.info("#{self.class.name}#configure")
       end
 
