@@ -3,9 +3,11 @@ module Carriers
   class RufusService < ::Carriers::Service
     def fetch_rates
       withShopify do
-        construct_item_columns
-        construct_aggregate_columns
+        construct_item_columns!
+        construct_aggregate_columns!
+        rufusize_column_names!
         decisions.each do decision
+          decision.transform! decision_items
         end
       end
       # for each item
@@ -20,7 +22,7 @@ module Carriers
       Rails.root.join( 'rufus', self.class.name.demodulize.underscore)
     end
 
-    def construct_item_columns
+    def construct_item_columns!
       decision_items.each do |item|
         variant = ProductCache.instance[item]
         item_columns.each do |ag_col|
@@ -37,7 +39,7 @@ module Carriers
       end
     end
 
-    def construct_aggregate_columns
+    def construct_aggregate_columns!
       product_types_set = Set.new
       product_types_quantities = nil
       decision_items.each do |item|
@@ -55,6 +57,10 @@ module Carriers
       end
       decision_items.each{ |item| product_types_quantities.each{ |type, qty| item[type] = qty } } if product_types_quantities
       decision_items
+    end
+
+    def rufusize_column_names!
+      @decision_items.map!{ |item| Hash[ item.map{ |k,v| ["in:#{k}", v] } ] }
     end
 
     def aggregate_columns
@@ -76,7 +82,7 @@ module Carriers
     end
 
     def decision_items 
-      @decision_items ||= items.map{|i| i.to_hash.stringify_keys}
+      @decision_items ||= items.map{ |i| i.to_hash.stringify_keys }
     end
 
     def decisions
