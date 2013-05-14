@@ -5,7 +5,6 @@ module Carriers
       withShopify do
         construct_item_columns!
         construct_aggregate_columns!
-        rufusize_column_names!
         decisions.each do decision
           decision.transform! decision_items
         end
@@ -59,9 +58,9 @@ module Carriers
       decision_items
     end
 
-    def rufusize_column_names!
-      @decision_items.map!{ |item| Hash[ item.map{ |k,v| ["in:#{k}", v] } ] }
-    end
+    # def rufusize_column_names!
+    #   @decision_items.map!{ |item| Hash[ item.map{ |k,v| ["in:#{k}", v] } ] }
+    # end
 
     def aggregate_columns
       [
