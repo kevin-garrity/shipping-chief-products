@@ -1,8 +1,13 @@
+require 'rufus-decision'
 module Carriers
   class RufusService < ::Carriers::Service
     def fetch_rates
-      construct_aggregate_columns if preference.aggregate_columns?
-
+      withShopify do
+        construct_item_columns
+        construct_aggregate_columns
+        decisions.each do decision
+        end
+      end
       # for each item
       #    optionally: restore option1, option2, option3 & product_type
       #    map item keys
@@ -15,9 +20,63 @@ module Carriers
       Rails.root.join( 'rufus', self.class.name.demodulize.underscore)
     end
 
+    def construct_item_columns
+      decision_items.each do |item|
+        variant = ProductCache.instance[item]
+        item_columns.each do |ag_col|
+          entity, key = ag_col.split('.')
+          case entity
+          when 'product'
+            item_key = variant.attributes.keys.include?(key) ? ag_col : key
+            item[item_key] = variant.product.attributes[key]
+          when 'variant'
+            item_key = variant.product.attributes.keys.include?(key) ? ag_col : key
+            item[item_key] = variant.attributes[key]
+          end
+        end
+      end
+    end
+
     def construct_aggregate_columns
-      # for lifemap we need "Product Types" which is a set of the product types in the order
-      #  Shopify
+      product_types_set = Set.new
+      product_types_quantities = nil
+      decision_items.each do |item|
+        aggregate_columns.each do |aggregate|
+          case aggregate
+          when :product_types_quantities
+            product_types_quantities ||= {}
+            product_types_quantities[item['product_type']] ||= 0
+            product_types_quantities[item['product_type']] += 1
+          when :product_types_set
+            product_types_set << item['product_type']
+            item['product_types_set'] = product_types_set
+          end
+        end
+      end
+      decision_items.each{ |item| product_types_quantities.each{ |type, qty| item[type] = qty } } if product_types_quantities
+      decision_items
+    end
+
+    def aggregate_columns
+      [
+        :product_types_quantities,
+        :product_types_set
+      ]
+    end
+
+    def item_columns
+      [
+        'product.product_type',
+        'variant.option1',
+        'variant.option2',
+        'variant.option3',
+        'variant.id',
+        'product.id'
+      ]
+    end
+
+    def decision_items 
+      @decision_items ||= items.map{|i| i.to_hash.stringify_keys}
     end
 
     def decisions

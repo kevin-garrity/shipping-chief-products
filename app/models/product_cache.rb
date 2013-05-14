@@ -78,6 +78,7 @@ class ProductCache
   end
 
   def[](shopify_rates_params_item)
+    logger.debug('ProductCache[] called')
     self.variants[shopify_rates_params_item['name']]
   end
 
