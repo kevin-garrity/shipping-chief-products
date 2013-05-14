@@ -1,8 +1,6 @@
 module Carriers
   module LifemapScience
-    class Service < ::Carriers::Service
-      def fetch_rates
-      end
+    class Service < ::Carriers::RufusService
     end
   end
 end

@@ -18,7 +18,7 @@ module Carriers
     end
 
     def decision_table_dir
-      Rails.root.join( 'rufus', self.class.name.demodulize.underscore)
+      Rails.root.join( 'rufus', *self.class.name.underscore.split('/')[0...-1])
     end
 
     def construct_item_columns!
