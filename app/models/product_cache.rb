@@ -5,15 +5,24 @@ require 'logger'
 require 'dalli'
 
 class ProductCache
+  include Singleton
 
-  attr_accessor :domain, :opts, :logger
+  attr_accessor :logger
 
-  def initialize(opts={})
-    @domain = ShopifyAPI::Shop.current.myshopify_domain
-    @opts = opts
-    @logger = opts[:logger] || Logger.new(STDOUT)
+  def initialize()
+    if defined?(Rails)
+      @logger = Rails.logger
+    else 
+      @logger = Logger.new(STDOUT)
+    end
   end
-  
+
+
+  def domain
+    @domain ||= ShopifyAPI::Shop.current.myshopify_domain
+    @domain
+  end
+
   def cache
     @cache ||= Dalli::Client.new
   end
@@ -28,32 +37,38 @@ class ProductCache
 
 
   def product_fields
-    opts[:product_fields] || "id,product_type,title,options,variants,vendor"
+    "id,product_type,title,options,variants,vendor"
   end
 
   def variants
+    dirty?
     @variants ||= begin
-      products = ShopifyAPI::Product.find(:all,
-        params: {limit: false, fields: product_fields}
-      )
-      puts "products.map(&:id): #{products.map(&:id).inspect}"
-      @variants = {}
-      products.each do |product|
-        product.variants.each do |variant|
-          variant.attributes[:product] = product
-          item_title = [product.title, variant.title].join(' - ')
-          @variants[item_title] = variant
+      logger.debug "ProductCache#variants - checking cache for variants"
+      @variants = cache.get(variants_key)
+       logger.debug "  got #{@variants.nil? ? 'nil' : @variants.length}"
+     @variants ||= begin
+       products = ShopifyAPI::Product.find(:all,
+          params: {limit: false, fields: product_fields}
+        )
+        @variants = {}
+        products.each do |product|
+          product.variants.each do |variant|
+            variant.attributes[:product] = product
+            item_title = [product.title, variant.title].join(' - ')
+            @variants[item_title] = variant
+          end
         end
+        @variants
       end
-      @variants
     end
   end
 
   def products
+    dirty?
     @products ||= begin
-      logger.debug "checking cache for products"
+      logger.debug "ProductCache#products - checking cache for products"
       @products = cache.get(products_key)
-      logger.debug "got #{@products.nil? ? 'nil' : @products.length}"
+      logger.debug "  got #{@products.nil? ? 'nil' : @products.length}"
       @products ||= ShopifyAPI::Product.find(:all,
         params: {limit: false, fields: product_fields}
       )
@@ -68,6 +83,18 @@ class ProductCache
 
   def dirty!
     @variants = nil
+    cache.delete(variants_key)
+    @products = nil
+    cache.delete(products_key)
+    @domain = nil
+  end
+
+  def dirty?
+    if @domain != ShopifyAPI::Shop.current.myshopify_domain
+      @domain = ShopifyAPI::Shop.current.myshopify_domain
+      @variants = nil
+      @products = nil
+    end
   end
 
 end
