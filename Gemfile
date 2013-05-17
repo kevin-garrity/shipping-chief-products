@@ -32,8 +32,8 @@ gem "httparty"
 gem "rack-cors", :require => 'rack/cors'
 
 
-gem "rufus-decision"
-
+gem 'rufus-decision', git: 'https://github.com/jmettraux/rufus-decision.git'
+gem 'rudelo'
 
 gem 'kgio' # improves performance of dalli
 gem 'dalli' # memcached client
