@@ -67,19 +67,6 @@ class Preference < ActiveRecord::Base
     }
   end
 
-  def self.method_missing(name, *args, &block)
-    results = super(name, *args, &block)
-
-#putting a check here is back as there is legimate code in the application that tries to look up the preference before it is created
-#    if name.to_s == "find_by_shop_url" && results.nil?
-      # if the results are completely empty, we can't proceed
-#      raise UnknownShopError.new("Shipping Calculator has not been configured.")
-#    else
-#    end
-
-    return results
-  end
-  
   def shopify_pro_shop
     carrier != 'AusPost'
   end
