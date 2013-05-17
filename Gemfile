@@ -50,7 +50,7 @@ group :development do
   gem 'haml-rails'
   gem 'guard'
   gem 'guard-rspec'
-  gem 'zeus'
+  # gem 'zeus'
   gem 'rb-inotify', :require => false
   gem 'rb-fsevent', :require => false
   gem 'rb-fchange', :require => false
