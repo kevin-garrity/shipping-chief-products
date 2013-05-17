@@ -32,13 +32,13 @@ describe AustraliaPostApiConnectionsController do
       before(:each) { get :new }
 
       it { should render_template("new") }
-      specify { expect { assigns(:australia_post_api_connection).save }.to be_true }
+      specify { expect(assigns(:australia_post_api_connection).save).to be_true }
       specify { assigns(:countries).should_not be_empty }
     end
 
     context "when request origin is unknown" do
       let!(:request_origin) { @request.env['HTTP_ORIGIN'] = "http://www.example.com" }
-      specify { expect {get :new}.to raise_error(ActiveRecord::RecordNotFound)}
+      specify { expect(get :new).to raise_error(ActiveRecord::RecordNotFound)}
     end
   end
 
@@ -46,7 +46,7 @@ describe AustraliaPostApiConnectionsController do
     before(:each) { post :create, post_params }
 
     it { should render_template("create") }
-    specify { expect { assigns(:australia_post_api_connection).save }.to be_true }
+    specify { expect( assigns(:australia_post_api_connection).save).to be_true }
     specify { assigns(:countries).should_not be_empty }
     specify { assigns(:service_list).should_not be_empty }
   end
@@ -59,7 +59,7 @@ describe AustraliaPostApiConnectionsController do
       let!(:international) { post_params['australia_post_api_connection']['country_code'] = "It" }
 
       it_behaves_like "a succesful post to create"
-      specify { expect { assigns(:australia_post_api_connection).domestic }.to be_false }
+      specify { expect(assigns(:australia_post_api_connection).domestic).to be_false }
     end
 
     context "when country code is domestic" do
@@ -69,7 +69,7 @@ describe AustraliaPostApiConnectionsController do
       end
 
       it_behaves_like "a succesful post to create"
-      specify { expect { assigns(:australia_post_api_connection).domestic }.to be_true }
+      specify { expect(assigns(:australia_post_api_connection).domestic).to be_true }
     end
 
     context "when the postcode for a domestic request is missing" do
@@ -84,7 +84,7 @@ describe AustraliaPostApiConnectionsController do
     context "when the shop is not recognized" do
       let!(:not_a_shop) { post_params['australia_post_api_connection']['shop'] = "www.example.com" }
 
-      specify { expect { post :create, post_params }.to raise_error(ActiveRecord::RecordNotFound)}
+      specify { expect(post :create, post_params).to raise_error(ActiveRecord::RecordNotFound)}
     end
 
     context "when weight is out of bounds" do

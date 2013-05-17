@@ -1,7 +1,7 @@
 # A sample Guardfile
 # More info at https://github.com/guard/guard#readme
 
-scope groups: [:carriers]
+scope groups: [:everything]
 
 group :everything do
   guard 'rspec', zeus:true, bundler: false do
