@@ -18,7 +18,6 @@ gem "compass-rails", ">= 1.0.3", :group => :assets
 gem "zurb-foundation", ">= 3.2.5", :group => :assets
 gem "simple_form", ">= 2.0.4"
 gem "shopify_app"
-gem "heroku"
 gem "nokogiri"
 gem "log4r"
 gem "kaminari"
