@@ -8,7 +8,7 @@ module Carriers
 
     def initialize(preference, params)
       @preference = preference
-      @params = params
+      @params = params.symbolize_keys
     end
 
     def origin
