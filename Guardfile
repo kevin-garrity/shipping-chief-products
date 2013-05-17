@@ -3,7 +3,7 @@
 
 scope groups: [:carriers]
 
-group :all do
+group :everything do
   guard 'rspec', zeus:true, bundler: false do
     watch(%r{^spec/.+_spec\.rb$})
     watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
