@@ -41,20 +41,29 @@ module Carriers
     def construct_aggregate_columns!
       product_types_set = Set.new
       product_types_quantities = nil
+      total_item_quantity = nil
       decision_items.each do |item|
         aggregate_columns.each do |aggregate|
           case aggregate
           when :product_types_quantities
             product_types_quantities ||= {}
-            product_types_quantities[item['product_type']] ||= 0
-            product_types_quantities[item['product_type']] += 1
+            column_name = "#{item['product_type']} quantity"
+            product_types_quantities[column_name] ||= 0
+            product_types_quantities[column_name] += item['quantity']
           when :product_types_set
             product_types_set << item['product_type']
             item['product_types_set'] = product_types_set
+          when :total_item_quantity
+            total_item_quantity ||= 0
+            total_item_quantity += item['quantity']
           end
         end
       end
-      decision_items.each{ |item| product_types_quantities.each{ |type, qty| item[type] = qty } } if product_types_quantities
+      decision_items.each do |item| 
+        product_types_quantities.each{ |type, qty| item[type] = qty } if product_types_quantities
+        item[:total_item_quantity] = total_item_quantity if total_item_quantity
+      end
+
       decision_items
     end
 
@@ -65,6 +74,7 @@ module Carriers
     def aggregate_columns
       [
         :product_types_quantities,
+        :total_item_quantity,
         :product_types_set
       ]
     end
