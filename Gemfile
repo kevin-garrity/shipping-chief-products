@@ -51,7 +51,10 @@ group :development do
   gem 'haml-rails'
   gem 'guard'
   gem 'guard-rspec'
-  gem 'zeus',  git: "https://github.com/burke/zeus"
+  gem 'zeus'
+  gem 'rb-inotify', :require => false
+  gem 'rb-fsevent', :require => false
+  gem 'rb-fchange', :require => false
 end
 
 group :test do
