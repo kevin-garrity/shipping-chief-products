@@ -58,8 +58,11 @@ describe RatesController do
   end
 
   describe :shipping_rates do
+    let!(:existing_shop) { FactoryGirl.create :existing_shop }
+    let!(:existing_shop_prefs) { FactoryGirl.create :preference_for_shop }
 
     it "responds successfully with HTTP 200 OK!" do
+      request.env['HTTP_X_SHOPIFY_SHOP_DOMAIN'] = 'www.existingshop.com'
       post :shipping_rates, valid_parameters_from_shopify
       expect(response).to be_success
       expect(response.code).to eq("200")
