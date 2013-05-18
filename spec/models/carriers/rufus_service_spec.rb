@@ -7,6 +7,15 @@ class Set
   end
 end
 
+module ::Carriers::SpecService
+  class Service < Carriers::RufusService
+    include ShippingHelpers
+    def decision_table_root
+      Pathname.new(fixtures_dir).join('rufus')
+    end
+  end
+end
+
 describe Carriers::RufusService do
   before do
     ProductCache.instance.stub(:variants).and_return(ProductCacheStub.variants)
@@ -18,7 +27,7 @@ describe Carriers::RufusService do
   let(:preference){ nil }
   let(:params){ ShopifyStub.rates_query }
   let(:service){ }
-  subject{ Carriers::RufusService.new(preference, params) }
+  subject{ ::Carriers::SpecService::Service.new(preference, params) }
   describe '#decision_table_dir' do
     module ::Carriers::Bob
       class Service < ::Carriers::RufusService;end
@@ -118,6 +127,13 @@ describe Carriers::RufusService do
       expect(sample['Cube quantity']).to eq(4)
       expect(sample['product_types_set']).to eq(Set['Cube', 'Debug-1'])
     end
+  end
+
+  describe '#decisions' do
+    let(:num_files){Dir[File.join(fixtures_dir,'rufus/carriers/spec_service/*.csv')].length}
+    specify{ expect(subject.decisions.length).to eq(num_files) }
+    specify{ expect(subject.decisions.first).to be_a_kind_of(Rufus::Decision::Table) }
+    specify{ expect(subject.decisions.last.matchers.map{|m| m.class }).to eq([Rudelo::Matchers::SetLogic, Rufus::Decision::Matchers::Numeric, Rufus::Decision::Matchers::Range, Rufus::Decision::Matchers::String])}
   end
 end
 

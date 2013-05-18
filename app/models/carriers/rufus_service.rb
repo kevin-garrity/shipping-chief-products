@@ -1,4 +1,5 @@
 require 'rufus-decision'
+require "rudelo/matchers/set_logic"
 module Carriers
   class RufusService < ::Carriers::Service
     def fetch_rates
@@ -92,8 +93,11 @@ module Carriers
     end
 
     def decisions
+      puts "decision_table_dir: #{decision_table_dir.inspect}"
       @@decisions ||= Dir["#{decision_table_dir}/*.csv"].map do |path|
-        Rufus::Decision::Table.new(path)
+        table = Rufus::Decision::Table.new(path)
+        table.matchers.unshift(Rudelo::Matchers::SetLogic.new)
+        table
       end
     end
   end
