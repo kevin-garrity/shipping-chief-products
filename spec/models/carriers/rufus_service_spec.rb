@@ -1,6 +1,12 @@
 require 'spec_helper'
 require 'oj'
 
+class Set
+  def self.empty
+    Set.new
+  end
+end
+
 describe Carriers::RufusService do
   before do
     ProductCache.instance.stub(:variants).and_return(ProductCacheStub.variants)
@@ -49,21 +55,25 @@ describe Carriers::RufusService do
         'variant.option2',
         'variant.option3'
         ])
-      @expected_columns = [
+      @expected_columns = Set.new([
         'product_type',
         'option1',
         'option2',
         'option3'
-      ]
+      ])
     end
     it "adds the columns specified in item_columns" do
-      expect(subject.decision_items.all?{ |i|
-        @expected_columns.all?{|c| ! i.keys.include?(c) }
-      }).to be_true
+      subject.decision_items.each do |i| 
+        expect( Set.new(i.keys).intersection(@expected_columns)
+        ).to eq(Set.empty)
+      end
+
       subject.construct_item_columns!
-      expect(subject.decision_items.any?{ |i|
-        @expected_columns.any?{|c| ! i.keys.include?(c) }
-      }).to be_false
+
+      subject.decision_items.each do |i| 
+        expect( Set.new(i.keys).intersection(@expected_columns)
+        ).to eq(@expected_columns)
+      end
     end
 
     it "gets the values from the product cache" do
@@ -74,6 +84,39 @@ describe Carriers::RufusService do
       expect(sample['option1']).to eq('Low')
       expect(sample['option2']).to eq('Medium')
       expect(sample['option3']).to eq('Extreme')
+    end
+  end
+
+  describe '#construct_aggregate_columns!' do
+    before do
+      @expected_columns = Set.new([
+        'total_item_quantity',
+        'Debug-1 quantity',
+        'Cube quantity',
+        'product_types_set'
+
+      ])
+    end
+    it "adds the columns specified in item_columns" do
+      subject.decision_items.each do |i| 
+        expect( Set.new(i.keys).intersection(@expected_columns)
+        ).to eq(Set.empty)
+      end
+
+      subject.construct_item_columns!
+      subject.construct_aggregate_columns!
+      
+      subject.decision_items.each do |i| 
+        expect( Set.new(i.keys).intersection(@expected_columns)
+        ).to eq(@expected_columns)
+      end
+
+      sample = subject.decision_items.detect{|i| i['name'] == "RatesDebug - Low / Medium / Extreme"}
+
+      expect(sample['total_item_quantity']).to eq(7)
+      expect(sample['Debug-1 quantity']).to eq(3)
+      expect(sample['Cube quantity']).to eq(4)
+      expect(sample['product_types_set']).to eq(Set['Cube', 'Debug-1'])
     end
   end
 end

@@ -60,7 +60,7 @@ module Carriers
       end
       decision_items.each do |item| 
         product_types_quantities.each{ |type, qty| item[type] = qty } if product_types_quantities
-        item[:total_item_quantity] = total_item_quantity if total_item_quantity
+        item['total_item_quantity'] = total_item_quantity if total_item_quantity
       end
 
       decision_items
