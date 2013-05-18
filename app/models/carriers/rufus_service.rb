@@ -9,16 +9,14 @@ module Carriers
           decision.transform! decision_items
         end
       end
-      # for each item
-      #    optionally: restore option1, option2, option3 & product_type
-      #    map item keys
-      #    for each decision
-      #        transform item
-      # apply aggregator
+    end
+
+    def decision_table_root
+      Rails.root.join( Pathname.new('rufus') )
     end
 
     def decision_table_dir
-      Rails.root.join( 'rufus', *self.class.name.underscore.split('/')[0...-1])
+      decision_table_root.join( *self.class.name.underscore.split('/')[0...-1])
     end
 
     def construct_item_columns!
