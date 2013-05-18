@@ -342,6 +342,7 @@ DEPENDENCIES
   hpricot (>= 0.8.6)
   httparty
   jquery-rails
+  json
   kaminari
   kgio
   launchy (>= 2.1.2)
