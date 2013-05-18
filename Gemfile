@@ -36,7 +36,8 @@ gem 'rudelo'
 
 gem 'kgio' # improves performance of dalli
 gem 'dalli' # memcached client
-gem 'json'
+
+gem 'oj' # fast json parser, but mainly to make multi_json stfu
 
 group :development do
   gem 'shopifydev', :git => "git://github.com/variousauthors/shopifydev.git", :branch => "GLI_commandline_suite"

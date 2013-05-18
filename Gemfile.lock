@@ -195,6 +195,7 @@ GEM
       jwt (~> 0.1.4)
       multi_json (~> 1.0)
       rack (~> 1.2)
+    oj (2.0.12)
     omniauth (1.1.4)
       hashie (>= 1.2, < 3)
       rack
@@ -342,12 +343,12 @@ DEPENDENCIES
   hpricot (>= 0.8.6)
   httparty
   jquery-rails
-  json
   kaminari
   kgio
   launchy (>= 2.1.2)
   log4r
   nokogiri
+  oj
   pg
   pry-rails
   quiet_assets (>= 1.0.1)
