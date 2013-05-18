@@ -12,7 +12,7 @@ module Carriers
     end
 
     def decision_table_root
-      Rails.root.join( Pathname.new('rufus') )
+      Rails.root.join( 'rufus' )
     end
 
     def decision_table_dir
@@ -22,14 +22,15 @@ module Carriers
     def construct_item_columns!
       decision_items.each do |item|
         variant = ProductCache.instance[item]
-        item_columns.each do |ag_col|
-          entity, key = ag_col.split('.')
+        item_columns.each do |item_column|
+          entity, key = item_column.split('.')
+          item_column = [entity, key.gsub(entity,'')].join('_')
           case entity
           when 'product'
-            item_key = variant.attributes.keys.include?(key) ? ag_col : key
+            item_key = variant.attributes.keys.include?(key) ? item_column : key
             item[item_key] = variant.product.attributes[key]
           when 'variant'
-            item_key = variant.product.attributes.keys.include?(key) ? ag_col : key
+            item_key = variant.product.attributes.keys.include?(key) ? item_column : key
             item[item_key] = variant.attributes[key]
           end
         end
@@ -82,9 +83,7 @@ module Carriers
         'product.product_type',
         'variant.option1',
         'variant.option2',
-        'variant.option3',
-        'variant.id',
-        'product.id'
+        'variant.option3'
       ]
     end
 
