@@ -37,6 +37,7 @@ gem 'rudelo'
 gem 'kgio' # improves performance of dalli
 gem 'dalli' # memcached client
 
+gem 'oj' # fast json parser, but mainly to make multi_json stfu
 
 group :development do
   gem 'shopifydev', :git => "git://github.com/variousauthors/shopifydev.git", :branch => "GLI_commandline_suite"
@@ -50,7 +51,7 @@ group :development do
   gem 'haml-rails'
   gem 'guard'
   gem 'guard-rspec'
-  # gem 'zeus'
+  gem 'zeus'
   gem 'rb-inotify', :require => false
   gem 'rb-fsevent', :require => false
   gem 'rb-fchange', :require => false
