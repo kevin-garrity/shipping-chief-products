@@ -19,6 +19,7 @@ FactoryGirl.define do
     default_box_size 10
     shipping_methods_allowed_int {{"INTL_SERVICE_ECI_M"=>"1", "INTL_SERVICE_ECI_D"=>"1", "INTL_SERVICE_EPI"=>"1", "INTL_SERVICE_AIR_MAIL"=>"1", "INTL_SERVICE_SEA_MAIL"=>"1"}}
     shipping_methods_allowed_dom {{"AUS_PARCEL_REGULAR"=>"1", "AUS_PARCEL_EXPRESS_SATCHEL_500G"=>"1", "US_PARCEL_PLATINUM_SATCHEL_500G"=>"1", "AUS_PARCEL_REGULAR_SATCHEL_3KG"=>"1", "AUS_PARCEL_EXPRESS_SATCHEL_3KG"=>"1", "US_PARCEL_PLATINUM_SATCHEL_3KG"=>"1", "AUS_PARCEL_REGULAR_SATCHEL_5KG"=>"1", "AUS_PARCEL_EXPRESS_SATCHEL_5KG"=>"1", "US_PARCEL_PLATINUM_SATCHEL_5KG"=>"1"}}
+    carrier "fedex"
 
     shipping_methods_desc_int {}
     shipping_methods_desc_dom {}
