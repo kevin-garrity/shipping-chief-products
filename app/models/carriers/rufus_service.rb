@@ -6,9 +6,17 @@ module Carriers
       withShopify do
         construct_item_columns!
         construct_aggregate_columns!
-        decisions.each do decision
-          decision.transform! decision_items
-        end
+        construct_order_aggregate_columns!
+        transform_decisions!
+      end
+    end
+ 
+    def transform_decisions!
+      decisions['item'].each do decision
+        decision.transform! decision_items
+      end
+      decisions['item'].each do decision
+        decision.transform! decision_order
       end
     end
 
@@ -40,6 +48,7 @@ module Carriers
 
     def construct_aggregate_columns!
       product_types_set = Set.new
+      sku_set = Set.new
       product_types_quantities = nil
       total_item_quantity = nil
       decision_items.each do |item|
@@ -56,15 +65,19 @@ module Carriers
           when :total_item_quantity
             total_item_quantity ||= 0
             total_item_quantity += item['quantity']
+          when :sku_set
+            sku_set << item['sku']
+            item['sku_set'] = sku_set
           end
         end
       end
       decision_items.each do |item| 
-        product_types_quantities.each{ |type, qty| item[type] = qty } if product_types_quantities
+        item.merge!(product_types_quantities) if product_types_quantities
         item['total_item_quantity'] = total_item_quantity if total_item_quantity
       end
-
-      decision_items
+      decision_order.merge!(product_types_quantities) if product_types_quantities
+      decision_order['product_types_set'] = product_types_set if aggregate_columns.include?(:product_types_set)
+      decision_order['sku_set'] = sku_set if aggregate_columns.include?(:sku_set)
     end
 
     # def rufusize_column_names!
@@ -75,7 +88,8 @@ module Carriers
       [
         :product_types_quantities,
         :total_item_quantity,
-        :product_types_set
+        :product_types_set,
+        :sku_set
       ]
     end
 
@@ -92,13 +106,28 @@ module Carriers
       @decision_items ||= items.map{ |i| i.to_hash.stringify_keys }
     end
 
-    def decisions
-      puts "decision_table_dir: #{decision_table_dir.inspect}"
-      @@decisions ||= Dir["#{decision_table_dir}/*.csv"].map do |path|
-        table = Rufus::Decision::Table.new(path)
-        table.matchers.unshift(Rudelo::Matchers::SetLogic.new)
-        table
+    def decision_order
+      @decision_order ||= begin
+        order = params[:destination].to_hash.stringify_keys
+        order['currency'] = params[:currency]
+        order
       end
+    end
+
+    def decisions
+      @@decisions ||= begin
+        decisions = {}
+        ['order', 'item'].each do |decision_type|
+          decisions[decision_type] =
+            Dir["#{decision_table_dir}/#{decision_type}/*.csv"].map do |path|
+              table = Rufus::Decision::Table.new(path)
+              table.matchers.unshift(Rudelo::Matchers::SetLogic.new)
+              table
+            end
+        end
+        decisions
+      end
+      @@decisions
     end
   end
 end

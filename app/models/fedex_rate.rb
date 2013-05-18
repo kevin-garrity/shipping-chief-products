@@ -33,7 +33,7 @@ class FedexRate
     
     rates = response.rates
     
-    Rails.logger.info("fedex return unfilter: #{rates.inspect}")
+    # Rails.logger.info("fedex return unfilter: #{rates.inspect}")
     
     
     #rates = response.rates.select do |rate|

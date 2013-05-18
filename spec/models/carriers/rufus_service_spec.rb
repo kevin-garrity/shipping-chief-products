@@ -13,6 +13,10 @@ module ::Carriers::SpecService
     def decision_table_root
       Pathname.new(fixtures_dir).join('rufus')
     end
+
+    def withShopify
+      yield
+    end
   end
 end
 
@@ -52,6 +56,15 @@ describe Carriers::RufusService do
       subject.params = {items: [name: "bob"]}
       expect(subject.decision_items.first['name']).to eq("bob")
       expect(subject.decision_items.first[:name]).to be_nil
+    end
+  end
+
+  describe '#decision_order' do
+    it "stringifies keys of items" do
+      subject.params = {items: [name: "bob"], destination: {province: 'BC', country_code: 'CA'}, currency: "CAD"}
+      expect(subject.decision_order['province']).to eq("BC")
+      expect(subject.decision_order['currency']).to eq("CAD")
+      expect(subject.decision_order['country_code']).to eq("CA")
     end
   end
 
@@ -102,8 +115,8 @@ describe Carriers::RufusService do
         'total_item_quantity',
         'Debug-1 quantity',
         'Cube quantity',
-        'product_types_set'
-
+        'product_types_set',
+        'sku_set'
       ])
     end
     it "adds the columns specified in item_columns" do
@@ -126,14 +139,43 @@ describe Carriers::RufusService do
       expect(sample['Debug-1 quantity']).to eq(3)
       expect(sample['Cube quantity']).to eq(4)
       expect(sample['product_types_set']).to eq(Set['Cube', 'Debug-1'])
+      expect(sample['sku_set']).to eq(Set["BOX/CUB/004WP", "BOX/CUB/001K", "samesku"])
     end
   end
 
+
   describe '#decisions' do
-    let(:num_files){Dir[File.join(fixtures_dir,'rufus/carriers/spec_service/*.csv')].length}
-    specify{ expect(subject.decisions.length).to eq(num_files) }
-    specify{ expect(subject.decisions.first).to be_a_kind_of(Rufus::Decision::Table) }
-    specify{ expect(subject.decisions.last.matchers.map{|m| m.class }).to eq([Rudelo::Matchers::SetLogic, Rufus::Decision::Matchers::Numeric, Rufus::Decision::Matchers::Range, Rufus::Decision::Matchers::String])}
+    let(:num_order_files){Dir[File.join(fixtures_dir,'rufus/carriers/spec_service/order/*.csv')].length}
+    let(:num_item_files){Dir[File.join(fixtures_dir,'rufus/carriers/spec_service/item/*.csv')].length}
+    specify{ 
+      expect(subject.decisions).to be_a_kind_of(Hash) }
+
+    specify{ 
+      expect(subject.decisions['item'].length).to eq(num_item_files) }
+
+    specify{
+      expect(subject.decisions['order'].length).to eq(num_item_files) }
+
+    specify{ 
+      expect(subject.decisions['item'].first).
+      to be_a_kind_of(Rufus::Decision::Table) }
+
+    specify{ 
+      expect(subject.decisions['order'].first).
+      to be_a_kind_of(Rufus::Decision::Table) }
+
+    specify{
+      expect(subject.decisions['item'].first.matchers.map{|m| m.class}).
+        to eq([Rudelo::Matchers::SetLogic, Rufus::Decision::Matchers::Numeric, Rufus::Decision::Matchers::Range, Rufus::Decision::Matchers::String])}
+  end
+
+  describe '#fetch_rates' do
+    # these specs are more like acceptance tests than units
+    it "uses a shopify session" do
+      subject.stub(:withShopify).and_raise("ok")
+      expect{subject.fetch_rates}.to raise_error("ok")
+    end
+
   end
 end
 
