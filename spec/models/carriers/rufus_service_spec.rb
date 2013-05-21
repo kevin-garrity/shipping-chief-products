@@ -128,6 +128,10 @@ describe Carriers::RufusService do
       subject.construct_item_columns!
       subject.construct_aggregate_columns!
       
+      pp subject.decision_items
+      puts "--------------"
+      pp subject.decision_order
+
       subject.decision_items.each do |i| 
         expect( Set.new(i.keys).intersection(@expected_columns)
         ).to eq(@expected_columns)
@@ -140,8 +144,13 @@ describe Carriers::RufusService do
       expect(sample['Cube quantity']).to eq(4)
       expect(sample['product_types_set']).to eq(Set['Cube', 'Debug-1'])
       expect(sample['sku_set']).to eq(Set["BOX/CUB/004WP", "BOX/CUB/001K", "samesku"])
+      expect(sample['option1_name']).to eq("Kraftiness")
+      expect(sample['option2_name']).to eq("Zaniness")
+      expect(sample['option3_name']).to eq(nil)
     end
   end
+
+
 
 
   describe '#decisions' do
@@ -176,6 +185,11 @@ describe Carriers::RufusService do
       expect{subject.fetch_rates}.to raise_error("ok")
     end
 
+    context "an order decision table and an item decision table" do
+
+    end
+
+    
   end
 end
 

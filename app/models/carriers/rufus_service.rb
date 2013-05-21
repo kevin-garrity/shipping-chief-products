@@ -36,8 +36,14 @@ module Carriers
           item_column = [entity, key.gsub(entity,'')].join('_')
           case entity
           when 'product'
-            item_key = variant.attributes.keys.include?(key) ? item_column : key
-            item[item_key] = variant.product.attributes[key]
+            if(m = key.match(/^option(\d+)_name$/))
+              item_key = key
+              option = variant.product.options[m[1].to_i]
+              item[key] = option.nil? ? nil : option.name
+            else
+              item_key = variant.attributes.keys.include?(key) ? item_column : key
+              item[item_key] = variant.product.attributes[key]
+            end
           when 'variant'
             item_key = variant.product.attributes.keys.include?(key) ? item_column : key
             item[item_key] = variant.attributes[key]
@@ -96,6 +102,9 @@ module Carriers
     def item_columns
       [
         'product.product_type',
+        'product.option1_name',
+        'product.option2_name',
+        'product.option3_name',
         'variant.option1',
         'variant.option2',
         'variant.option3'
