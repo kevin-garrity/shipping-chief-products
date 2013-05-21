@@ -22,7 +22,7 @@ end
 
 describe Carriers::RufusService do
   before do
-    ProductCache.instance.stub(:variants).and_return(ProductCacheStub.variants)
+    ProductCache.instance.stub(:variants).and_return(ProductCacheStub.new('product_cache').variants)
     @mock_shop = double('shop')
     @mock_shop.stub(:myshopify_domain).and_return('schumm-durgan-and-lang94.myshopify.com')
     ShopifyAPI::Shop.stub(:current).and_return(@mock_shop)
@@ -179,6 +179,9 @@ describe Carriers::RufusService do
   end
 
   describe '#fetch_rates' do
+    before do
+      ProductCache.instance.stub(:variants).and_return(ProductCacheStub.new('cells_product_cache').variants)
+    end
     # these specs are more like acceptance tests than units
     it "uses a shopify session" do
       subject.stub(:withShopify).and_raise("ok")
