@@ -236,6 +236,23 @@ describe Carriers::RufusService do
   end
 
 
+  describe '#calculate_price' do
+    it "recognizes the base price" do
+      expect(subject.calculate_price({'price' => '25.4'})).to eq(25.4)
+    end
+    it "adds fees" do
+      expect(subject.calculate_price({'price' => '25.4', 'first fee' => '1.0', 'other Fee' => '0.3'})).to eq(26.7)
+    end
+
+    it "recognizes total_price" do
+      expect(subject.calculate_price({'price' => '8000', 'total_price' => '25.4', 'first fee' => '1.0', 'other Fee' => '0.3'})).to eq(26.7)
+    end
+
+    it "recognizes xxx price" do
+      expect(subject.calculate_price({'xxx price' => '25.4', 'first fee' => '1.0', 'other Fee' => '0.3'})).to eq(26.7)
+    end
+  end
+
   describe '#fetch_rates' do
     before do
       ProductCache.instance.stub(:variants).and_return(ProductCacheStub.new('cells_product_cache').variants)

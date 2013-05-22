@@ -3,31 +3,30 @@ require "rudelo/matchers/set_logic"
 require 'webify/hash_expand'
 module Carriers
   class RufusService < ::Carriers::Service
-    attr_accessor :item_columns, :aggregate_columns, :service_names, :service_name_column, :service_columns
+    attr_accessor :item_columns, :aggregate_columns, :service_name_column, :service_columns
 
     # def default_options
     # end
 
     def fetch_rates
-      services = nil
+      rates = nil
       withShopify do
         construct_item_columns!
         construct_aggregate_columns!
-        # add_service_names!
-        transform_decisions!
-        services = construct_services!
+        selected_services = transform_order_decisions
+        rates = construct_rates(selected_services)
       end
-      return services
+      return rates
     end
  
-    def transform_decisions!
-      decisions['item'].each do decision
-        decision.transform! decision_items
-      end
-      decisions['order'].each do decision
-        decision.transform! decision_order
-      end
-    end
+    # def transform_decisions!
+    #   decisions['item'].each do decision
+    #     decision.transform! decision_items
+    #   end
+    #   decisions['order'].each do decision
+    #     decision.transform! decision_order
+    #   end
+    # end
 
     def transform_order_decisions
       results = nil
@@ -109,63 +108,38 @@ module Carriers
       decision_order['sku_set'] = sku_set if aggregate_columns.include?(:sku_set)
     end
 
-    # def collect_service_names
-    #   service_names = Set.new(decision_order[service_name_column])
-    #   service_names += decision_items.collect{|item| item[service_name_column]}
-    #   service_names.flatten
-    # end
 
-    def construct_services!
-      services = []
-      # the decision table will accumulate services 
-      # (if option accumulate is on)
-      service_names = [decision_order[service_name_column]].flatten
-      service_names.each_with_index do |name, ix|
-        service = {}
-        service_column_map.each do |d_col, s_col|
-          service[s_col] = [decision_order[d_col]].flatten[ix]
-        end
+    def service_name(selected_service)
+      selected_service[service_name_column]
+    end
 
-        price_columns.each do |price_column, op|
+    def service_code(selected_services)
+      selected_service[service_name_column]
+    end
 
-        end
-
-
-
-        # NOTE:
-        #  I think I have to change this so that after running decision
-        # tables that have accumulate, I expand the result into an 
-        # array of hashes. Because otherwise how will my zone -> price
-        # decision table work?
-        prices = [service['total_price']]
-        # the item decision tables can either override or add
-        # to or subtract from the price of a service
-        decision_item.each do |item|
-          # if the item decision table has commented on an item,
-          # it will be in the array of values for "Shipping Method"
-          if item.has_key?(service_name_column)
-            ix = item[service_name_column].index(name)
-            if ix
-
-            end
-          end
-        end
-        services << service
+    def construct_rates(selected_services)
+      rates = []
+      selected_services.each do |selected_service|
+        rate = {}
+        rate['total_price'] = calculate_price(selected_service)
+        rate['service_name'] = service_name(selected_service)
+        rate['currency'] = selected_service['currency']
+        rate['service_code'] = service_code(selected_service)
+        rates << rate
       end
-      services
+      rates
     end
 
     def calculate_price(row)
-
+      base_price = row[base_price_column(row)].to_f
+      fee_price_columns(row).
+        inject(base_price){ |total, k| total + row[k].to_f }
     end
 
     # def rufusize_column_names!
     #   @decision_items.map!{ |item| Hash[ item.map{ |k,v| ["in:#{k}", v] } ] }
     # end
 
-    # def add_service_names!
-    #   decision_items.each{|item| item.merge!()}
-    # end
 
     # TODO: add option1_names_set, and also columns for each option name, with subtotal quantities
     def aggregate_columns
@@ -189,12 +163,6 @@ module Carriers
       ]
     end
 
-    def services
-      @services ||= [
-        {'STD' => 'Standard'}
-      ]
-    end
-
     def service_name_column
       @service_name_column ||= "Shipping Method"
     end
@@ -203,19 +171,6 @@ module Carriers
       @item_service_operation ||= :plus
     end
 
-    def service_column_map
-      {
-        "Shipping Method" => 'service_name',
-        # "Service Price" => "total_price",
-        "Currency" => "currency",
-        "Min Delivery Date" => "min_delivery_date",
-        "Max Delivery Date" => "max_delivery_date"
-      }
-    end
-
-    def service_price_column
-      service_column_map.invert['total_price']
-    end
 
     def price_columns
       {
@@ -241,6 +196,18 @@ module Carriers
         order['num_items'] = items.length
         order
       end
+    end
+
+    def base_price_column(out)
+      out = out.first if out.is_a?(Array)
+      return "total_price" if out.has_key?("total_price")
+      return "price" if out.has_key?("price")
+      return out.keys.detect{|k| k.include?("price")}
+    end
+
+    def fee_price_columns(out)
+       out = out.first if out.is_a?(Array)
+       out.keys.select{|k| k =~ /fee$/i }
     end
 
     def decisions

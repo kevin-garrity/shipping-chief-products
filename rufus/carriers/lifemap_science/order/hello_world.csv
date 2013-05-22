@@ -1,0 +1,5 @@
+in:product_type,out:Shipping Method,out:price
+Cell,2-day,10
+Cell,overnight,30
+Media Kit,2-day,40
+Media Kit,overnight,70
