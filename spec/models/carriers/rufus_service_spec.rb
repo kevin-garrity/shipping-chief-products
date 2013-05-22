@@ -128,9 +128,9 @@ describe Carriers::RufusService do
       subject.construct_item_columns!
       subject.construct_aggregate_columns!
       
-      pp subject.decision_items
-      puts "--------------"
-      pp subject.decision_order
+      # pp subject.decision_items
+      # puts "--------------"
+      # pp subject.decision_order
 
       subject.decision_items.each do |i| 
         expect( Set.new(i.keys).intersection(@expected_columns)
@@ -159,24 +159,48 @@ describe Carriers::RufusService do
     specify{ 
       expect(subject.decisions).to be_a_kind_of(Hash) }
 
-    specify{ 
-      expect(subject.decisions['item'].length).to eq(num_item_files) }
+    it "has an item decision for each file in service/item/" do
+      expect(subject.decisions['item'].length).to eq(num_item_files) 
+    end
 
-    specify{
-      expect(subject.decisions['order'].length).to eq(num_item_files) }
+    it "has an order decision for each file in service/order/" do
+      expect(subject.decisions['order'].length).to eq(num_item_files) 
+    end
 
-    specify{ 
-      expect(subject.decisions['item'].first).
-      to be_a_kind_of(Rufus::Decision::Table) }
+    it "returns instances of Rufus::Decision::Table" do
+      expect(
+        (subject.decisions['order'] + subject.decisions['item']).all? {|entry|
+          entry.is_a?(Rufus::Decision::Table)
+        }).to be_true
+    end
 
-    specify{ 
-      expect(subject.decisions['order'].first).
-      to be_a_kind_of(Rufus::Decision::Table) }
-
-    specify{
+    it "adds Rudelo SetLogic matcher to each table" do
       expect(subject.decisions['item'].first.matchers.map{|m| m.class}).
-        to eq([Rudelo::Matchers::SetLogic, Rufus::Decision::Matchers::Numeric, Rufus::Decision::Matchers::Range, Rufus::Decision::Matchers::String])}
+        to eq([Rudelo::Matchers::SetLogic, Rufus::Decision::Matchers::Numeric, Rufus::Decision::Matchers::Range, Rufus::Decision::Matchers::String])
+    end
   end
+
+  describe 'transform_order_decisions' do
+    context "a single decision table" do
+      before do
+        subject.stub(:decision_table_dir).and_return(
+          Pathname.new(fixtures_dir).join('rufus','carriers','transform_order_single_spec'))
+      end
+      # let(:subject) {   ::Carriers::SpecService::Service.new(preference, params) }
+      let(:transformed){subject.transform_order_decisions}
+      it "returns a single result" do
+        subject.stub(:decision_order).and_return({total_quantity: '5'}.stringify_keys)
+        expect(transformed).to be_a_kind_of(Array)
+        expect(transformed.length).to eq(1)
+        expect(transformed.first["Service Name"]).to eq("should get first row only")
+      end
+    end
+    context "a single decision table with accumulate and multiple matches" do
+    end
+    context "multiple decision tables" do
+    end
+  end
+
 
   describe '#fetch_rates' do
     before do

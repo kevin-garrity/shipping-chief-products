@@ -1,5 +1,6 @@
-  require 'rufus-decision'
+require 'rufus-decision'
 require "rudelo/matchers/set_logic"
+require 'webify/hash_expand'
 module Carriers
   class RufusService < ::Carriers::Service
     attr_accessor :item_columns, :aggregate_columns, :service_names, :service_name_column, :service_columns
@@ -26,6 +27,20 @@ module Carriers
       decisions['order'].each do decision
         decision.transform! decision_order
       end
+    end
+
+    def transform_order_decisions
+      results = nil
+      results = [decision_order]
+      decisions['order'].each do |decision|
+        new_results = []
+        results .each do |intermediate_result|
+          transformed = decision.transform!(intermediate_result)
+          new_results += transformed.expand
+        end
+        results = new_results
+      end
+      results
     end
 
     def decision_table_root
@@ -223,12 +238,13 @@ module Carriers
       @decision_order ||= begin
         order = params[:destination].to_hash.stringify_keys
         order['currency'] = params[:currency]
+        order['num_items'] = items.length
         order
       end
     end
 
     def decisions
-      @@decisions ||= begin
+      @decisions ||= begin
         decisions = {}
         ['order', 'item'].each do |decision_type|
           decisions[decision_type] =
@@ -240,7 +256,7 @@ module Carriers
         end
         decisions
       end
-      @@decisions
+      @decisions
     end
   end
 end
