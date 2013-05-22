@@ -31,7 +31,7 @@ gem "httparty"
 gem "rack-cors", :require => 'rack/cors'
 
 
-gem 'rufus-decision', git: 'https://github.com/jmettraux/rufus-decision.git'
+gem 'rufus-decision', git: 'https://github.com/lastobelus/rufus-decision.git', branch: 'short_circuit_matchers'
 gem 'rudelo'
 
 gem 'kgio' # improves performance of dalli

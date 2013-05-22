@@ -28,8 +28,9 @@ GIT
       shopify_api (>= 3.0.0)
 
 GIT
-  remote: https://github.com/jmettraux/rufus-decision.git
-  revision: 3ef4fbec8f4e7789751e2681e14acca0565466c9
+  remote: https://github.com/lastobelus/rufus-decision.git
+  revision: e67efe7c1c7e6fb55bd280e6a9c1a1127b26712b
+  branch: short_circuit_matchers
   specs:
     rufus-decision (1.4.0)
       rufus-dollar
@@ -268,7 +269,7 @@ GEM
     ruby-filemagic (0.4.2)
     ruby_parser (3.1.3)
       sexp_processor (~> 4.1)
-    rudelo (0.1.1)
+    rudelo (0.2.2)
       parslet
       rufus-decision (~> 1.4)
     rufus-dollar (1.0.4)

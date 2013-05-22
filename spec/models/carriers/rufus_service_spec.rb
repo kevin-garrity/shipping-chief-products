@@ -180,7 +180,7 @@ describe Carriers::RufusService do
     end
   end
 
-  describe 'transform_order_decisions' do
+  describe '#transform_order_decisions' do
     let(:transformed){subject.transform_order_decisions}
     context "a single decision table" do
       before do
@@ -199,12 +199,13 @@ describe Carriers::RufusService do
         subject.stub(:decision_table_dir).and_return(
           Pathname.new(fixtures_dir).join('rufus','carriers','transform_order_accumulate_spec'))
       end
-      it "returns a an array of result" do
+      it "returns an array of results" do
         $logon = true
         subject.stub(:decision_order).and_return({total_quantity: '5'}.stringify_keys)
         expect(transformed).to be_a_kind_of(Array)
         expect(transformed.length).to eq(2)
         expect(transformed.first["Service Name"]).to eq("should get first row")
+        expect(transformed.last["Service Name"]).to eq("should also get second")
       end
     end
     context "multiple decision tables" do
@@ -212,13 +213,24 @@ describe Carriers::RufusService do
         subject.stub(:decision_table_dir).and_return(
           Pathname.new(fixtures_dir).join('rufus','carriers','transform_order_multi_spec'))
       end
-      it "returns a an array of result" do
+      it "runs all decision tables and returns an array of results" do
         $logon = true
-        subject.stub(:decision_order).and_return({total_quantity: '5', province: 'CA', num_items: 4}.stringify_keys)
-        puts "transformed: #{transformed.inspect}"
+        subject.stub(:decision_order).and_return({total_quantity: '5', province: 'ON', num_items: 4}.stringify_keys)
         expect(transformed).to be_a_kind_of(Array)
         expect(transformed.length).to eq(3)
-        expect(transformed.first["Service Name"]).to eq("should get first row")
+
+        # service-1, price from zone-2, handling fee 5
+        expect(transformed[0]["Service Name"]).to eq("service-1")
+        expect(transformed[0]["price"]).to eq("112")
+        expect(transformed[0]["handling fee"]).to eq("5")
+        # service-2, price from zone-2, handling fee 5
+        expect(transformed[1]["Service Name"]).to eq("service-2")
+        expect(transformed[1]["price"]).to eq("122")
+        expect(transformed[1]["handling fee"]).to eq("5")
+        # service-3, price from zone-2, handling fee 5
+        expect(transformed[2]["Service Name"]).to eq("service-3")
+        expect(transformed[2]["price"]).to eq("132")
+        expect(transformed[2]["handling fee"]).to eq("5")
       end
     end
   end

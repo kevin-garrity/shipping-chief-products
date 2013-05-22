@@ -23,6 +23,14 @@ RSpec.configure do |config|
   config.include(EmailSpec::Matchers)
   config.include ShippingHelpers
 
+  config.backtrace_clean_patterns = [
+    /\/lib\d*\/ruby\//,
+    /bin\//,
+    # /gems/,
+    /spec\/spec_helper\.rb/,
+    /lib\/rspec\/(core|expectations|matchers|mocks)/
+  ]
+  
   # ## Mock Framework
   #
   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
