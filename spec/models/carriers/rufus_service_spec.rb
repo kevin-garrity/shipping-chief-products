@@ -181,13 +181,12 @@ describe Carriers::RufusService do
   end
 
   describe 'transform_order_decisions' do
+    let(:transformed){subject.transform_order_decisions}
     context "a single decision table" do
       before do
         subject.stub(:decision_table_dir).and_return(
           Pathname.new(fixtures_dir).join('rufus','carriers','transform_order_single_spec'))
       end
-      # let(:subject) {   ::Carriers::SpecService::Service.new(preference, params) }
-      let(:transformed){subject.transform_order_decisions}
       it "returns a single result" do
         subject.stub(:decision_order).and_return({total_quantity: '5'}.stringify_keys)
         expect(transformed).to be_a_kind_of(Array)
@@ -196,8 +195,31 @@ describe Carriers::RufusService do
       end
     end
     context "a single decision table with accumulate and multiple matches" do
+      before do
+        subject.stub(:decision_table_dir).and_return(
+          Pathname.new(fixtures_dir).join('rufus','carriers','transform_order_accumulate_spec'))
+      end
+      it "returns a an array of result" do
+        $logon = true
+        subject.stub(:decision_order).and_return({total_quantity: '5'}.stringify_keys)
+        expect(transformed).to be_a_kind_of(Array)
+        expect(transformed.length).to eq(2)
+        expect(transformed.first["Service Name"]).to eq("should get first row")
+      end
     end
     context "multiple decision tables" do
+      before do
+        subject.stub(:decision_table_dir).and_return(
+          Pathname.new(fixtures_dir).join('rufus','carriers','transform_order_multi_spec'))
+      end
+      it "returns a an array of result" do
+        $logon = true
+        subject.stub(:decision_order).and_return({total_quantity: '5', province: 'CA', num_items: 4}.stringify_keys)
+        puts "transformed: #{transformed.inspect}"
+        expect(transformed).to be_a_kind_of(Array)
+        expect(transformed.length).to eq(3)
+        expect(transformed.first["Service Name"]).to eq("should get first row")
+      end
     end
   end
 

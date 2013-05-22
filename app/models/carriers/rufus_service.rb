@@ -34,7 +34,7 @@ module Carriers
       results = [decision_order]
       decisions['order'].each do |decision|
         new_results = []
-        results .each do |intermediate_result|
+        results.each do |intermediate_result|
           transformed = decision.transform!(intermediate_result)
           new_results += transformed.expand
         end

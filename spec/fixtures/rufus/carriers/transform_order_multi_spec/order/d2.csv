@@ -1,4 +1,4 @@
-in: province, in:Service Name, out:price
+in:province, in:Service Name, out:price
 BC,$(service-1,service-2,service-3),${Zone 1}
 ON,$(service-1,service-2,service-3),${Zone 2}
 NB,service-1,${Zone 2}

@@ -1,5 +1,5 @@
 accumulate
-in: total_quantity, out:Service Name
+in:total_quantity, out:Service Name
 <4,only get matches
 >4,should get first row
 >4,should also get second

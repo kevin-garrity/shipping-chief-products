@@ -1,5 +1,5 @@
 accumulate
-in: total_quantity, out:Service Name, out:Zone 1, out:Zone 2,out:Zone 3
+in:total_quantity, out:Service Name, out:Zone 1, out:Zone 2,out:Zone 3
 <4,service-1,11,12,13
 <4,service-2,21,22,23
 >4,service-1,111,112,113,
