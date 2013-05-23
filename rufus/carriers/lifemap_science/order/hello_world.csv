@@ -1,5 +1,7 @@
-in:product_type,out:Shipping Method,out:price
-Cell,2-day,10
-Cell,overnight,30
-Media Kit,2-day,40
-Media Kit,overnight,70
+accumulate
+in:product_types_set,out:Shipping Method,out:price
+
+"$in intersection $(""Differentiation Kit"" ""Human Embryonic Progenitor Package"") #> 0",2-day,4000
+"$in intersection $(""Differentiation Kit"" ""Human Embryonic Progenitor Package"") #> 0",overnight,7000
+"$in intersection $(""Differentiation Kit"" ""Human Embryonic Progenitor Package"") #= 0",2-day,1000
+"$in intersection $(""Differentiation Kit"" ""Human Embryonic Progenitor Package"") #= 0",overnight,3000

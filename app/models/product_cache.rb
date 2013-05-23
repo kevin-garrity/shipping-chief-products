@@ -58,6 +58,7 @@ class ProductCache
             @variants[item_title] = variant
           end
         end
+        cache.set(variants_key, @variants)
         @variants
       end
     end
@@ -79,7 +80,14 @@ class ProductCache
 
   def[](shopify_rates_params_item)
     logger.debug('ProductCache[] called')
-    self.variants[shopify_rates_params_item['name']]
+    variant = self.variants[shopify_rates_params_item['name']]
+    if variant.nil?
+      variant = ShopifyAPI::Variant.find(shopify_rates_params_item['variant_id'])
+      variant.attributes[:product] = ShopifyAPI::Product.find(shopify_rates_params_item['product_id'])
+      self.variants[shopify_rates_params_item['name']] = variant
+      cache.set(variants_key, @variants)
+    end
+    variant
   end
 
   def dirty!

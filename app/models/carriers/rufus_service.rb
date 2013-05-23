@@ -1,6 +1,14 @@
 require 'rufus-decision'
 require "rudelo/matchers/set_logic"
 require 'webify/hash_expand'
+require 'csv'
+
+class ::Set
+  def to_rudelo
+    inspect.chomp.gsub('#<Set: {', '$(').gsub('}>', ')')
+  end
+end
+
 module Carriers
   class RufusService < ::Carriers::Service
     attr_accessor :item_columns, :aggregate_columns, :service_name_column, :service_columns
@@ -29,12 +37,17 @@ module Carriers
     # end
 
     def transform_order_decisions
+      Rails.logger.info("transform_order_decisions:")
+      ppl decision_order
       results = nil
       results = [decision_order]
       decisions['order'].each do |decision|
         new_results = []
         results.each do |intermediate_result|
+          ppl decision
           transformed = decision.transform!(intermediate_result)
+          Rails.logger.info("after transforming")
+          ppl transformed
           new_results += transformed.expand
         end
         results = new_results
@@ -51,8 +64,12 @@ module Carriers
     end
 
     def construct_item_columns!
+      ProductCache.instance.dirty!
       decision_items.each do |item|
+        Rails.logger.info("looking up #{item.inspect}")
+        ppl ProductCache.instance.variants
         variant = ProductCache.instance[item]
+        Rails.logger.info("  got #{variant}")
         item_columns.each do |item_column|
           entity, key = item_column.split('.')
           item_column = [entity, key.gsub(entity,'')].join('_')
@@ -104,8 +121,8 @@ module Carriers
         item['total_item_quantity'] = total_item_quantity if total_item_quantity
       end
       decision_order.merge!(product_types_quantities) if product_types_quantities
-      decision_order['product_types_set'] = product_types_set if aggregate_columns.include?(:product_types_set)
-      decision_order['sku_set'] = sku_set if aggregate_columns.include?(:sku_set)
+      decision_order['product_types_set'] = product_types_set.to_rudelo if aggregate_columns.include?(:product_types_set)
+      decision_order['sku_set'] = sku_set.to_rudelo if aggregate_columns.include?(:sku_set)
     end
 
 
@@ -113,7 +130,7 @@ module Carriers
       selected_service[service_name_column]
     end
 
-    def service_code(selected_services)
+    def service_code(selected_service)
       selected_service[service_name_column]
     end
 
@@ -218,6 +235,7 @@ module Carriers
             Dir["#{decision_table_dir}/#{decision_type}/*.csv"].map do |path|
               table = Rufus::Decision::Table.new(path)
               table.matchers.unshift(Rudelo::Matchers::SetLogic.new)
+              table.matchers.first.force = Rails.env.development?
               table
             end
         end
