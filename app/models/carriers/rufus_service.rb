@@ -21,12 +21,16 @@ module Carriers
       withShopify do
         construct_item_columns!
         construct_aggregate_columns!
+        process_decision_order!
         selected_services = transform_order_decisions
         rates = construct_rates(selected_services)
       end
       return rates
     end
  
+    def process_decision_order!
+      # override in subclasses
+    end
     # def transform_decisions!
     #   decisions['item'].each do decision
     #     decision.transform! decision_items
@@ -120,6 +124,7 @@ module Carriers
         item.merge!(product_types_quantities) if product_types_quantities
         item['total_item_quantity'] = total_item_quantity if total_item_quantity
       end
+      decision_order['total_quantity'] = total_item_quantity if total_item_quantity
       decision_order.merge!(product_types_quantities) if product_types_quantities
       decision_order['product_types_set'] = product_types_set.to_rudelo if aggregate_columns.include?(:product_types_set)
       decision_order['sku_set'] = sku_set.to_rudelo if aggregate_columns.include?(:sku_set)

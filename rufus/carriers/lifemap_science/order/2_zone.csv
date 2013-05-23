@@ -1,0 +1,6 @@
+in:province,out:price
+$(CA),${Zone 1}
+$(NV OR AZ UT ID),${Zone 2}
+$(WA MT WY CO NM),${Zone 3}
+$(ND SD MN WI IL IA NE KS MO AR OK TX LA),${Zone 4}
+$(MI IN KY TN MS AL OH AL FL MA CT NJ DE MD VA NC SC GA WV OH PA NY VT NH HI AL),${Zone 5}
