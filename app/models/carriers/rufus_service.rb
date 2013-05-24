@@ -7,8 +7,19 @@ class ::Set
   def to_rudelo
     inspect.chomp.gsub('#<Set: {', '$(').gsub('}>', ')')
   end
+
+  def self.from_rudelo(str)
+    @value_parser ||= Rudelo::Parsers::SetValueParser.new
+    @value_transform ||= Rudelo::Parsers::SetLogicTransform.new
+    @value_transform.apply(@value_parser.parse(str))
+  end
 end
 
+class String
+  def to_f_or_i_or_s
+    ((float = Float(self)) && (float % 1.0 == 0) ? float.to_i : float) rescue self
+  end
+end
 module Carriers
   class RufusService < ::Carriers::Service
     attr_accessor :item_columns, :aggregate_columns, :service_name_column, :service_columns
@@ -34,25 +45,55 @@ module Carriers
 
     def transform_item_decisions
       results = []
+
+      # on each line item
       decision_items.each do | item|
         item_results = [item]
+        # run each decision, expanding results that have array items due to
+        # accumulate setting
         decisions['item'].each do |decision|
           new_results = []
           item_results.each do |intermediate_result|
-            transformed = decision.transform!(intermediate_result)
+            puts "decision: #{decision.inspect}"
+            transformed = decision.transform(intermediate_result)
+            puts "transformed: #{transformed}"
+            puts "intermediate_result: #{intermediate_result}"
             new_results += transformed.expand
           end
           item_results = new_results
         end
+        item_results.each do |result|
+          result.keys.each do |key|
+            result.delete(key) if item.has_key?(key) && (result[key] == item[key])
+          end
+        end
         results += item_results
       end
-      service_names = Set.new(results.map{|result| result[service_name_column]}.squeeze)
+      results
+    end
+    def extract_services_from_item_decision_results(results)
       services = {}
-      service_names.each do |service_name|
-        results.select{|result| result[service_name_column] == service_name}.each do |result|
-          re
+      results.each do |result|
+        service_name = result.delete(service_name_column)
+        service_name = :all if service_name.nil?
+        services[service_name] ||= {}
+        service = services[service_name]
+        result.each do |column, value|
+          column_type, column_name = column.split(':')
+          if column_name.nil?
+            column_name = column_type
+            column_type = :set
+          end
+          case column_type
+          when :set
+            service = service.union( Set.from_rudelo(value) )
+          when :sum
+            num = value.to_f_or_i_or_s
+            service += num if num.is_a?(Numeric)
+          end
         end
       end
+      services
     end
 
     def transform_order_decisions

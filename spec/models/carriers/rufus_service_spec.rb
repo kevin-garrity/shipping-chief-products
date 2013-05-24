@@ -178,20 +178,28 @@ describe Carriers::RufusService do
 
   describe '#transform_item_decisions' do
     before do
-    end
-    it "transforms each item with each item decision" do
+      puts "\n------------------\n"
       @item1 = {}
       @item2 = {}
       subject.stub(:decision_items).and_return([@item1, @item2])
-      dec_1 = mock('decision')
-      dec_2 = mock(decision)
-      dec_1.should_receive(:transform!).with(@item1).once
-      dec_1.should_receive(:transform!).with(@item2).once
-      dec_2.should_receive(:transform!).with(@item1).once
-      dec_2.should_receive(:transform!).with(@item2).once
+      @dec_1 = mock('decision')
+      @dec_2 = mock('decision')
+      @dec_1.stub(:transform).and_return(@item1)
+      @dec_2.stub(:transform).and_return(@item2)
+      subject.stub(:decisions).and_return({'item' => [@dec_1, @dec_2]})
+    end
+    it "transforms each item with each item decision" do
+      @dec_1.should_receive(:transform).with(@item1).once.and_return({})
+      @dec_1.should_receive(:transform).with(@item2).once.and_return({})
+      @dec_2.should_receive(:transform).with(@item1).once.and_return({})
+      @dec_2.should_receive(:transform).with(@item2).once.and_return({})
       subject.transform_item_decisions
     end
-    it "expands each item result"
+    it "expands each item result" do
+      @item1.should_receive(:expand).at_least(:once).and_return([{}])
+      @item2.should_receive(:expand).at_least(:once).and_return([{}])
+      subject.transform_item_decisions
+    end
     it "only includes new or modified columns in the result"
     it "collapses set of all item results by  service_name_column"
     it "converts columns with multiple results to sets"
