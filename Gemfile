@@ -51,7 +51,7 @@ group :development do
   gem 'haml-rails'
   gem 'guard'
   gem 'guard-rspec'
-  gem 'zeus'
+  gem 'zeus', ">= 0.13.4.pre2"
   gem 'rb-inotify', :require => false
   gem 'rb-fsevent', :require => false
   gem 'rb-fchange', :require => false
