@@ -10,6 +10,13 @@ describe "Hash#expand" do
     end
   end
 
+  context "empty hash" do
+    let(:in_hash){{}}
+    it "returns an empty hash" do
+      expect(subject).to eq([in_hash])
+    end
+  end
+
   context "all elements are arrays" do
     let(:in_hash){
         {a: ['first a', 'second a', 'third a'], b: ['first b', 'second b', 'third b']}.stringify_keys

@@ -1,6 +1,6 @@
 class Hash
   def expand
-
+    return [self] if self.empty?
     rows = values.map{|v| v.is_a?(Array) ? v.length : 1}
     rows = rows.max
     result = Array.new(rows)
