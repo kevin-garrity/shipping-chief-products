@@ -31,27 +31,42 @@ module Carriers
     def process_decision_order!
       # override in subclasses
     end
-    # def transform_decisions!
-    #   decisions['item'].each do decision
-    #     decision.transform! decision_items
-    #   end
-    #   decisions['order'].each do decision
-    #     decision.transform! decision_order
-    #   end
-    # end
+
+    def transform_item_decisions
+      results = []
+      decision_items.each do | item|
+        item_results = [item]
+        decisions['item'].each do |decision|
+          new_results = []
+          item_results.each do |intermediate_result|
+            transformed = decision.transform!(intermediate_result)
+            new_results += transformed.expand
+          end
+          item_results = new_results
+        end
+        results += item_results
+      end
+      service_names = Set.new(results.map{|result| result[service_name_column]}.squeeze)
+      services = {}
+      service_names.each do |service_name|
+        results.select{|result| result[service_name_column] == service_name}.each do |result|
+          re
+        end
+      end
+    end
 
     def transform_order_decisions
       Rails.logger.info("transform_order_decisions:")
-      ppl decision_order
+      # ppl decision_order
       results = nil
       results = [decision_order]
       decisions['order'].each do |decision|
         new_results = []
         results.each do |intermediate_result|
-          ppl decision
+          # ppl decision
           transformed = decision.transform!(intermediate_result)
           Rails.logger.info("after transforming")
-          ppl transformed
+          # ppl transformed
           new_results += transformed.expand
         end
         results = new_results
@@ -71,7 +86,6 @@ module Carriers
       ProductCache.instance.dirty!
       decision_items.each do |item|
         Rails.logger.info("looking up #{item.inspect}")
-        ppl ProductCache.instance.variants
         variant = ProductCache.instance[item]
         Rails.logger.info("  got #{variant}")
         item_columns.each do |item_column|

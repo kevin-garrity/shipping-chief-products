@@ -128,10 +128,6 @@ describe Carriers::RufusService do
       subject.construct_item_columns!
       subject.construct_aggregate_columns!
       
-      # pp subject.decision_items
-      # puts "--------------"
-      # pp subject.decision_order
-
       subject.decision_items.each do |i| 
         expect( Set.new(i.keys).intersection(@expected_columns)
         ).to eq(@expected_columns)
@@ -178,6 +174,28 @@ describe Carriers::RufusService do
       expect(subject.decisions['item'].first.matchers.map{|m| m.class}).
         to eq([Rudelo::Matchers::SetLogic, Rufus::Decision::Matchers::Numeric, Rufus::Decision::Matchers::Range, Rufus::Decision::Matchers::String])
     end
+  end
+
+  describe '#transform_item_decisions' do
+    before do
+    end
+    it "transforms each item with each item decision" do
+      @item1 = {}
+      @item2 = {}
+      subject.stub(:decision_items).and_return([@item1, @item2])
+      dec_1 = mock('decision')
+      dec_2 = mock(decision)
+      dec_1.should_receive(:transform!).with(@item1).once
+      dec_1.should_receive(:transform!).with(@item2).once
+      dec_2.should_receive(:transform!).with(@item1).once
+      dec_2.should_receive(:transform!).with(@item2).once
+      subject.transform_item_decisions
+    end
+    it "expands each item result"
+    it "only includes new or modified columns in the result"
+    it "collapses set of all item results by  service_name_column"
+    it "converts columns with multiple results to sets"
+    it "sums sum: columns"
   end
 
   describe '#transform_order_decisions' do
@@ -253,6 +271,59 @@ describe Carriers::RufusService do
     end
   end
 
+  describe '#service_name' do
+    it "returns value of column spec'd in service_name_column" do
+      subject.should_receive(:service_name_column).and_return('whatever')
+      expect(subject.service_name({'whatever' => 'the name'})).to eq('the name')
+    end
+  end
+
+  describe '#service_code' do
+    it "returns value of column spec'd in service_name_column" do
+      subject.should_receive(:service_name_column).and_return('whatever')
+      expect(subject.service_code({'whatever' => 'the name'})).to eq('the name')
+    end
+  end
+
+  describe '#construct_rates' do
+    before do
+      @serv1 =  {id: 'serv-1', currency: 'CAD'}.stringify_keys
+      @serv2 = {id: 'serv-2', currency: 'CAD'}.stringify_keys
+      subject.should_receive(:service_name).with(@serv1).and_return('service_name1')
+      subject.should_receive(:service_name).with(@serv2).and_return('service_name2')
+
+      subject.should_receive(:service_code).with(@serv1).and_return('service_code1')
+      subject.should_receive(:service_code).with(@serv2).and_return('service_code2')
+
+      subject.should_receive(:calculate_price).with(@serv1).and_return('price1')
+      subject.should_receive(:calculate_price).with(@serv2).and_return('price2')
+    end
+    let(:selected_services){ [ @serv1, @serv2 ] }
+    let(:construct_rates){ subject.construct_rates(selected_services)}
+    it "returns an array of rates" do
+      expect(construct_rates).to be_a_kind_of(Array)
+    end
+    it "returns a rate for each selected service" do
+      expect(construct_rates.length).to eq(selected_services.length)
+    end
+    it "sets total_price using calculate_price" do
+      expect(construct_rates[0]['total_price']).to eq('price1')
+      expect(construct_rates[1]['total_price']).to eq('price2')
+    end
+    it "sets service_name using service_name" do
+      expect(construct_rates[0]['service_name']).to eq('service_name1')
+      expect(construct_rates[1]['service_name']).to eq('service_name2')
+    end
+    it "sets service_code using service_code" do
+      expect(construct_rates[0]['service_code']).to eq('service_code1')
+      expect(construct_rates[1]['service_code']).to eq('service_code2')
+    end
+    it "sets currency" do
+      expect(construct_rates[0]['currency']).to eq('CAD')
+      expect(construct_rates[1]['currency']).to eq('CAD')
+    end
+  end
+
   describe '#fetch_rates' do
     before do
       ProductCache.instance.stub(:variants).and_return(ProductCacheStub.new('cells_product_cache').variants)
@@ -265,9 +336,7 @@ describe Carriers::RufusService do
 
     context "an order decision table and an item decision table" do
 
-    end
-
-    
+    end    
   end
 end
 
