@@ -44,33 +44,40 @@ module Carriers
     end
 
     def transform_item_decisions
+      puts '####### transform_item_decisions #########'
       results = []
 
       # on each line item
       decision_items.each do | item|
+        puts "  item: #{item.inspect}"
         item_results = [item]
         # run each decision, expanding results that have array items due to
         # accumulate setting
         decisions['item'].each do |decision|
+          puts "    decision: #{decision.inspect}"
           new_results = []
           item_results.each do |intermediate_result|
-            puts "decision: #{decision.inspect}"
+            puts "      intermediate_result: #{intermediate_result}"
             transformed = decision.transform(intermediate_result)
-            puts "transformed: #{transformed}"
-            puts "intermediate_result: #{intermediate_result}"
+            puts "      transformed: #{transformed}"
             new_results += transformed.expand
           end
           item_results = new_results
+          puts "    item_results: #{item_results.inspect}"
         end
+        puts "  ."
         item_results.each do |result|
+          puts "    result: #{result.inspect}"
           result.keys.each do |key|
             result.delete(key) if item.has_key?(key) && (result[key] == item[key])
           end
+          puts "    now result: #{result.inspect}"
         end
         results += item_results
       end
       results
     end
+
     def extract_services_from_item_decision_results(results)
       services = {}
       results.each do |result|

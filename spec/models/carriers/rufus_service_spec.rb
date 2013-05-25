@@ -179,28 +179,68 @@ describe Carriers::RufusService do
   describe '#transform_item_decisions' do
     before do
       puts "\n------------------\n"
-      @item1 = {}
-      @item2 = {}
+      @item1 = {"in-1" => "old-1-1", 'in-2' =>'old-1-2'}
+      @item2 = {"in-1" => "old-2", 'in-2' =>'old-2-2'}
       subject.stub(:decision_items).and_return([@item1, @item2])
-      @dec_1 = mock('decision')
-      @dec_2 = mock('decision')
-      @dec_1.stub(:transform).and_return(@item1)
-      @dec_2.stub(:transform).and_return(@item2)
+      @dec_1 = mock('first decision')
+      @dec_2 = mock('second decision')
+      @dec_1.stub(:transform).with(@item1).and_return(@item1)
+      @dec_1.stub(:transform).with(@item2).and_return(@item2)
+      @dec_2.stub(:transform).with(@item1).and_return(@item1)
+      @dec_2.stub(:transform).with(@item2).and_return(@item2)
       subject.stub(:decisions).and_return({'item' => [@dec_1, @dec_2]})
     end
     it "transforms each item with each item decision" do
-      @dec_1.should_receive(:transform).with(@item1).once.and_return({})
-      @dec_1.should_receive(:transform).with(@item2).once.and_return({})
-      @dec_2.should_receive(:transform).with(@item1).once.and_return({})
-      @dec_2.should_receive(:transform).with(@item2).once.and_return({})
+      @dec_1.should_receive(:transform).with(@item1).once.and_return(@item1)
+      @dec_1.should_receive(:transform).with(@item2).once.and_return(@item2)
+      @dec_2.should_receive(:transform).with(@item1).once.and_return(@item1)
+      @dec_2.should_receive(:transform).with(@item2).once.and_return(@item2)
       subject.transform_item_decisions
     end
     it "expands each item result" do
-      @item1.should_receive(:expand).at_least(:once).and_return([{}])
-      @item2.should_receive(:expand).at_least(:once).and_return([{}])
+      @item1.should_receive(:expand).at_least(:once).and_return([@item1])
+      @item2.should_receive(:expand).at_least(:once).and_return([@item2])
       subject.transform_item_decisions
     end
-    it "only includes new or modified columns in the result"
+
+    it "only includes new or modified columns in the result" do
+      intermediate = {
+        'in-1' => 'old-1-1', 'in-2' => 'old-1-2', 'new-1' => 'blah'
+        }
+      @dec_1.should_receive(:transform).with(@item1).once.and_return(intermediate)
+      @dec_2.should_receive(:transform).with(intermediate).once.and_return(intermediate)
+
+      result = subject.transform_item_decisions
+      expect(result.first).to have_key('new-1')
+      expect(result.first).to_not have_key('in-1')
+      expect(result.first).to_not have_key('in-2')
+    end
+  end
+
+  describe  "item decisions" do
+    context "fixture with item fees & pkg choices" do
+      before do
+        subject.stub(:decision_table_dir).and_return(
+          Pathname.new(fixtures_dir).join('rufus','carriers','transform_item_sums_spec'))
+      end
+
+      it "sums fees and chooses max of pkg" do
+        puts "subject.decisions: #{subject.decisions.inspect}"
+        subject.stub(:decision_items).and_return([
+          {name: 'one', sku: 'YY-1', product_type: 'WIDGET'}.stringify_keys,
+          {name: 'one', sku: 'XX-1', product_type: 'VASE'}.stringify_keys
+        ])
+        expect(subject.transform_item_decisions).to eq([
+          {'sum:big item fee' => '2.00', 'max:pkg' => '15_box'},
+          {'sum:big item fee' => '4.33', 'max:pkg' => '20_crate'}
+        ]
+        )
+      end
+
+    end
+  end
+
+  describe '#extract_services_from_item_decision_results' do
     it "collapses set of all item results by  service_name_column"
     it "converts columns with multiple results to sets"
     it "sums sum: columns"
