@@ -13,6 +13,10 @@ class ::Set
     @value_transform ||= Rudelo::Parsers::SetLogicTransform.new
     @value_transform.apply(@value_parser.parse(str))
   end
+
+  def self.empty
+    Set.new
+  end
 end
 
 class String
@@ -20,6 +24,7 @@ class String
     ((float = Float(self)) && (float % 1.0 == 0) ? float.to_i : float) rescue self
   end
 end
+
 module Carriers
   class RufusService < ::Carriers::Service
     attr_accessor :item_columns, :aggregate_columns, :service_name_column, :service_columns
@@ -31,14 +36,29 @@ module Carriers
       rates = nil
       withShopify do
         construct_item_columns!
+        item_decision_results = transform_item_decisions
+        item_decision_results = extract_services_from_item_decision_results(item_decision_results)
         construct_aggregate_columns!
         process_decision_order!
         selected_services = transform_order_decisions
+        add_item_decision_results(selected_services, item_decision_results)
         rates = construct_rates(selected_services)
       end
       return rates
     end
  
+    def add_item_decision_results!(selected_services, item_decision_results)
+      return if item_decision_results.empty?
+      selected_services.each do |selected_service|
+        name = service_name(selected_service)
+        if item_decision_results.has_key?(name)
+          selected_service.merge!(item_decision_results[name])
+        elsif item_decision_results.has_key?(:all)
+          selected_service.merge!(item_decision_results[:all])
+        end
+      end
+    end
+
     def process_decision_order!
       # override in subclasses
     end

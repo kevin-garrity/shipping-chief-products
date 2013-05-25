@@ -1,0 +1,6 @@
+in:vendor,in:country,out:price
+ProSpec,$(US DE FR),${Zone 1}
+ProSpec,$(CA TR),${Zone 2}
+ProSpec,$(AU CN BR),${Zone 3}
+ProSpec,$(PL BY UA LV RO),${Zone 4}
+ProSpec,$(DZ TN KE ZA),${Zone 5}
