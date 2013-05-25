@@ -85,19 +85,29 @@ module Carriers
         service_name = :all if service_name.nil?
         services[service_name] ||= {}
         service = services[service_name]
-        result.each do |column, value|
+        result.each do |column, new_value|
           column_type, column_name = column.split(':')
           if column_name.nil?
             column_name = column_type
             column_type = :set
           end
-          case column_type
+          value = service[column_name]
+          case column_type.to_sym
           when :set
-            service = service.union( Set.from_rudelo(value) )
+            value ||= Set.empty
+            value = value.union( Set.from_rudelo(new_value) )
           when :sum
-            num = value.to_f_or_i_or_s
-            service += num if num.is_a?(Numeric)
+            value ||= 0
+            num = new_value.to_f_or_i_or_s
+            value += num if num.is_a?(Numeric)
+          when :max
+            num = new_value.to_f_or_i_or_s
+            value = value.nil? ? num : [value, num].max
+          when :min
+            num = new_value.to_f_or_i_or_s
+            value = value.nil? ? num : [value, num].min
           end
+          service[column_name] = value
         end
       end
       services

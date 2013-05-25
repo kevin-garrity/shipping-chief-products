@@ -225,18 +225,38 @@ describe Carriers::RufusService do
       end
 
       it "sums fees and chooses max of pkg" do
-        puts "subject.decisions: #{subject.decisions.inspect}"
         subject.stub(:decision_items).and_return([
           {name: 'one', sku: 'YY-1', product_type: 'WIDGET'}.stringify_keys,
           {name: 'one', sku: 'XX-1', product_type: 'VASE'}.stringify_keys
         ])
-        expect(subject.transform_item_decisions).to eq([
+        transformed = subject.transform_item_decisions
+        expect(transformed).to eq([
           {'sum:big item fee' => '2.00', 'max:pkg' => '15_box'},
           {'sum:big item fee' => '4.33', 'max:pkg' => '20_crate'}
         ]
         )
+
+        services = subject.extract_services_from_item_decision_results(transformed)
+        expect(services).to eq(
+            :all=>{"big item fee"=>6.33, "pkg"=>"20_crate"}
+        )
       end
 
+      it "handles no matches" do
+        subject.stub(:decision_items).and_return([
+          {name: 'one', sku: 'AA-1', product_type: 'GOOBER'}.stringify_keys,
+          {name: 'one', sku: 'BB-1', product_type: 'SPLING'}.stringify_keys
+        ])
+        transformed = subject.transform_item_decisions
+        expect(transformed).to eq([
+          {"max:pkg"=>"10_box"}, {"max:pkg"=>"10_box"}
+        ])
+
+        services = subject.extract_services_from_item_decision_results(transformed)
+        expect(services).to eq(
+            :all => {"pkg"=>"10_box"}
+        )
+      end
     end
   end
 
