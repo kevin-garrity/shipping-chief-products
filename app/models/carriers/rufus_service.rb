@@ -138,7 +138,7 @@ module Carriers
       # ppl decision_order
       results = nil
       results = [decision_order]
-      decisions['order'].each do |decision|
+        decisions['order'].each do |decision|
         new_results = []
         results.each do |intermediate_result|
           # ppl decision
@@ -268,6 +268,7 @@ module Carriers
     def item_columns
       @item_columns ||= [
         'product.product_type',
+        # 'product.vendor',
         'product.option1_name',
         'product.option2_name',
         'product.option3_name',
@@ -330,6 +331,7 @@ module Carriers
         ['order', 'item'].each do |decision_type|
           decisions[decision_type] =
             Dir["#{decision_table_dir}/#{decision_type}/*.csv"].map do |path|
+              puts "loading #{path}"
               table = Rufus::Decision::Table.new(path)
               table.matchers.unshift(Rudelo::Matchers::SetLogic.new)
               table.matchers.first.force = Rails.env.development?

@@ -73,19 +73,27 @@ describe Carriers::RufusService do
     before do
       subject.stub(:item_columns).and_return([
         'product.product_type',
+        # 'product.vendor',
+        'product.option1_name',
+        'product.option2_name',
+        'product.option3_name',
         'variant.option1',
         'variant.option2',
         'variant.option3'
         ])
       @expected_columns = Set.new([
         'product_type',
+        # 'vendor',
+        'option1_name',
+        'option2_name',
+        'option3_name',
         'option1',
         'option2',
         'option3'
       ])
     end
     it "adds the columns specified in item_columns" do
-      subject.decision_items.each do |i| 
+      subject.decision_items.each do |i|
         expect( Set.new(i.keys).intersection(@expected_columns)
         ).to eq(Set.empty)
       end
@@ -95,7 +103,10 @@ describe Carriers::RufusService do
       subject.decision_items.each do |i| 
         expect( Set.new(i.keys).intersection(@expected_columns)
         ).to eq(@expected_columns)
+        expect( i.keys ).to include("vendor")
       end
+
+
     end
 
     it "gets the values from the product cache" do
