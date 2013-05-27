@@ -34,7 +34,8 @@ describe Carriers::LifemapScience::Service do
     ShopifyAPI::Shop.stub(:current).and_return(@mock_shop)
   end
 
-
+  specify{expect(ProductCache.instance.variants.length).to eq(383)}
+  
   context "BioTime products"
     let(:us){ {country: 'US'} }
     let(:zone1){ us.merge(province: 'CA') }
