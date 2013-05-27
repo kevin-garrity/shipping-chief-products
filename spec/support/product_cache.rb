@@ -4,15 +4,21 @@ class ProductCacheStub
 
   attr_accessor :fixture
   def initialize(fixture)
-    @fixture = fixture
+    @fixture = "#{fixture}_product_cache.json"
   end
 
   def variants
-    @@variants ||= Oj.load_file(File.join(fixtures_dir, "#{fixture}.json"), object: true, circular: true)
+    @@variants ||= Oj.load_file(File.join(fixtures_dir, fixture), object: true, circular: true)
   end
 
   def product_types
     @@product_types ||= variants.values.map{|v| v.product.product_type}.uniq.sort
+  end
+
+  def write_json
+    h = ProductCache.instance.variants
+    json = Oj.dump(h, object:true, circular:true)
+    File.open(File.join(fixtures_dir, fixture), 'w'){|f| f.write(json)}
   end
 
 end
@@ -93,10 +99,10 @@ module CellsProductFixture
   }
     end
 
-    def write_json
+    def write_json(fixture)
       h = ProductCache.instance.variants
       json = Oj.dump(h, object:true, circular:true)
-      File.open(File.join(fixtures_dir, "cells_product_cache.json"), 'w'){|f| f.write(json)}
+      File.open(File.join(fixtures_dir, "#{fixture}_product_cache.json"), 'w'){|f| f.write(json)}
     end
     def create!
       product_types.each do |t, prods|
