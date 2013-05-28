@@ -136,7 +136,7 @@ module Carriers
           if name.nil?
             raise "don't know what to do with #{item.inspect}" unless item.keys.length == 1
             name, item = item.first
-            item = item.stringify_keys
+            item = item.is_a?(Hash) ? item.stringify_keys : {'quantity' => item}
           end
         end
         variant = ProductCache.instance.variants[name]
