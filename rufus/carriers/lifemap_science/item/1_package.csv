@@ -1,3 +1,3 @@
 in:product_type,in:quantity,out:sum:pkg_quantity
-$(Cells),,,
-$(Media,Etc),,${quantity}
+"$(""Human Embryonic Stem Cell"", ""Human Embryonic Progenitor"")",,
+"$(""Differentiation Kit"" ""Human Embryonic Progenitor Package"" ""Growth Media"" ""Basal Media"")",,${quantity}
