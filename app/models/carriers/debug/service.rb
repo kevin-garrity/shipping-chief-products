@@ -109,39 +109,51 @@ module Carriers
       }
 
       SAMPLE_ITEM = {
-
+        "name"=>"RatesDebug - Low / Medium / Extreme",
+        "sku"=>"samesku",
+        "quantity"=>2,
+        "grams"=>0,
+        "price"=>0,
+        "vendor"=>"LastObelus",
+        "requires_shipping"=>true,
+        "taxable"=>true,
+        "fulfillment_service"=>"manual",
+        "product_id"=>135576025,
+        "variant_id"=>309727645
       }
 
-      def sample_item(item=nil)
+      def self.sample_item(item=nil)
         out = SAMPLE_ITEM.dup
         return out unless item
         name = nil
         case item
         when String
           name = item
+          item = {}
         when Hash
           item = item.stringify_keys
-          name = item['name']
+          name = item.delete('name')
           if name.nil?
             raise "don't know what to do with #{item.inspect}" unless item.keys.length == 1
-            item = item.values.first
+            name, item = item.first
+            item = item.stringify_keys
           end
         end
-        variant = ProductCache.instance.variants[item]
+        variant = ProductCache.instance.variants[name]
         raise "couldn't find item matching #{item.inspect}" if variant.nil?
 
         out.merge!(
-          "name"=> item,
+          "name"=> name,
           "sku"=>variant.sku,
           "quantity"=>1,
-          "grams"=>4990,
-          "price"=>5920,
+          "grams"=>variant.grams,
+          "price"=>variant.price,
           "vendor"=>"FAB",
-          "requires_shipping"=>true,
-          "taxable"=>false,
-          "fulfillment_service"=>"manual",
-          "product_id"=>126245474,
-          "variant_id"=>286982482
+          "requires_shipping"=>variant.requires_shipping,
+          "taxable"=>variant.taxable,
+          "fulfillment_service"=>variant.fulfillment_service,
+          "product_id"=>variant.product.id,
+          "variant_id"=>variant.id
         )
         out.merge!(item)
         out
@@ -158,10 +170,8 @@ module Carriers
         items = opts.delete('items')
         items = [items].flatten
         items.each do |item|      
-          case item
-          when String
-          when Hash
-          end
+          out['items'] << sample_item(item)
+        end
         out
       end
     end
