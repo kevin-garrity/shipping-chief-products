@@ -75,6 +75,95 @@ module Carriers
           }
         ]
       end
+
+      SAMPLE_SERVICE_QUERY = {
+        :origin=> {
+          "country"=>"CA",
+          "postal_code"=>"V7V 7V7",
+          "province"=>"BC",
+          "city"=>"Somecity",
+          "name"=>nil,
+          "address1"=>"123 Some Street",
+          "address2"=>"",
+          "address3"=>nil,
+          "phone"=>nil,
+          "fax"=>nil,
+          "address_type"=>nil,
+          "company_name"=>nil
+        },
+        :destination=> {
+          "country"=>"US",
+          "postal_code"=>"35004",
+          "province"=>"AL",
+          "city"=>nil,
+          "name"=>nil,
+          "address1"=>nil,
+          "address2"=>nil,
+          "address3"=>nil,
+          "phone"=>nil,
+          "fax"=>nil,
+          "address_type"=>nil,
+          "company_name"=>nil
+        },
+        :items=> []
+      }
+
+      SAMPLE_ITEM = {
+
+      }
+
+      def sample_item(item=nil)
+        out = SAMPLE_ITEM.dup
+        return out unless item
+        name = nil
+        case item
+        when String
+          name = item
+        when Hash
+          item = item.stringify_keys
+          name = item['name']
+          if name.nil?
+            raise "don't know what to do with #{item.inspect}" unless item.keys.length == 1
+            item = item.values.first
+          end
+        end
+        variant = ProductCache.instance.variants[item]
+        raise "couldn't find item matching #{item.inspect}" if variant.nil?
+
+        out.merge!(
+          "name"=> item,
+          "sku"=>variant.sku,
+          "quantity"=>1,
+          "grams"=>4990,
+          "price"=>5920,
+          "vendor"=>"FAB",
+          "requires_shipping"=>true,
+          "taxable"=>false,
+          "fulfillment_service"=>"manual",
+          "product_id"=>126245474,
+          "variant_id"=>286982482
+        )
+        out.merge!(item)
+        out
+      end
+
+      def self.sample_query(opts={})
+        opts = {items: opts} unless opts.is_a?(Hash)
+        opts = opts.stringify_keys
+        out = SAMPLE_SERVICE_QUERY.dup.stringify_keys
+        dest = opts.delete('destination')
+        if dest
+          out['destination'].merge!(dest)
+        end
+        items = opts.delete('items')
+        items = [items].flatten
+        items.each do |item|      
+          case item
+          when String
+          when Hash
+          end
+        out
+      end
     end
   end
 end

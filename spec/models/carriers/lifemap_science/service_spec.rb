@@ -35,7 +35,7 @@ describe Carriers::LifemapScience::Service do
   end
 
   specify{expect(ProductCache.instance.variants.length).to eq(383)}
-  
+
   context "BioTime products"
     let(:us){ {country: 'US'} }
     let(:zone1){ us.merge(province: 'CA') }
@@ -44,7 +44,7 @@ describe Carriers::LifemapScience::Service do
     let(:zone4){ us.merge(province: 'MO') }
     let(:zone5){ us.merge(province: 'OH') }
     context "charges same rate for cells regardless of quantity"  do
-      it_produces "correct rates for"
+      it_produces "correct rates for", us
     end
     it "charges more for more than 4 media items"
     it "charges dry ice fee if order contains media item"
