@@ -1,6 +1,6 @@
-in:vendor,in:province,out:price
-BioTime,$(CA),${Zone 1}
-BioTime,$(NV OR AZ UT ID),${Zone 2}
-BioTime,$(WA MT WY CO NM),${Zone 3}
-BioTime,$(ND SD MN WI IL IA NE KS MO AR OK TX LA),${Zone 4}
-BioTime,$(MI IN KY TN MS AL OH AL FL MA CT NJ DE MD VA NC SC GA WV OH PA NY VT NH HI AL),${Zone 5}
+in:vendor_set,in:province,out:price
+$(BioTime),$(CA),${Zone 1}
+$(BioTime),$(NV OR AZ UT ID),${Zone 2}
+$(BioTime),$(WA MT WY CO NM),${Zone 3}
+$(BioTime),$(ND SD MN WI IL IA NE KS MO AR OK TX LA),${Zone 4}
+$(BioTime),$(MI IN KY TN MS AL OH AL FL MA CT NJ DE MD VA NC SC GA WV OH PA NY VT NH HI AL),${Zone 5}

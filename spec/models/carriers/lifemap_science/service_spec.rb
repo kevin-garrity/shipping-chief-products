@@ -30,6 +30,7 @@ shared_examples_for "correct rates for" do |items, destination, expected_service
     puts "------------------------------------------------------------------"
     pp result
     puts "------------------------------------------------------------------"
+    expect(result.length).to eq(expected_services.length)
     expected_services.each do |name, rate|
       returned_service = subject.detect{|s| s['service_name'] == name}
       expect(returned_service).to_not be_nil
@@ -55,7 +56,13 @@ describe Carriers::LifemapScience::Service do
       [
         "Human Embryonic Stem Cell Line ESI-017 - (46,XX) - Default Title" => 2
       ],
-      Destinations.zone1, {bob: 2}
+      Destinations.zone1, { "Overnight" => 3700 }
+
+      it_produces "correct rates for",
+      [
+        "Human Embryonic Stem Cell Line ESI-017 - (46,XX) - Default Title" => 20
+      ],
+      Destinations.zone1, { "Overnight" => 3700 }
 
     end
     it "charges more for more than 4 media items"

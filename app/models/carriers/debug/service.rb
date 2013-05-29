@@ -148,7 +148,7 @@ module Carriers
           "quantity"=>1,
           "grams"=>variant.grams,
           "price"=>variant.price,
-          "vendor"=>"FAB",
+          "vendor"=> variant.product.vendor,
           "requires_shipping"=>variant.requires_shipping,
           "taxable"=>variant.taxable,
           "fulfillment_service"=>variant.fulfillment_service,
