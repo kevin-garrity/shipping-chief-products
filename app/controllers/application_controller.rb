@@ -11,7 +11,9 @@ class ApplicationController < ActionController::Base
 
 
       #if (Rails.env == "production")
-        if (!ShopifyAPI::RecurringApplicationCharge.current && default_client? && !session[:shopify].url.include?("dev-shop") )
+        if (!ShopifyAPI::RecurringApplicationCharge.current && default_client? && !session[:shopify].url.include?("dev-shop") 
+           &&  !session[:shopify].url.include?("schumm-durgan-and-lang94") 
+          )
             #place a recurring charge
           charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Shipping Calculator Application", 
                                                              :price => 15, 
