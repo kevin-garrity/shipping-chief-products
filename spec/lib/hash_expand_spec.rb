@@ -1,4 +1,4 @@
-require 'lib/webify/hash_expand'
+require 'webify/hash_expand'
 describe "Hash#expand" do
   subject { in_hash.expand }
   context "nothing to expand" do

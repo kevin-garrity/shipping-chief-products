@@ -10,11 +10,11 @@ class ProductCacheStub
 
   def variants
 
-    @@variants ||= Oj.load_file(File.join(fixtures_dir, fixture), object: true, circular: true)
+    @variants ||= Oj.load_file(File.join(fixtures_dir, fixture), object: true, circular: true)
   end
 
   def product_types
-    @@product_types ||= variants.values.map{|v| v.product.product_type}.uniq.sort
+    @product_types ||= variants.values.map{|v| v.product.product_type}.uniq.sort
   end
 
   def write_json

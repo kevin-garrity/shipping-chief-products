@@ -2,8 +2,11 @@
 require 'spec_helper'
 
 describe "#sample_item" do
-  before do
+  before(:each) do
     ProductCache.instance.stub(:variants).and_return(ProductCacheStub.new('lifemap').variants)
+  end
+  after(:each) do
+    ProductCache.instance.unstub(:variants)
   end
   let(:subject){ ::Carriers::Debug::Service }
 

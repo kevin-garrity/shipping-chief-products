@@ -21,11 +21,13 @@ module ::Carriers::SpecService
 end
 
 describe Carriers::RufusService do
-  before do
+  include_context "mock shopify"
+
+  before(:each) do
     ProductCache.instance.stub(:variants).and_return(ProductCacheStub.new('').variants)
-    @mock_shop = double('shop')
-    @mock_shop.stub(:myshopify_domain).and_return('schumm-durgan-and-lang94.myshopify.com')
-    ShopifyAPI::Shop.stub(:current).and_return(@mock_shop)
+  end
+  after(:each) do
+    ProductCache.instance.unstub(:variants)
   end
 
   let(:preference){ nil }
@@ -93,6 +95,7 @@ describe Carriers::RufusService do
       ])
     end
     it "adds the columns specified in item_columns" do
+
       subject.decision_items.each do |i|
         expect( Set.new(i.keys).intersection(@expected_columns)
         ).to eq(Set.empty)
@@ -123,12 +126,13 @@ describe Carriers::RufusService do
   describe '#construct_aggregate_columns!' do
     before do
       @expected_columns = Set.new([
-        'total_item_quantity',
+        'total_quantity',
         'Debug-1 quantity',
         'Cube quantity',
         'product_types_set',
         'sku_set',
-        'vendor_set'
+        'vendor_set',
+        'total_order_price'
       ])
     end
     it "adds the columns specified in item_columns" do
@@ -147,7 +151,7 @@ describe Carriers::RufusService do
 
       sample = subject.decision_items.detect{|i| i['name'] == "RatesDebug - Low / Medium / Extreme"}
 
-      expect(sample['total_item_quantity']).to eq(7)
+      expect(sample['total_quantity']).to eq(7)
       expect(sample['Debug-1 quantity']).to eq(3)
       expect(sample['Cube quantity']).to eq(4)
       expect(sample['product_types_set']).to eq(Set['Cube', 'Debug-1'])
@@ -375,8 +379,8 @@ describe Carriers::RufusService do
       subject.should_receive(:service_code).with(@serv1).and_return('service_code1')
       subject.should_receive(:service_code).with(@serv2).and_return('service_code2')
 
-      subject.should_receive(:calculate_price).with(@serv1).and_return('price1')
-      subject.should_receive(:calculate_price).with(@serv2).and_return('price2')
+      subject.should_receive(:calculate_price).with(@serv1).at_least(:once).and_return('price1')
+      subject.should_receive(:calculate_price).with(@serv2).at_least(:once).and_return('price2')
     end
     let(:selected_services){ [ @serv1, @serv2 ] }
     let(:construct_rates){ subject.construct_rates(selected_services)}
@@ -405,11 +409,12 @@ describe Carriers::RufusService do
   end
 
   describe '#fetch_rates' do
-    before do
+    before(:each) do
       ProductCache.instance.stub(:variants).and_return(ProductCacheStub.new('cells').variants)
     end
     # these specs are more like acceptance tests than units
     it "uses a shopify session" do
+      puts "the spec"
       subject.stub(:withShopify).and_raise("ok")
       expect{subject.fetch_rates}.to raise_error("ok")
     end

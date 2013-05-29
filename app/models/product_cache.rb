@@ -41,6 +41,7 @@ class ProductCache
   end
 
   def variants
+
     dirty?
     @variants ||= begin
       logger.debug "ProductCache#variants - checking cache for variants"
@@ -79,9 +80,9 @@ class ProductCache
   end
 
   def[](shopify_rates_params_item)
-    logger.debug('ProductCache[] called')
     variant = self.variants[shopify_rates_params_item['name']]
     if variant.nil?
+      puts "   couldn't find #{shopify_rates_params_item['name']} in cache(#{self.variants.length})"
       variant = ShopifyAPI::Variant.find(shopify_rates_params_item['variant_id'])
       variant.attributes[:product] = ShopifyAPI::Product.find(shopify_rates_params_item['product_id'])
       self.variants[shopify_rates_params_item['name']] = variant

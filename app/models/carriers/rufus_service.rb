@@ -25,6 +25,7 @@ class String
   end
 end
 
+
 module Carriers
   class RufusService < ::Carriers::Service
     attr_accessor :item_columns, :aggregate_columns, :service_name_column, :service_columns
@@ -38,17 +39,20 @@ module Carriers
         construct_item_columns!
         item_decision_results = transform_item_decisions
         item_decision_results = extract_services_from_item_decision_results(item_decision_results)
+        # puts "item_decision_results:"
+        # pp item_decision_results
         construct_aggregate_columns!
-        puts "\n\n########################################################"
+        decision_order.merge!(item_decision_results[:all]) if item_decision_results.has_key?(:all)
+        # puts "\n\n########################################################"
         process_decision_order!
         selected_services = transform_order_decisions
-        add_item_decision_results!(selected_services, item_decision_results)
+        add_item_decision_results(selected_services, item_decision_results)
         rates = construct_rates(selected_services)
       end
       return rates
     end
  
-    def add_item_decision_results!(selected_services, item_decision_results)
+    def add_item_decision_results(selected_services, item_decision_results)
       return if item_decision_results.empty?
       selected_services.each do |selected_service|
         name = service_name(selected_service)
@@ -65,39 +69,39 @@ module Carriers
     end
 
     def transform_item_decisions
-      puts '####### transform_item_decisions #########'
+      # puts '####### transform_item_decisions #########'
       results = []
 
       # on each line item
       decision_items.each do | item|
-        puts "---item: #{item.inspect}"
+        # puts "---item: #{item.inspect}"
         item_results = [item]
         # run each decision, expanding results that have array items due to
         # accumulate setting
         decisions['item'].each do |decision|
-          puts "------decision: #{decision.inspect}"
+          # puts "------decision: #{decision.inspect}"
           new_results = []
           item_results.each do |intermediate_result|
-            puts "---------intermediate_result: #{intermediate_result}"
+            # puts "---------intermediate_result: #{intermediate_result}"
             transformed = decision.transform(intermediate_result)
-            puts "---------transformed:"
-            pp transformed
+            # puts "---------transformed:"
+             # pp transformed
             new_results += transformed.expand
           end
           item_results = new_results
-          puts "------item_results: #{item_results.inspect}"
+          # puts "------item_results: #{item_results.inspect}"
         end
-        puts "---"
+        # puts "---"
         item_results.each do |result|
-          puts "------result: #{result.inspect}"
+          # puts "------result: #{result.inspect}"
           result.keys.each do |key|
             result.delete(key) if item.has_key?(key) && (result[key] == item[key])
           end
-          puts "------now result: #{result.inspect}"
+          # puts "------now result: #{result.inspect}"
         end
         results += item_results
       end
-      puts "---returning: #{results.inspect}"
+      # puts "---returning: #{results.inspect}"
       results
     end
 
@@ -138,9 +142,9 @@ module Carriers
 
     def transform_order_decisions
       Rails.logger.info("transform_order_decisions:")
-      puts '####### transform_item_decisions #########'
-      puts "---decision_order:"
-      pp decision_order
+      # puts '####### transform_order_decisions #########'
+      # puts "---decision_order:"
+      # pp decision_order
       results = nil
       results = [decision_order]
         decisions['order'].each do |decision|
@@ -154,6 +158,8 @@ module Carriers
         end
         results = new_results
       end
+      # puts "-------> transform_order_decisions results:"
+      # pp results
       results
     end
 
@@ -195,6 +201,7 @@ module Carriers
     def construct_aggregate_columns!
       product_types_set = Set.new
       sku_set = Set.new
+      total_order_price = nil
       vendor_set = Set.new
       product_types_quantities = nil
       total_item_quantity = nil
@@ -218,14 +225,19 @@ module Carriers
           when :vendor_set
             vendor_set << item['vendor']
             item['vendor_set'] = vendor_set
+          when :total_order_price
+            total_order_price ||= 0
+            total_order_price += item['quantity'].to_f * item['price'].to_f
           end
         end
       end
       decision_items.each do |item| 
         item.merge!(product_types_quantities) if product_types_quantities
-        item['total_item_quantity'] = total_item_quantity if total_item_quantity
+        item['total_quantity'] = total_item_quantity if total_item_quantity
+        item['total_order_price'] = total_order_price if total_order_price
       end
       decision_order['total_quantity'] = total_item_quantity if total_item_quantity
+      decision_order['total_order_price'] = total_order_price if total_order_price
       decision_order.merge!(product_types_quantities) if product_types_quantities
       decision_order['product_types_set'] = product_types_set.to_rudelo if aggregate_columns.include?(:product_types_set)
       decision_order['sku_set'] = sku_set.to_rudelo if aggregate_columns.include?(:sku_set)
@@ -245,17 +257,23 @@ module Carriers
       rates = []
       selected_services.each do |selected_service|
         rate = {}
-        rate['total_price'] = calculate_price(selected_service)
-        rate['service_name'] = service_name(selected_service)
-        rate['currency'] = selected_service['currency']
-        rate['service_code'] = service_code(selected_service)
-        rates << rate
+        price = calculate_price(selected_service)
+        unless price == :na
+          rate['total_price'] = calculate_price(selected_service)
+          rate['service_name'] = service_name(selected_service)
+          rate['currency'] = selected_service['currency']
+          rate['service_code'] = service_code(selected_service)
+          rates << rate
+        end
       end
       rates
     end
 
     def calculate_price(row)
-      base_price = row[base_price_column(row)].to_f
+      base_price = row[base_price_column(row)]
+      # puts "calculate_price. base_price: #{base_price.inspect}"
+      return :na if ["na", 'n/a', 'skip', '-'].include?(base_price.downcase)
+      base_price = base_price.to_f
       fee_price_columns(row).
         inject(base_price){ |total, k| total + row[k].to_f }
     end
@@ -272,7 +290,8 @@ module Carriers
         :total_item_quantity,
         :product_types_set,
         :sku_set,
-        :vendor_set
+        :vendor_set,
+        :total_order_price
       ]
     end
 
@@ -342,10 +361,10 @@ module Carriers
         ['order', 'item'].each do |decision_type|
           decisions[decision_type] =
             Dir["#{decision_table_dir}/#{decision_type}/*.csv"].map do |path|
-              puts "loading #{path}"
+              # puts "loading #{path}"
               table = Rufus::Decision::Table.new(path)
               table.matchers.unshift(Rudelo::Matchers::SetLogic.new)
-              table.matchers.first.force = Rails.env.development?
+              # table.matchers.first.force = Rails.env.development? || Rails.env.test?
               table
             end
         end

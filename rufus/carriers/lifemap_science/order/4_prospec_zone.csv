@@ -1,6 +1,1 @@
-in:vendor_set,in:country,out:price
-$(ProSpec),$(US DE FR),${Zone 1}
-$(ProSpec),$(CA TR),${Zone 2}
-$(ProSpec),$(AU CN BR),${Zone 3}
-$(ProSpec),$(PL BY UA LV RO),${Zone 4}
-$(ProSpec),$(DZ TN KE ZA),${Zone 5}
+in:vendor_set,in:country,out:price,out:zone name$(ProSpec),"$(US, DE, FR)",${Zone 1},USA & Western Europe$(ProSpec),"$(CA, TR)",${Zone 2},"Canada, Turkey"$(ProSpec),"$(AU, CN, BR)",${Zone 3},"Australia , Asia, Middle East, Central America, South America"$(ProSpec),"$(PL, BY, UA, LV, RO)",${Zone 4},Eastern Europe$(ProSpec),"$(DZ, TN, KE, ZA)",${Zone 5},Africa & S. Africa
