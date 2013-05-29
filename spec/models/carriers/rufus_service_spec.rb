@@ -127,7 +127,8 @@ describe Carriers::RufusService do
         'Debug-1 quantity',
         'Cube quantity',
         'product_types_set',
-        'sku_set'
+        'sku_set',
+        'vendor_set'
       ])
     end
     it "adds the columns specified in item_columns" do

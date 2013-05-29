@@ -39,9 +39,10 @@ module Carriers
         item_decision_results = transform_item_decisions
         item_decision_results = extract_services_from_item_decision_results(item_decision_results)
         construct_aggregate_columns!
+        puts "\n\n########################################################"
         process_decision_order!
         selected_services = transform_order_decisions
-        add_item_decision_results(selected_services, item_decision_results)
+        add_item_decision_results!(selected_services, item_decision_results)
         rates = construct_rates(selected_services)
       end
       return rates
@@ -69,32 +70,34 @@ module Carriers
 
       # on each line item
       decision_items.each do | item|
-        puts "  item: #{item.inspect}"
+        puts "---item: #{item.inspect}"
         item_results = [item]
         # run each decision, expanding results that have array items due to
         # accumulate setting
         decisions['item'].each do |decision|
-          puts "    decision: #{decision.inspect}"
+          puts "------decision: #{decision.inspect}"
           new_results = []
           item_results.each do |intermediate_result|
-            puts "      intermediate_result: #{intermediate_result}"
+            puts "---------intermediate_result: #{intermediate_result}"
             transformed = decision.transform(intermediate_result)
-            puts "      transformed: #{transformed}"
+            puts "---------transformed:"
+            pp transformed
             new_results += transformed.expand
           end
           item_results = new_results
-          puts "    item_results: #{item_results.inspect}"
+          puts "------item_results: #{item_results.inspect}"
         end
-        puts "  ."
+        puts "---"
         item_results.each do |result|
-          puts "    result: #{result.inspect}"
+          puts "------result: #{result.inspect}"
           result.keys.each do |key|
             result.delete(key) if item.has_key?(key) && (result[key] == item[key])
           end
-          puts "    now result: #{result.inspect}"
+          puts "------now result: #{result.inspect}"
         end
         results += item_results
       end
+      puts "---returning: #{results.inspect}"
       results
     end
 
@@ -135,7 +138,9 @@ module Carriers
 
     def transform_order_decisions
       Rails.logger.info("transform_order_decisions:")
-      # ppl decision_order
+      puts '####### transform_item_decisions #########'
+      puts "---decision_order:"
+      pp decision_order
       results = nil
       results = [decision_order]
         decisions['order'].each do |decision|
@@ -190,6 +195,7 @@ module Carriers
     def construct_aggregate_columns!
       product_types_set = Set.new
       sku_set = Set.new
+      vendor_set = Set.new
       product_types_quantities = nil
       total_item_quantity = nil
       decision_items.each do |item|
@@ -209,6 +215,9 @@ module Carriers
           when :sku_set
             sku_set << item['sku']
             item['sku_set'] = sku_set
+          when :vendor_set
+            vendor_set << item['vendor']
+            item['vendor_set'] = vendor_set
           end
         end
       end
@@ -220,6 +229,7 @@ module Carriers
       decision_order.merge!(product_types_quantities) if product_types_quantities
       decision_order['product_types_set'] = product_types_set.to_rudelo if aggregate_columns.include?(:product_types_set)
       decision_order['sku_set'] = sku_set.to_rudelo if aggregate_columns.include?(:sku_set)
+      decision_order['vendor_set'] = vendor_set.to_rudelo if aggregate_columns.include?(:vendor_set)
     end
 
 
@@ -261,7 +271,8 @@ module Carriers
         :product_types_quantities,
         :total_item_quantity,
         :product_types_set,
-        :sku_set
+        :sku_set,
+        :vendor_set
       ]
     end
 

@@ -10,8 +10,9 @@ shared_examples_for "correct rates for" do |items, destination, expected_service
 
   let(:params) {
     {
-      'origin' => destination,
-      'items' => items.map!{|item| ::Carriers::Debug::Service.sample_item(item) }
+      origin: Destinations.US,
+      destination: destination,
+      items: items.map!{|item| ::Carriers::Debug::Service.sample_item(item) }
     }
   }
   let(:service){
@@ -24,7 +25,11 @@ shared_examples_for "correct rates for" do |items, destination, expected_service
     puts "items: #{items.inspect}"
     puts "destination: #{destination.inspect}"
     puts "expected_services: #{expected_services.inspect}"
-    pp subject
+
+    result = subject
+    puts "------------------------------------------------------------------"
+    pp result
+    puts "------------------------------------------------------------------"
     expected_services.each do |name, rate|
       returned_service = subject.detect{|s| s['service_name'] == name}
       expect(returned_service).to_not be_nil
@@ -50,7 +55,7 @@ describe Carriers::LifemapScience::Service do
       [
         "Human Embryonic Stem Cell Line ESI-017 - (46,XX) - Default Title" => 2
       ],
-      Destinations.zone1, {}
+      Destinations.zone1, {bob: 2}
 
     end
     it "charges more for more than 4 media items"

@@ -4,10 +4,12 @@ class ProductCacheStub
 
   attr_accessor :fixture
   def initialize(fixture)
-    @fixture = "#{fixture}_product_cache.json"
+    fixture = fixture.blank? ? '' : "#{fixture}_"
+    @fixture = "#{fixture}product_cache.json"
   end
 
   def variants
+
     @@variants ||= Oj.load_file(File.join(fixtures_dir, fixture), object: true, circular: true)
   end
 
