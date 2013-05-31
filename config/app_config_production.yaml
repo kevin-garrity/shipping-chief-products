@@ -36,10 +36,11 @@ clients:
     carriers:
       - :aus_post
     service_host: shipping.webifytechnology.com      
-  lifemap_science.myshopify.com:
-    access:
+  lifemap-bioreagents.myshopify.com:
+    access: 
       all_except: []
     menus: []
+    service_host: lifemapsc.herokuapp.com
     carriers:
+    - :debug
     - :lifemap_science
-    service_host: webify-shipping.herokuapp.com

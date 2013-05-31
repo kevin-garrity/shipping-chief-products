@@ -31,5 +31,12 @@ clients:
       all_except: []
     menus: []
     carriers:
-      - :aus_post
-      - :red_pepper
+    - :aus_post
+    - :red_pepper
+  lifemap-bioreagents.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :debug
+    - :lifemap_science
