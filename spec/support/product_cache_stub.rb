@@ -9,7 +9,6 @@ class ProductCacheStub
   end
 
   def variants
-
     @variants ||= Oj.load_file(File.join(fixtures_dir, fixture), object: true, circular: true)
   end
 
@@ -18,11 +17,24 @@ class ProductCacheStub
   end
 
   def write_json
+    ProductCache.instance.prime!
     h = ProductCache.instance.variants
     json = Oj.dump(h, object:true, circular:true)
     File.open(File.join(fixtures_dir, fixture), 'w'){|f| f.write(json)}
   end
 
+  def convert!
+    h = variants
+    new_hash = {}
+    h.each do |k, v|
+      v.instance_variable_set(:@metafields_cached, [])
+      v.product.instance_variable_set(:@metafields_cached, [])
+      new_hash[v.id.to_s] = v
+    end
+    @variants = new_hash
+    json = Oj.dump(new_hash, object:true, circular:true)
+    File.open(File.join(fixtures_dir, fixture), 'w'){|f| f.write(json)}
+  end
 end
 
 

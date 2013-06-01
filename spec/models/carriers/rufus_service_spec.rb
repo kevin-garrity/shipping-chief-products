@@ -63,7 +63,7 @@ describe Carriers::RufusService do
 
   describe '#decision_order' do
     it "stringifies keys of items" do
-      subject.params = {items: [name: "bob"], destination: {province: 'BC', country_code: 'CA'}, currency: "CAD"}
+      subject.params = {items: [variant_id: 286982344], destination: {province: 'BC', country_code: 'CA'}, currency: "CAD"}
       expect(subject.decision_order['province']).to eq("BC")
       expect(subject.decision_order['currency']).to eq("CAD")
       expect(subject.decision_order['country_code']).to eq("CA")

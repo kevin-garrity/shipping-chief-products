@@ -172,7 +172,7 @@ module Carriers
     end
 
     def construct_item_columns!
-      ProductCache.instance.dirty!
+      # ProductCache.instance.dirty!
       decision_items.each do |item|
         Rails.logger.info("looking up #{item.inspect}")
         variant = ProductCache.instance[item]
@@ -181,23 +181,30 @@ module Carriers
           entity, key = item_column.split('.')
           item_column = [entity, key.gsub(entity,'')].join('_')
           case entity
+          when 'metafields'
+            variant.product.metafields_cached.each do |metafield|
+              item[column_name_for_metafield(metafield)] = metafield.value
+            end
+            variant.metafields_cached.each do |metafield|
+              item[column_name_for_metafield(metafield)] = metafield.value
+            end
           when 'product'
             if(m = key.match(/^option(\d+)_name$/))
-              item_key = key
               option = variant.product.options[m[1].to_i]
               item[key] = option.nil? ? nil : option.name
             else
-              item_key = variant.attributes.keys.include?(key) ? item_column : key
-              item[item_key] = variant.product.attributes[key]
+              item[key] = variant.product.attributes[key]
             end
           when 'variant'
-            item_key = variant.product.attributes.keys.include?(key) ? item_column : key
-            item[item_key] = variant.attributes[key]
+            item[key] = variant.attributes[key]
           end
         end
       end
     end
 
+    def column_name_for_metafield(metafield)
+      "#{metafield.namespace}:#{metafield.key}"
+    end
     def construct_aggregate_columns!
       product_types_set = Set.new
       sku_set = Set.new
@@ -302,9 +309,11 @@ module Carriers
         'product.option1_name',
         'product.option2_name',
         'product.option3_name',
+        'product.metafields',
         'variant.option1',
         'variant.option2',
-        'variant.option3'
+        'variant.option3',
+        'variant.metafields'
       ]
     end
 

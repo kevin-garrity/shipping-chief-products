@@ -26,12 +26,18 @@
 # Lifemap
 ## Deploy
 
-* finish writing some acceptance tests
-  * shared example correct rates for
-  * get product cache stub from lifemap
-    * create credentials
-    * load in shest
-    * delete credentials
-* setup heroku app
-* push
-* test
+- [x] finish writing some acceptance tests
+  - [x]  shared example correct rates for
+  - [x]  get product cache stub from lifemap
+    - [x]  create credentials
+    - [x]  load in shest
+    - [ ]  delete credentials
+- [x]  setup heroku app
+- [x]  push
+- [ ]  test
+
+
+# add metafield support
+- [ ] automatically add variant & product metafields with namespace "wby.*" to item hash
+  - [ ] name the keys "wby.ship.lifemap:key"
+  
