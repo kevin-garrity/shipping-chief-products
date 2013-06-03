@@ -6,6 +6,7 @@ clients:
     carriers:
       - :aus_post
       - :fabusa
+      - :lifemap_science      
   red-pepper.myshopify.com:
     access: 
       all_except: []
