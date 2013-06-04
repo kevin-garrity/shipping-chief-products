@@ -7,6 +7,7 @@ clients:
       - :aus_post
       - :fabusa
       - :lifemap_science      
+    service_host: lifemapsc.herokuapp.com
   red-pepper.myshopify.com:
     access: 
       all_except: []
