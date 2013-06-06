@@ -147,6 +147,9 @@ module Carriers
       results = [decision_order]
         decisions['order'].each do |decision|
         new_results = []
+        Rails.logger.info '####### decision is #########'
+        Rails.logger.info decision.to_s
+        
         results.each do |intermediate_result|
           
           Rails.logger.info '####### transform_order_decisions #########'
