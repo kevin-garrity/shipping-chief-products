@@ -41,11 +41,12 @@ gem 'rudelo'
 gem 'memcachier'
 gem 'kgio' # improves performance of dalli
 gem 'dalli' # memcached client
-
+gem 'shydra'
 gem 'oj' # fast json parser, but mainly to make multi_json stfu
 
 group :development do
-  gem 'shopifydev', :git => "git://github.com/variousauthors/shopifydev.git", :branch => "GLI_commandline_suite"
+  gem 'shopifydev'
+  # gem 'shopifydev', path: "/Users/lasto/clients/webify/shopifydev"
   gem "css_canon", :git => "git://github.com/lastobelus/css_canon"
   gem "hpricot", ">= 0.8.6"
   gem "ruby_parser", ">= 2.3.1"
@@ -67,3 +68,5 @@ group :test do
   gem "factory_girl_rails", ">= 4.1.0"
   gem 'simplecov', require: false
 end
+
+
