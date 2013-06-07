@@ -42,7 +42,8 @@ clients:
     access: 
       all_except: []
     menus: []
-    service_host: shipping-lifemap-bioreagents.herokuapp.com
     carriers:
     - :debug
     - :lifemap_science
+    service_host: shipping-lifemap-bioreagents.herokuapp.com
+    
