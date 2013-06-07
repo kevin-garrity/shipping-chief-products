@@ -6,6 +6,8 @@ clients:
     carriers:
       - :aus_post
       - :fabusa
+      - :lifemap_science      
+    service_host: shipping-lifemap-bioreagents.herokuapp.com
   red-pepper.myshopify.com:
     access: 
       all_except: []

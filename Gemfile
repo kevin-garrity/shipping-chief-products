@@ -1,10 +1,13 @@
 source 'https://rubygems.org'
+ruby "1.9.3"
+
 gem 'rails', '>= 3.2.13'
 group :assets do
     gem 'sass-rails',   '~> 3.2.3'
       gem 'coffee-rails', '~> 3.2.1'
         gem 'uglifier', '>= 1.0.3'
 end
+
 gem 'jquery-rails'
 gem "rails_apps_composer", :git => "git://github.com/lastobelus/rails_apps_composer.git", :branch => "devcloudcoder"
 gem "thin", ">= 1.5.0"
@@ -35,6 +38,7 @@ gem "rack-cors", :require => 'rack/cors'
 gem 'rufus-decision', :git => 'https://github.com/jmettraux/rufus-decision.git'
 gem 'rudelo'
 
+gem 'memcachier'
 gem 'kgio' # improves performance of dalli
 gem 'dalli' # memcached client
 

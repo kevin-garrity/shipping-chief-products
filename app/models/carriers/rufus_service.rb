@@ -142,14 +142,20 @@ module Carriers
 
     def transform_order_decisions
       Rails.logger.info("transform_order_decisions:")
-      # puts '####### transform_order_decisions #########'
-      # puts "---decision_order:"
-      # pp decision_order
+
       results = nil
       results = [decision_order]
         decisions['order'].each do |decision|
         new_results = []
+        Rails.logger.info '####### decision is #########'
+        Rails.logger.info decision.inspect
+        
         results.each do |intermediate_result|
+          
+          Rails.logger.info '####### transform_order_decisions #########'
+          Rails.logger.info "---decision_order:"
+          Rails.logger.info intermediate_result.to_s
+                    
           # ppl decision
           transformed = decision.transform!(intermediate_result)
           Rails.logger.info("after transforming")
@@ -172,7 +178,6 @@ module Carriers
     end
 
     def construct_item_columns!
-      # ProductCache.instance.dirty!
       decision_items.each do |item|
         Rails.logger.info("looking up #{item.inspect}")
         variant = ProductCache.instance[item]
