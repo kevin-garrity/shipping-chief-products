@@ -46,4 +46,12 @@ clients:
     - :debug
     - :lifemap_science
     service_host: shipping-lifemap-bioreagents.herokuapp.com
-    
+  bioreagents.lifemapsc.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :debug
+    - :lifemap_science
+    service_host: shipping-lifemap-bioreagents.herokuapp.com
+      
