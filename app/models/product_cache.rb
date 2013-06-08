@@ -213,6 +213,17 @@ class ProductCache
   end
 
   def resources_for_rates_query(rates_query, time_allowed)
+    items = rates_query['items'].dup
+
+    items.each do |item|
+      item['prod_req'] = Shydra::Request.new(
+        :product, id: item['product_id'],fields: product_fields)
+      item['prod_meta_req'] = Shydra::Request.new(
+        :metafields
+    end
+  end
+
+  def x_resources_for_rates_query(rates_query, time_allowed)
     raise "add memcached-based cache for typhoeus. make ttl be 1 day + rand(1 hour). remember to delete the HTTP_X_SHOPIFY_SHOP_API_CALL_LIMIT header!"
     raise "need to use token: X-Shopify-Access-Token -- just ask for ShopifyAPI::Base.headers"
     rates['items'].each do |item|
@@ -246,6 +257,3 @@ class ProductCache
 
 
 end
-
-
-c

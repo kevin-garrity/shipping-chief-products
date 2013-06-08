@@ -24,6 +24,29 @@ GIT
       rufus-dollar
       rufus-treechecker
 
+PATH
+  remote: /Users/lasto/clients/lasto/shydra
+  specs:
+    shydra (0.0.1)
+      oj
+      shopify_api (>= 3.0.3)
+      typhoeus (>= 0.6.3)
+
+PATH
+  remote: /Users/lasto/clients/webify/shopifydev
+  specs:
+    shopifydev (0.0.6)
+      activesupport
+      dalli
+      gli (>= 2.5.2)
+      oj
+      pry
+      railties
+      ruby-filemagic (>= 0.4.2)
+      shopify_api (>= 3.0.0)
+      shydra
+      term-ansicolor
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -294,21 +317,6 @@ GEM
       omniauth-shopify-oauth2 (= 1.0.0)
       rails (~> 3.1)
       shopify_api (~> 3.0.0)
-    shopifydev (0.0.2)
-      activesupport
-      dalli
-      gli (>= 2.5.2)
-      oj
-      pry
-      railties
-      ruby-filemagic (>= 0.4.2)
-      shopify_api (>= 3.0.0)
-      shydra
-      term-ansicolor
-    shydra (0.0.1)
-      oj
-      shopify_api (>= 3.0.3)
-      typhoeus (>= 0.6.3)
     simple_form (2.1.0)
       actionpack (~> 3.0)
       activemodel (~> 3.0)
@@ -396,8 +404,8 @@ DEPENDENCIES
   rufus-decision!
   sass-rails (~> 3.2.3)
   shopify_app
-  shopifydev
-  shydra
+  shopifydev!
+  shydra!
   simple_form (>= 2.0.4)
   simplecov
   thin (>= 1.5.0)
