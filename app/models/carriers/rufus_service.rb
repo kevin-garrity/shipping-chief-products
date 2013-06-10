@@ -207,9 +207,11 @@ module Carriers
       end
     end
 
+    # wby:shipping:refrigeration 
     def column_name_for_metafield(metafield)
       "#{metafield.namespace}:#{metafield.key}"
     end
+
     def construct_aggregate_columns!
       product_types_set = Set.new
       sku_set = Set.new

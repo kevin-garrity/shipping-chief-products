@@ -27,7 +27,7 @@ GIT
 PATH
   remote: /Users/lasto/clients/lasto/shydra
   specs:
-    shydra (0.0.1)
+    shydra (0.1.1)
       oj
       shopify_api (>= 3.0.3)
       typhoeus (>= 0.6.3)
@@ -35,7 +35,7 @@ PATH
 PATH
   remote: /Users/lasto/clients/webify/shopifydev
   specs:
-    shopifydev (0.0.6)
+    shopifydev (0.0.7)
       activesupport
       dalli
       gli (>= 2.5.2)
