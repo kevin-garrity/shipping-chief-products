@@ -139,8 +139,10 @@ module Carriers
             item = item.is_a?(Hash) ? item.stringify_keys : {'quantity' => item}
           end
         end
-        variant = ProductCache.instance.variants[name]
-        raise "couldn't find item matching #{item.inspect}" if variant.nil?
+        # variant = ProductCache.instance.variants[name]
+        variant = ProductCache.instance.variants.detect{|k, v| name == [v.product.title, v.title].join(' - ')}
+        raise "couldn't find item matching #{name.inspect}" if variant.empty?
+        variant = variant.last
 
         out.merge!(
           "name"=> name,

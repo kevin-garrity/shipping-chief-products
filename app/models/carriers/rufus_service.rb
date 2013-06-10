@@ -33,6 +33,14 @@ module Carriers
     # def default_options
     # end
 
+    def variant_metafields
+      []
+    end
+
+    def product_metafields
+      []
+    end
+
     def fetch_rates
       rates = nil
       withShopify do

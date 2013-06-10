@@ -23,18 +23,42 @@ class ProductCacheStub
     File.open(File.join(fixtures_dir, fixture), 'w'){|f| f.write(json)}
   end
 
-  def convert!
+  def convert!(save=false)
     h = variants
     new_hash = {}
     h.each do |k, v|
       v.instance_variable_set(:@metafields_cached, [])
       v.product.instance_variable_set(:@metafields_cached, [])
+      yield v if block_given?
       new_hash[v.id.to_s] = v
     end
     @variants = new_hash
     json = Oj.dump(new_hash, object:true, circular:true)
-    File.open(File.join(fixtures_dir, fixture), 'w'){|f| f.write(json)}
+    if save
+      File.open(File.join(fixtures_dir, fixture), 'w'){|f| f.write(json)}
+    end
+    json
   end
+
+
+  def convert_lifemap!(save=false)
+    convert!(save) do |v|
+      if v.product.vendor == 'ProSpec'
+        mefi = ::ShopifyAPI::Metafield.new({
+          namespace: 'wby.ship.lifemap', 
+          key: 'refrigeration',
+          value_type: 'string'
+        })
+        if (v.product.id % 10) < 3
+          mefi.value = 'ice-packs'
+        else
+          mefi.value = 'lyophilized'
+        end
+        v.metafields_cached << mefi
+      end
+    end
+  end
+
 end
 
 

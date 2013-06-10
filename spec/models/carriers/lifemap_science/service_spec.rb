@@ -23,6 +23,14 @@ module Products
       "BMP2 Human Recombinant Protein - 1mg"
     end
 
+    def freezedried_protein
+      "Activin-A Human Recombinant Protein - 2µg"
+    end
+
+    def protein_needing_refrigeration
+      "beta-NGF Human Recombinant Protein - 5µg"
+    end
+
   end
 end
 
@@ -87,11 +95,11 @@ describe Carriers::LifemapScience::Service do
       ],
       Destinations.US.zone1, { "Overnight" => 3700 }
 
-      it_produces "correct rates",
-      [
-        Products.cells => 20,
-      ],
-      Destinations.US.zone1, { "Overnight" => 3700 }
+      # it_produces "correct rates",
+      # [
+      #   Products.cells => 20,
+      # ],
+      # Destinations.US.zone1, { "Overnight" => 3700 }
 
     end
 

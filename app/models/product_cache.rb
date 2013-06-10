@@ -10,68 +10,6 @@ class ShopifyAPI::Base
   end
 end
 
-class ThrottledHydra < Typhoeus::Hydra
-  CREDIT_LIMIT_HEADER_PARAM = 'HTTP_X_SHOPIFY_SHOP_API_CALL_LIMIT'
-  # use Typhoeus.before to update the credit left. If credit left is nil, the request should be run
-
-  # don't think before works
-  # add an on complete to each request that updates credit. if request fails,
-  # because of api limit, it calls
-  # pause on the hydra and requeues itself
-  # override dequeue to do nothing if hydra paused
-  # when one or more requests fail bc limit, run will finish with other 
-  # requests still in queue
-  # then can sleep a while and call run again.
-  # keep track of total time and raise if it runs out
-
-  def pause!
-    @paused = true
-  end
-
-  def paused?
-    @paused
-  end
-
-  def run
-    @paused = false
-    super
-  end
-
-  def dequeue
-    return if paused?
-    super
-  end
-
-  def queue(request)
-    request.on_complete  do |response|
-      if response.code == 429 
-        hydra.pause!
-        hydra.queue self
-      elsif(credit_param = response.headers[CREDIT_LIMIT_HEADER_PARAM])
-        credit_used, credit_limit = credit_param.split('/')
-        if credit_used >= (credit_limit - 1 - hydra.queued_requests.length)
-          hydra.pause!
-        end
-      end
-    end
-    super(request)
-  end
-
-  def run(time_allowed)
-    start = Time.now
-    super
-    return true if queued_requests.empty?    
-    time_left = time_allowed - (Time.now - start)
-
-    if time_left > 0      
-      sleep time_left
-      super
-    end
-
-    return queued_requests.empty?
-  end
-end
-
 
 class ProductCache
   include Singleton
@@ -136,13 +74,13 @@ class ProductCache
     end
   end
 
-  def[](shopify_rates_params_item)
+  def [](shopify_rates_params_item)
     variant_id = shopify_rates_params_item['variant_id'].to_s
     product_id = shopify_rates_params_item['product_id'].to_s
     variant = self.variants[variant_id]
     if variant.nil?
       puts "   couldn't find #{variant_id} in cache(#{self.variants.length})"
-
+      pp self.variants.keys
       variant = throttle{ ShopifyAPI::Variant.find(variant_id) }
       throttle{ variant.metafields_cached }
       product = throttle{ ShopifyAPI::Product.find(product_id) }
@@ -203,14 +141,7 @@ class ProductCache
     end
   end
 
-  def hydra
-    @hydra ||= ThrottledHydra.new
-  end
 
-
-  def request_for_item(item)
-
-  end
 
   def resources_for_rates_query(rates_query, time_allowed)
     items = rates_query['items'].dup
@@ -231,36 +162,7 @@ class ProductCache
     Set.new(items.map{|i| i[:variant_id]})
   end
   
-  def x_resources_for_rates_query(rates_query, time_allowed)
-    raise "add memcached-based cache for typhoeus. make ttl be 1 day + rand(1 hour). remember to delete the HTTP_X_SHOPIFY_SHOP_API_CALL_LIMIT header!"
-    raise "need to use token: X-Shopify-Access-Token -- just ask for ShopifyAPI::Base.headers"
-    rates['items'].each do |item|
-      item['prod_req'] = Typhoeus::Request.new(
-        Base.site.merge("products/#{item['product_id']}.json").to_s, 
-        params: {fields: product_fields},
-        headers: ShopifyAPI::Base.headers)
-      item['prod_meta_req'] = Typhoeus::Request.new(
-        Base.site.merge("products/#{item['product_id']}/metafields.json").to_s, 
-        params: {fields: metafield_fields},
-        headers: ShopifyAPI::Base.headers)
-      item['var_meta_req'] = Typhoeus::Request.new(
-        Base.site.merge("variants/#{item['variant_id']}/metafields.json").to_s, 
-        params: {fields: metafield_fields},
-        headers: ShopifyAPI::Base.headers)
-      hydra.queue item['prod_req']
-      hydra.queue item['prod_meta_req']
-      hydra.queue item['var_meta_req']
-    end
-    finished = hydra.run
-    if finished
-      rates['items'].each do |item|
-        item['product'] = Oj.parse(item['prod_req'].response.response_body)
-        item['product']['metafields'] = Oj.parse(item['prod_meta_req'].response.response_body)
-        variant = item['product'].detect{ |v| v['id'].to_i == item['variant_id'].to_i }   
-        variant['metafields'] = Oj.parse(item['var_meta_req'].response.response_body)
-      end
-    end
-    return finished
+  def variants_for_order(items)
   end
 
 

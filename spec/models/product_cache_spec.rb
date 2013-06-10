@@ -2,14 +2,6 @@ require 'spec_helper'
 require 'oj'
 require 'set'
 describe ProductCache do
-  subject{ ProductCache.instance }
-  describe '#resources_for_rates_query' do
-    it "adds a product request for each product"    
-    it "adds a product metafields request for each product"
-    it "adds a metafields request for each variant"    
-  end
-
-  context "rates queries" do
     let(:rates_query){ {
       origin: Destinations.US,
       destination:  Destinations.US,
@@ -22,6 +14,18 @@ describe ProductCache do
         {product_id: 111, variant_id: 41112}
       ]}
     }
+
+  subject{ ProductCache.instance }
+  
+  describe '#resources_for_rates_query' do
+    it "adds a product request for each product"    
+    it "adds a product metafields request for each product"
+    it "adds a metafields request for each variant"    
+  end
+
+
+
+  context "rates queries" do
     describe '#product_ids_in_order' do
       it 'returns the set of product ids' do
         pp rates_query[:items]
