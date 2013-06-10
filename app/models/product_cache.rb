@@ -6,7 +6,15 @@ require 'dalli'
 
 class ShopifyAPI::Base
   def metafields_cached
-    @metafields_cached ||= metafields
+    @metafields_cached ||= metafields(namespace: 'wby.ship').map(&:attributes)
+  end
+  def metafields_cached=(metafields)
+  end
+end
+
+module ::ShopifyAPI::Metafields
+  def metafields(opts={})
+    ::ShopifyAPI::Metafield.find(:all, :params => {:resource => self.class.collection_name, :resource_id => id}.merge(opts))
   end
 end
 
@@ -27,8 +35,7 @@ class ProductCache
 
 
   def domain
-    @domain ||= ShopifyAPI::Shop.current.myshopify_domain
-    @domain
+    ShopifyAPI::Base.site.hostname
   end
 
   def cache
@@ -49,7 +56,6 @@ class ProductCache
   end
 
   def variants
-    dirty?
     @variants ||= begin
       logger.debug "ProductCache#variants - checking cache for variants"
       @variants = cache.get(variants_key)
@@ -61,7 +67,6 @@ class ProductCache
   end
 
   def products
-    dirty?
     @products ||= begin
       logger.debug "ProductCache#products - checking cache for products"
       @products = cache.get(products_key)
@@ -81,13 +86,21 @@ class ProductCache
     if variant.nil?
       puts "   couldn't find #{variant_id} in cache(#{self.variants.length})"
       pp self.variants.keys
-      variant = throttle{ ShopifyAPI::Variant.find(variant_id) }
+      product = throttle(false){ ShopifyAPI::Product.find(product_id) }
+      variant = product.variants.detect{|v| v.id.to_s == variant_id}
+      variant ||= throttle{ ShopifyAPI::Variant.find(variant_id)}
       throttle{ variant.metafields_cached }
-      product = throttle{ ShopifyAPI::Product.find(product_id) }
-      variant.attributes[:product] = product
       throttle{ product.metafields_cached }
+      # product = product.attributes
+      product.attributes.delete(:variants)
+      # variant = variant.attributes
+      variant.product = product
       self.variants[variant_id] = variant
+      puts "updating cache with:"
+      pp @variants
       cache.set(variants_key, @variants)
+      puts "now cache:"
+      pp cache.get(variants_key)
     end
     variant
   end
@@ -110,8 +123,7 @@ class ProductCache
     end
   end
 
-  def throttle(&block)
-    presleep = true
+  def throttle(presleep=true, &block)
     begin
       if presleep && ShopifyAPI.credit_left < 10
         sleep(10 - ShopifyAPI.credit_left)
@@ -133,16 +145,6 @@ class ProductCache
     @domain = nil
   end
 
-  def dirty?
-    if @domain != ShopifyAPI::Shop.current.myshopify_domain
-      @domain = ShopifyAPI::Shop.current.myshopify_domain
-      @variants = nil
-      @products = nil
-    end
-  end
-
-
-
   def resources_for_rates_query(rates_query, time_allowed)
     items = rates_query['items'].dup
 
@@ -163,6 +165,8 @@ class ProductCache
   end
   
   def variants_for_order(items)
+    shydra = Shydra::Hydra.new
+    order_p = product_ids_in_order(items)
   end
 
 

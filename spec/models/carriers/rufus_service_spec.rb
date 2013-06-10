@@ -75,7 +75,6 @@ describe Carriers::RufusService do
     before do
       subject.stub(:item_columns).and_return([
         'product.product_type',
-        # 'product.vendor',
         'product.option1_name',
         'product.option2_name',
         'product.option3_name',
@@ -85,7 +84,6 @@ describe Carriers::RufusService do
         ])
       @expected_columns = Set.new([
         'product_type',
-        # 'vendor',
         'option1_name',
         'option2_name',
         'option3_name',
@@ -94,6 +92,8 @@ describe Carriers::RufusService do
         'option3'
       ])
     end
+
+
     it "adds the columns specified in item_columns" do
 
       subject.decision_items.each do |i|
@@ -159,6 +159,7 @@ describe Carriers::RufusService do
       expect(sample['option1_name']).to eq("Kraftiness")
       expect(sample['option2_name']).to eq("Zaniness")
       expect(sample['option3_name']).to eq(nil)
+      expect(sample['vendor_set']).to eq(Set["FAB", "LastObelus"])
     end
   end
 

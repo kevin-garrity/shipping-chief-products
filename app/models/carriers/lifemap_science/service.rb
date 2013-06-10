@@ -2,11 +2,11 @@ module Carriers
   module LifemapScience
     class Service < ::Carriers::RufusService
 
-      def variant_metafields
-        [
-          { namespace: 'wby.ship.lifemap', key: 'refrigeration' }
-        ]
-      end
+      # def variant_metafields
+      #   [
+      #     { namespace: 'wby.ship', key: 'refrigeration' }
+      #   ]
+      # end
 
       # def process_decision_order!
       #   pkg_qty = 0

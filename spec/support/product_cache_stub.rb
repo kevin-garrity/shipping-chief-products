@@ -1,4 +1,8 @@
 require 'oj'
+
+# TODO: this can go away after move the shopify api extensions out of product cache
+ProductCache.instance 
+
 class ProductCacheStub
   include ShippingHelpers
 
@@ -16,10 +20,18 @@ class ProductCacheStub
     @product_types ||= variants.values.map{|v| v.product.product_type}.uniq.sort
   end
 
-  def write_json
-    ProductCache.instance.prime!
-    h = ProductCache.instance.variants
+  def write_json(load_cache=false)
+    if load_cache
+      ProductCache.instance.prime!
+      h = ProductCache.instance.variants
+    else
+      h = @variants
+    end
     json = Oj.dump(h, object:true, circular:true)
+    save_json(json)
+  end
+
+  def save_json(json)
     File.open(File.join(fixtures_dir, fixture), 'w'){|f| f.write(json)}
   end
 
@@ -35,7 +47,7 @@ class ProductCacheStub
     @variants = new_hash
     json = Oj.dump(new_hash, object:true, circular:true)
     if save
-      File.open(File.join(fixtures_dir, fixture), 'w'){|f| f.write(json)}
+      save_json(json)
     end
     json
   end
