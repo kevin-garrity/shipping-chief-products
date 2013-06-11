@@ -10,7 +10,7 @@ class RatesController < ApplicationController
     Rails.logger.info("preference: #{preference.inspect}")
     return nothing unless params[:rate] && preference
 
-    # log_params
+    log_params
 
     service_class = carrier_service_class_for(preference.carrier, preference.client_config)
     service = service_class.new(preference, params[:rate])
