@@ -413,7 +413,7 @@ module Carriers
         decisions = {}
         ['order', 'item'].each do |decision_type|
           decisions[decision_type] =
-            Dir["#{decision_table_dir}/#{decision_type}/*.csv"].map do |path|
+            Dir["#{decision_table_dir}/#{decision_type}/*.csv"].sort.map do |path|
               fname = File.basename(path, '.csv')
               options = {}
               if fname =~ /eval$/
