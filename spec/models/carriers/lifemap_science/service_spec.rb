@@ -68,8 +68,11 @@ shared_examples_for "correct rates" do |items, destination, expected_services|
     puts "------------------------------------------------------------------"
     expect(result.length).to eq(expected_services.length)
     expected_services.each do |name, rate|
+      service_names = subject.map{|s| s['service_name']}
+      expect(service_names).to include(name)
       returned_service = subject.detect{|s| s['service_name'] == name}
-      expect(returned_service).to_not be_nil
+
+      # expect(returned_service).to_not be_nil
       expect(returned_service['total_price']).to eq(rate)
     end
   end
@@ -204,6 +207,18 @@ describe Carriers::LifemapScience::Service do
 
     context "doesn't require refrigeration" do
     end
+  end
+
+  context "Combo order" do
+    it_produces "correct rates",
+    [
+      { Products.cheap_liquid_protein => 6 },
+      { Products.differentiation_kit => 1 } 
+    ],
+    Destinations.US.zone1, { 
+      "Overnight,  FedEx International Express Styrofoam Box" => 12700,
+      "Overnight,  FedEx NextDay Styrofoam Box" => 14200 }
+
   end
 end
 

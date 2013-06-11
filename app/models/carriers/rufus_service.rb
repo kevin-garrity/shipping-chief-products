@@ -130,7 +130,9 @@ module Carriers
           case column_type.to_sym
           when :set
             value ||= Set.empty
+            value = Set.from_rudelo(value) unless value.is_a?(Set)
             value = value.union( Set.from_rudelo(new_value) )
+            value = value.to_rudelo
           when :sum
             value ||= 0
             num = new_value.to_f_or_i_or_s
@@ -146,6 +148,7 @@ module Carriers
         end
       end
       services
+      services
     end
 
     def transform_order_decisions
@@ -153,22 +156,30 @@ module Carriers
 
       results = nil
       results = [decision_order]
-        decisions['order'].each do |decision|
+      ix = 1
+      decisions['order'].each do |decision|
+        puts "\n\n\n-----------> transforming with order decision #{ix}" 
+        $rufus_verbose = (ix == 3)
+        ix +=1
         new_results = []
         Rails.logger.info '####### decision is #########'
         Rails.logger.info decision.inspect
         
         results.each do |intermediate_result|
-          
+
           Rails.logger.info '####### transform_order_decisions #########'
           Rails.logger.info "---decision_order:"
           Rails.logger.info intermediate_result.to_s
-                    
+
           # ppl decision
           transformed = decision.transform!(intermediate_result)
           Rails.logger.info("after transforming")
           # ppl transformed
+          puts "\n+++++++++++++++++++++++   after transforming +++++++++++++++++++++++++++++++++++++++++"
+          pp transformed
           new_results += transformed.expand
+          puts "\n+++++++++++++++++++++++   after expanding +++++++++++++++++++++++++++++++++++++++++"
+          pp new_results
         end
         results = new_results
       end
@@ -197,6 +208,8 @@ module Carriers
           # item_column = [entity, key.gsub(entity,'')].join('_')
 
           case entity
+          when 'total_item_price'
+            item['total_item_price'] = item['quantity'].to_f * item['price'].to_f
           when 'metafields'
             variant.product.metafields_cached.each do |metafield|
               @metafield_columns << column_name_for_metafield(metafield)
@@ -342,7 +355,8 @@ module Carriers
         'variant.option1',
         'variant.option2',
         'variant.option3',
-        'metafields'
+        'metafields',
+        'total_item_price'
       ]
     end
 
@@ -390,7 +404,7 @@ module Carriers
 
     def fee_price_columns(out)
        out = out.first if out.is_a?(Array)
-       out.keys.select{|k| k =~ /fee$/i }
+       out.keys.select{|k| k =~ / fee$/i }
     end
 
     def decisions
@@ -399,8 +413,13 @@ module Carriers
         ['order', 'item'].each do |decision_type|
           decisions[decision_type] =
             Dir["#{decision_table_dir}/#{decision_type}/*.csv"].map do |path|
+              fname = File.basename(path, '.csv')
+              options = {}
+              if fname =~ /eval$/
+                options = {ruby_eval: true}
+              end
               # puts "loading #{path}"
-              table = Rufus::Decision::Table.new(path)
+              table = Rufus::Decision::Table.new(path, options)
               table.matchers.unshift(Rudelo::Matchers::SetLogic.new)
               # table.matchers.first.force = Rails.env.development? || Rails.env.test?
               table

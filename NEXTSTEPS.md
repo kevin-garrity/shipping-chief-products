@@ -42,3 +42,7 @@
   - [ ] name the keys "wby.ship.lifemap:key"
 - [ ] convert lifemap product cache stub
   
+
+
+# Combo Order
+- add item_price (quantity * price)
