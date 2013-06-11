@@ -158,28 +158,28 @@ module Carriers
       results = [decision_order]
       ix = 1
       decisions['order'].each do |decision|
-        puts "\n\n\n-----------> transforming with order decision #{ix}" 
+        Rails.logger.debug "\n\n\n-----------> transforming with order decision #{ix}" 
         $rufus_verbose = (ix == 3)
         ix +=1
         new_results = []
-        Rails.logger.info '####### decision is #########'
-        Rails.logger.info decision.inspect
+        Rails.logger.debug '####### decision is #########'
+        Rails.logger.debug decision.inspect
         
         results.each do |intermediate_result|
-
-          Rails.logger.info '####### transform_order_decisions #########'
-          Rails.logger.info "---decision_order:"
-          Rails.logger.info intermediate_result.to_s
+          Rails.logger.debug "----------------------------> IN"
+          Rails.logger.debug intermediate_result.inspect
 
           # ppl decision
           transformed = decision.transform!(intermediate_result)
-          Rails.logger.info("after transforming")
+          Rails.logger.debug "----------------------------> OUT"
           # ppl transformed
-          puts "\n+++++++++++++++++++++++   after transforming +++++++++++++++++++++++++++++++++++++++++"
+          # puts "\n+++++++++++++++++++++++   after transforming +++++++++++++++++++++++++++++++++++++++++"
 #          pp transformed
           new_results += transformed.expand
-          puts "\n+++++++++++++++++++++++   after expanding +++++++++++++++++++++++++++++++++++++++++"
+          # puts "\n+++++++++++++++++++++++   after expanding +++++++++++++++++++++++++++++++++++++++++"
  #         pp new_results
+          Rails.logger.debug "after expanding new_results has #{new_results.length} entries"
+
         end
         results = new_results
       end
