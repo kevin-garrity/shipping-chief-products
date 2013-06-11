@@ -241,18 +241,15 @@ module Carriers
             column_name = "#{item['product_type']} quantity"
             product_types_quantities[column_name] ||= 0
             product_types_quantities[column_name] += item['quantity']
-          when :product_types_set
-            product_types_set << item['product_type']
-            item['product_types_set'] = product_types_set
           when :total_item_quantity
             total_item_quantity ||= 0
             total_item_quantity += item['quantity']
           when :sku_set
             sku_set << item['sku']
-            item['sku_set'] = sku_set
           when :vendor_set
             vendor_set << item['vendor']
-            item['vendor_set'] = vendor_set
+          when :product_types_set
+            product_types_set << item['product_type']
           when :total_order_price
             total_order_price ||= 0
             total_order_price += item['quantity'].to_f * item['price'].to_f
@@ -269,9 +266,12 @@ module Carriers
         item.merge!(product_types_quantities) if product_types_quantities
         item['total_quantity'] = total_item_quantity if total_item_quantity
         item['total_order_price'] = total_order_price if total_order_price
-        metafields_sets.each { |column_name, set| item[column_name] = set }
+        metafields_sets.each { |column_name, set| item[column_name] = set.to_rudelo } if aggregate_columns.include?(:metafields_sets)
+        item['sku_set'] = sku_set.to_rudelo if aggregate_columns.include?(:sku_set)
+        item['product_types_set'] = product_types_set.to_rudelo if aggregate_columns.include?(:product_types_set)
+        item['vendor_set'] = vendor_set.to_rudelo if aggregate_columns.include?(:vendor_set)
       end
-      metafields_sets.each { |column_name, set| decision_order[column_name] = set }
+      metafields_sets.each { |column_name, set| decision_order[column_name] = set.to_rudelo }
       decision_order['total_quantity'] = total_item_quantity if total_item_quantity
       decision_order['total_order_price'] = total_order_price if total_order_price
       decision_order.merge!(product_types_quantities) if product_types_quantities

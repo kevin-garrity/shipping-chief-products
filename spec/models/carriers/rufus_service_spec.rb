@@ -163,15 +163,15 @@ describe Carriers::RufusService do
       expect(sample['total_quantity']).to eq(7)
       expect(sample['Debug-1 quantity']).to eq(3)
       expect(sample['Cube quantity']).to eq(4)
-      expect(sample['product_types_set']).to eq(Set['Cube', 'Debug-1'])
-      expect(sample['sku_set']).to eq(Set["BOX/CUB/004WP", "BOX/CUB/001K", "samesku"])
+      expect(Set.from_rudelo(sample['product_types_set'])).to eq(Set['Cube', 'Debug-1'])
+      expect(Set.from_rudelo(sample['sku_set'])).to eq(Set["BOX/CUB/004WP", "BOX/CUB/001K", "samesku"])
       expect(sample['option1_name']).to eq("Kraftiness")
       expect(sample['option2_name']).to eq("Zaniness")
       expect(sample['option3_name']).to eq(nil)
-      expect(sample['vendor_set']).to eq(Set["FAB", "LastObelus"])
+      expect(Set.from_rudelo(sample['vendor_set'])).to eq(Set["FAB", "LastObelus"])
 
-      expect(sample['wby.ship:test_product:set']).to eq(Set["Cube Gift Box metafield on product","RatesDebug metafield on product"])
-      expect(sample['wby.ship:test_variant:set']).to eq(Set[
+      expect(Set.from_rudelo(sample['wby.ship:test_product:set'])).to eq(Set["Cube Gift Box metafield on product","RatesDebug metafield on product"])
+      expect(Set.from_rudelo(sample['wby.ship:test_variant:set'])).to eq(Set[
         "20 Pearl White Gift Boxes metafield on variant",
         "20 Natural Brown Kraft Gift Boxes metafield on variant",
         "High / High / High metafield on variant",
