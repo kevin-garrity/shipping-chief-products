@@ -176,10 +176,10 @@ module Carriers
           Rails.logger.info("after transforming")
           # ppl transformed
           puts "\n+++++++++++++++++++++++   after transforming +++++++++++++++++++++++++++++++++++++++++"
-          pp transformed
+#          pp transformed
           new_results += transformed.expand
           puts "\n+++++++++++++++++++++++   after expanding +++++++++++++++++++++++++++++++++++++++++"
-          pp new_results
+ #         pp new_results
         end
         results = new_results
       end
