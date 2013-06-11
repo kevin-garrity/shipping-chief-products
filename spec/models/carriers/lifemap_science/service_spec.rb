@@ -157,6 +157,21 @@ describe Carriers::LifemapScience::Service do
 
   end
 
+  context "ProSpec and BioTime products" do
+    context "cells and liquid protein" do
+      it_produces "correct rates",
+      [
+        {Products.cells => 2},
+        {Products.cheap_protein => 1}
+      ],
+      Destinations.US.zone1, { 
+        "BioTime:Overnight: ProSpec:FedEx International Express Styrofoam Box" => (2200+2000+7000),
+        "BioTime:Overnight: ProSpec:FedEx NextDay Styrofoam Box" => (2200+2000+8500)
+      }
+    end
+  end
+
+    
   context "ProSpec products" do
     context "requires refrigeration" do
       context "less than 7 and less than 2500.00" do
