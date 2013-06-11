@@ -172,6 +172,7 @@ module Carriers
           # ppl decision
           transformed = decision.transform!(intermediate_result)
           Rails.logger.debug "----------------------------> OUT"
+          Rails.logger.debug transformed.inspect
           # ppl transformed
           # puts "\n+++++++++++++++++++++++   after transforming +++++++++++++++++++++++++++++++++++++++++"
 #          pp transformed
