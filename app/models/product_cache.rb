@@ -6,7 +6,7 @@ require 'dalli'
 
 class ShopifyAPI::Base
   def metafields_cached
-    @metafields_cached ||= metafields(namespace: 'wby.ship').map(&:attributes)
+    @metafields_cached ||= metafields(namespace: 'wby.ship')
   end
   def metafields_cached=(metafields)
   end
