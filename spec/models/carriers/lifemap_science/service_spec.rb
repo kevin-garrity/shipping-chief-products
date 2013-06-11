@@ -15,11 +15,13 @@ module Products
       "PureStem Mural Differentiation Kit EM-2005 - Default Title"
     end
 
-    def cheap_protein
+    def cheap_liquid_protein
+      # freezedried
       "FAS Human Recombinant Protein - 5µg"
     end
 
-    def expensive_protein
+    def expensive_liquid_protein
+      # 
       "BMP2 Human Recombinant Protein - 1mg"
     end
 
@@ -71,8 +73,6 @@ shared_examples_for "correct rates" do |items, destination, expected_services|
       expect(returned_service['total_price']).to eq(rate)
     end
   end
-
-
 end
 
 
@@ -155,10 +155,10 @@ describe Carriers::LifemapScience::Service do
   end
 
   context "ProSpec products" do
-    context "liquid protein" do
+    context "requires refrigeration" do
       context "less than 7 and less than 2500.00" do
         it_produces "correct rates",
-        [Products.cheap_protein => 6],
+        [Products.cheap_liquid_protein => 6],
         Destinations.US, { 
           "FedEx International Express Styrofoam Box" => 9000,
           "FedEx NextDay Styrofoam Box" => 10500 }
@@ -166,42 +166,44 @@ describe Carriers::LifemapScience::Service do
 
       context "more than 6" do
         it_produces "correct rates",
-        [Products.cheap_protein => 7],
+        [Products.cheap_liquid_protein => 7],
         Destinations.US, { "FedEx International Express Styrofoam Box" => 14000 }
       end
 
       context "order more than 2500" do
         it_produces "correct rates",
-        [Products.expensive_protein => 1],
+        [Products.expensive_liquid_protein => 1],
         Destinations.US, { "FedEx International Express Styrofoam Box" => 14000 }
       end
 
       context "zone 2" do
         it_produces "correct rates",
-        [Products.cheap_protein => 6],
+        [Products.cheap_liquid_protein => 6],
         Destinations.CA, { "FedEx International Express Styrofoam Box" => 10000 }
       end
 
       context "zone 3" do
         it_produces "correct rates",
-        [Products.cheap_protein => 6],
+        [Products.cheap_liquid_protein => 6],
         Destinations.AU, { "FedEx International Express Styrofoam Box" => 19500 }
       end
 
       context "zone 4" do
         it_produces "correct rates",
-        [Products.cheap_protein => 6],
+        [Products.cheap_liquid_protein => 6],
         Destinations.PL, { "FedEx International Express Styrofoam Box" => 19500 }
       end
 
       context "zone 5" do
         it_produces "correct rates",
-        [Products.cheap_protein => 6],
+        [Products.cheap_liquid_protein => 6],
         Destinations.ZA, { "FedEx International Express Styrofoam Box" => 27000 }
       end
 
     end
 
+    context "doesn't require refrigeration" do
+    end
   end
 end
 

@@ -54,6 +54,10 @@ class ProductCacheStub
   end
 
 
+  def variant_for_item_name(name)
+    variants.detect{|k,v| name == [v.product.title, v.title].join(' - ')}
+  end
+
   def convert_lifemap!(save=false)
     convert!(save) do |v|
       if v.product.vendor == 'ProSpec'

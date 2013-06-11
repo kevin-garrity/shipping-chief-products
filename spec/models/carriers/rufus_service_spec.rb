@@ -126,7 +126,6 @@ describe Carriers::RufusService do
     it "adds metafield columns" do
       subject.construct_item_columns!
       sample = subject.decision_items.detect{|i| i['name'] == "RatesDebug - Low / Medium / Extreme"}
-      pp sample
       expect(sample['wby.ship:test_variant']).to eq('Low / Medium / Extreme metafield on variant')
       expect(sample['wby.ship:test_product']).to eq('RatesDebug metafield on product')
     end
@@ -170,6 +169,14 @@ describe Carriers::RufusService do
       expect(sample['option2_name']).to eq("Zaniness")
       expect(sample['option3_name']).to eq(nil)
       expect(sample['vendor_set']).to eq(Set["FAB", "LastObelus"])
+
+      expect(sample['wby.ship:test_product:set']).to eq(Set["Cube Gift Box metafield on product","RatesDebug metafield on product"])
+      expect(sample['wby.ship:test_variant:set']).to eq(Set[
+        "20 Pearl White Gift Boxes metafield on variant",
+        "20 Natural Brown Kraft Gift Boxes metafield on variant",
+        "High / High / High metafield on variant",
+        "Low / Medium / Extreme metafield on variant"])
+
     end
   end
 
@@ -205,7 +212,6 @@ describe Carriers::RufusService do
 
   describe '#transform_item_decisions' do
     before do
-      puts "\n------------------\n"
       @item1 = {"in-1" => "old-1-1", 'in-2' =>'old-1-2'}
       @item2 = {"in-1" => "old-2", 'in-2' =>'old-2-2'}
       subject.stub(:decision_items).and_return([@item1, @item2])
@@ -425,7 +431,6 @@ describe Carriers::RufusService do
     end
     # these specs are more like acceptance tests than units
     it "uses a shopify session" do
-      puts "the spec"
       subject.stub(:withShopify).and_raise("ok")
       expect{subject.fetch_rates}.to raise_error("ok")
     end

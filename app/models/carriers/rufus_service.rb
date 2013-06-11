@@ -185,7 +185,9 @@ module Carriers
       decision_table_root.join( *self.class.name.underscore.split('/')[0...-1])
     end
 
+
     def construct_item_columns!
+      @metafield_columns = Set.new
       decision_items.each do |item|
         Rails.logger.info("looking up #{item.inspect}")
         variant = ProductCache.instance[item]
@@ -194,13 +196,14 @@ module Carriers
           entity, key = item_column.split('.')
           # item_column = [entity, key.gsub(entity,'')].join('_')
 
-          puts "adding entity: #{entity.inspect} key: #{key.inspect}"
           case entity
           when 'metafields'
             variant.product.metafields_cached.each do |metafield|
+              @metafield_columns << column_name_for_metafield(metafield)
               item[column_name_for_metafield(metafield)] = metafield.value
             end
             variant.metafields_cached.each do |metafield|
+              @metafield_columns << column_name_for_metafield(metafield)
               item[column_name_for_metafield(metafield)] = metafield.value
             end
           when 'product'
@@ -217,7 +220,7 @@ module Carriers
       end
     end
 
-    # wby:shipping:refrigeration 
+    # wby.ship:refrigeration 
     def column_name_for_metafield(metafield)
       "#{metafield.namespace}:#{metafield.key}"
     end
@@ -229,6 +232,7 @@ module Carriers
       vendor_set = Set.new
       product_types_quantities = nil
       total_item_quantity = nil
+      metafields_sets = {}
       decision_items.each do |item|
         aggregate_columns.each do |aggregate|
           case aggregate
@@ -252,6 +256,12 @@ module Carriers
           when :total_order_price
             total_order_price ||= 0
             total_order_price += item['quantity'].to_f * item['price'].to_f
+          when :metafields_sets
+            @metafield_columns.each do |column|          
+              column_name = "#{column}:set"
+              metafields_sets[column_name] ||= Set.new
+              metafields_sets[column_name] << item[column] unless item[column].blank?
+            end
           end
         end
       end
@@ -259,7 +269,9 @@ module Carriers
         item.merge!(product_types_quantities) if product_types_quantities
         item['total_quantity'] = total_item_quantity if total_item_quantity
         item['total_order_price'] = total_order_price if total_order_price
+        metafields_sets.each { |column_name, set| item[column_name] = set }
       end
+      metafields_sets.each { |column_name, set| decision_order[column_name] = set }
       decision_order['total_quantity'] = total_item_quantity if total_item_quantity
       decision_order['total_order_price'] = total_order_price if total_order_price
       decision_order.merge!(product_types_quantities) if product_types_quantities
@@ -315,7 +327,8 @@ module Carriers
         :product_types_set,
         :sku_set,
         :vendor_set,
-        :total_order_price
+        :total_order_price,
+        :metafields_sets
       ]
     end
 
