@@ -234,7 +234,19 @@ describe Carriers::LifemapScience::Service do
       "Overnight,  FedEx International Express Styrofoam Box" => 12700,
       "Overnight,  FedEx NextDay Styrofoam Box" => 14200 }
 
+    it_produces "correct rates",
+    [
+      { Products.freezedried_protein => 2 },
+      { Products.growth_media => 2 } 
+    ],
+    Destinations.US.zone1, { 
+      "Overnight,  FedEx International Express Small Box" => 8200,
+      "Overnight,  FedEx NextDay Small Box" => 9200 }
+
+
   end
+
+
 end
 
 
