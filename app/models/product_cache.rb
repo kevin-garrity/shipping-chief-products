@@ -85,7 +85,6 @@ class ProductCache
     variant = self.variants[variant_id]
     if variant.nil?
       puts "   couldn't find #{variant_id} in cache(#{self.variants.length})"
-      pp self.variants.keys
       product = throttle(false){ ShopifyAPI::Product.find(product_id) }
       variant = product.variants.detect{|v| v.id.to_s == variant_id}
       variant ||= throttle{ ShopifyAPI::Variant.find(variant_id)}
@@ -97,10 +96,8 @@ class ProductCache
       variant.product = product
       self.variants[variant_id] = variant
       puts "updating cache with:"
-      pp @variants
       cache.set(variants_key, @variants)
       puts "now cache:"
-      pp cache.get(variants_key)
     end
     variant
   end
