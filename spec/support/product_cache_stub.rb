@@ -31,7 +31,8 @@ class ProductCacheStub
     save_json(json)
   end
 
-  def save_json(json)
+  def save_json(json=nil)
+    json ||= Oj.dump(@variants, object:true, circular:true)
     File.open(File.join(fixtures_dir, fixture), 'w'){|f| f.write(json)}
   end
 

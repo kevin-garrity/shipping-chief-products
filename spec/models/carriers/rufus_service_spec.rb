@@ -80,7 +80,8 @@ describe Carriers::RufusService do
         'product.option3_name',
         'variant.option1',
         'variant.option2',
-        'variant.option3'
+        'variant.option3',
+        'metafields'
         ])
       @expected_columns = Set.new([
         'product_type',
@@ -121,6 +122,15 @@ describe Carriers::RufusService do
       expect(sample['option2']).to eq('Medium')
       expect(sample['option3']).to eq('Extreme')
     end
+
+    it "adds metafield columns" do
+      subject.construct_item_columns!
+      sample = subject.decision_items.detect{|i| i['name'] == "RatesDebug - Low / Medium / Extreme"}
+      pp sample
+      expect(sample['wby.ship:test_variant']).to eq('Low / Medium / Extreme metafield on variant')
+      expect(sample['wby.ship:test_product']).to eq('RatesDebug metafield on product')
+    end
+
   end
 
   describe '#construct_aggregate_columns!' do

@@ -40,4 +40,5 @@
 # add metafield support
 - [ ] automatically add variant & product metafields with namespace "wby.*" to item hash
   - [ ] name the keys "wby.ship.lifemap:key"
+- [ ] convert lifemap product cache stub
   

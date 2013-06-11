@@ -192,7 +192,9 @@ module Carriers
         Rails.logger.info("  got #{variant}")
         item_columns.each do |item_column|
           entity, key = item_column.split('.')
-          item_column = [entity, key.gsub(entity,'')].join('_')
+          # item_column = [entity, key.gsub(entity,'')].join('_')
+
+          puts "adding entity: #{entity.inspect} key: #{key.inspect}"
           case entity
           when 'metafields'
             variant.product.metafields_cached.each do |metafield|
@@ -324,11 +326,10 @@ module Carriers
         'product.option1_name',
         'product.option2_name',
         'product.option3_name',
-        'product.metafields',
         'variant.option1',
         'variant.option2',
         'variant.option3',
-        'variant.metafields'
+        'metafields'
       ]
     end
 
