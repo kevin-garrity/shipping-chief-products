@@ -41,13 +41,13 @@ gem 'rudelo'
 gem 'memcachier'
 gem 'kgio' # improves performance of dalli
 gem 'dalli' # memcached client
-# gem 'shydra'
-gem 'shydra', path: "/Users/lasto/clients/lasto/shydra"
+gem 'shydra'
+# gem 'shydra', path: "/Users/lasto/clients/lasto/shydra"
 gem 'oj' # fast json parser, but mainly to make multi_json stfu
 
 group :development do
-  # gem 'shopifydev'
-  gem 'shopifydev', path: "/Users/lasto/clients/webify/shopifydev"
+  gem 'shopifydev'
+  # gem 'shopifydev', path: "/Users/lasto/clients/webify/shopifydev"
   gem "css_canon", :git => "git://github.com/lastobelus/css_canon"
   gem "hpricot", ">= 0.8.6"
   gem "ruby_parser", ">= 2.3.1"
