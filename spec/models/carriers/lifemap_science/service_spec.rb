@@ -130,6 +130,15 @@ describe Carriers::LifemapScience::Service do
       Destinations.US.zone1, { "Overnight" => 4044 }
     end
 
+   context "cells and growth media" do
+      it_produces "correct rates",
+      [
+        { Products.growth_media => 1 },
+        { Products.cells => 2 }
+      ],
+      Destinations.US.zone1, { "Overnight" => 3700 }      
+    end
+      
     it "charges dry ice fee if order contains growth media"
     it "does not charge dry ice fee if order only basal medium or glycosan kit"
 
