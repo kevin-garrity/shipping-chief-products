@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
 
       # return the version of theme currently deployed
     def current_deployed_version
-      3
+      4
     end
 
 end
