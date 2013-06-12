@@ -149,7 +149,7 @@ module Carriers
           "sku"=>variant.sku,
           "quantity"=>1,
           "grams"=>variant.grams,
-          "price"=>variant.price,
+          "price"=>(variant.price.to_f * 100).to_i.to_s,
           "vendor"=> variant.product.vendor,
           "requires_shipping"=>variant.requires_shipping,
           "taxable"=>variant.taxable,

@@ -46,3 +46,24 @@
 
 # Combo Order
 - add item_price (quantity * price)
+
+
+add to rufus decision:
+class EmptyValue < Numeric
+  def to_s; ''; end
+  def to_str; ''; end
+  def to_i; 0; end
+  def to_int; 0; end
+  def to_f; 0.0; end
+
+  def +(other)
+   case other
+   when String
+     to_s + other
+   when Fixnum
+     to_i + other
+   when Float
+     to_f + other
+   end
+  end
+end

@@ -17,7 +17,7 @@ describe "#sample_item" do
       "sku"=>"LM-CYT-569",
       "quantity"=>1,
       "grams"=>0,
-      "price"=>"47.50",
+      "price"=>"4750",
       "vendor"=>"ProSpec",
       "requires_shipping"=>true,
       "taxable"=>true,
@@ -29,12 +29,12 @@ describe "#sample_item" do
 
   it "overrides values" do
     expect(subject.sample_item(
-      name: "Activin-A Human Recombinant Protein - 2µg", quantity: 4, price: '12.4')).to eq({
+      name: "Activin-A Human Recombinant Protein - 2µg", quantity: 4, price: '124')).to eq({
       "name"=>"Activin-A Human Recombinant Protein - 2µg",
       "sku"=>"LM-CYT-569",
       "quantity"=>4,
       "grams"=>0,
-      "price"=>"12.4",
+      "price"=>"124",
       "vendor"=>"ProSpec",
       "requires_shipping"=>true,
       "taxable"=>true,
@@ -45,12 +45,12 @@ describe "#sample_item" do
   end
 
   it "understands alternative syntax" do
-    expect(subject.sample_item( "Activin-A Human Recombinant Protein - 2µg" => {quantity: 4, price: '12.4'})).to eq({
+    expect(subject.sample_item( "Activin-A Human Recombinant Protein - 2µg" => {quantity: 4, price: '124'})).to eq({
       "name"=>"Activin-A Human Recombinant Protein - 2µg",
       "sku"=>"LM-CYT-569",
       "quantity"=>4,
       "grams"=>0,
-      "price"=>"12.4",
+      "price"=>"124",
       "vendor"=>"ProSpec",
       "requires_shipping"=>true,
       "taxable"=>true,
