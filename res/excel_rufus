@@ -1,0 +1,30 @@
+Sub testexport() 
+     '
+     ' export Macro
+     
+    Range("A3:A5").Select 
+    Selection.Copy 
+    Workbooks.Add 
+    ActiveSheet.Paste 
+    ActiveWorkbook. SaveAs Filename:= _ 
+    "C:\Documents and Settings\Simon\My Documents\Book2.csv" _ 
+    , FileFormat:=xlCSV, CreateBackup:=False 
+    Application.DisplayAlerts = False 
+    ActiveWorkbook.Close 
+    Application.DisplayAlerts = True 
+     
+End Sub 
+
+http://stackoverflow.com/questions/6136798/vba-shell-function-in-office-2011-for-mac
+
+RetVal = Shell("Macintosh HD:Users:brownj:Documents:" & _ "rnaseq:IGV_2.0.14:igv.sh", vbNormalFocus)
+
+MacScript("do shell script ""command""")
+
+
+Private Declare Function system Lib "libc.dylib" (ByVal command As String) As Long
+Sub RunSafari()
+    Dim result As Long
+    result = system("open -a Safari --args http://www.google.com")
+    Debug.Print Str(result)
+End Sub

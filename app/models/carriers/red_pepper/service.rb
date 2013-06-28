@@ -17,7 +17,7 @@ module Carriers
       end
 
       def fetch_rates
-        Rails.logger.info("#{self.class.name}#fetch_rates")
+        Rails.logger.info("#{self.class.name}#fetch_rates aaaaargh")
         withShopify do
           
           has_non_food_items, has_food_item = checkForFoodItems
@@ -105,8 +105,8 @@ module Carriers
           rates = addExtraCharge(rates, extra_charge) if extra_charge > 0 
           
           Rails.logger.info('final rate is ' + rates.inspect)
-          
           return rates
+          
         end # end with shopify
       end
 

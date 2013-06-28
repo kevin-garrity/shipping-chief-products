@@ -1,7 +1,6 @@
 class RatesController < ApplicationController
   include CarrierHelper
 
-  #this is the rules for foldaboxUSA store only
   def shipping_rates 
     shop_domain = request.headers['HTTP_X_SHOPIFY_SHOP_DOMAIN']
     Rails.logger.info("shop_domain: #{shop_domain}")
@@ -17,8 +16,8 @@ class RatesController < ApplicationController
     service = service_class.new(preference, params[:rate])
 
     rates = service.fetch_rates
-        
-    #Rails.logger.debug("----- returning " + rates.to_json)
+    ppl rates
+    Rails.logger.debug("----- returning " + rates.to_json)
     render :json => {:rates => rates}
   rescue ActiveMerchant::Shipping::ResponseError => e
     Rails.logger.debug e.message

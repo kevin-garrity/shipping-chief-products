@@ -1,0 +1,20 @@
+    def construct_item_columns!
+      decision_items.each do |item|
+        variant = ProductCache.instance[item]
+        item_columns.each do |item_column|
+          parts = item_column.split('.')
+          entity = parts.shift
+          item_column = [entity, parts.map{|p| p.gsub(entity,'')}].flatten.join('_')
+          case entity
+          when 'product'
+            base = variant.product
+          when 'variant'
+            base = variant
+          end
+          key = nil
+          while(k = parts.shift); puts "base: #{base} k: #{k.inspect}"; base = base.attributes[k]; key = k end
+          item[item_column] = base.attributes[key]
+        end
+      end
+    end
+

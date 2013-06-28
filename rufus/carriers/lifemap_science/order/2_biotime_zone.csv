@@ -1,0 +1,6 @@
+in:vendor_set,in:province,out:BioTime price
+$(BioTime) <= $in,$(CA),${Zone 1}
+$(BioTime) <= $in,"$(NV, OR, AZ, UT, ID)",${Zone 2}
+$(BioTime) <= $in,"$(WA, MT, WY, CO, NM)",${Zone 3}
+$(BioTime) <= $in,"$(ND, SD, MN, WI, IL, IA, NE, KS, MO, AR, OK, TX, LA)",${Zone 4}
+$(BioTime) <= $in,"$(MI, IN, KY, TN, MS, AL, OH, AL, FL, MA, CT, NJ, DE, MD, VA, NC, SC, GA, WV, OH, PA, NY, VT, NH, HI, AL)",${Zone 5}

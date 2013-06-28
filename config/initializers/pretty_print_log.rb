@@ -1,4 +1,4 @@
-if Rails.env.development?
+if Rails.env.development? 
   require 'pp'
   module Kernel
     def ppl(obj)
@@ -11,5 +11,13 @@ if Rails.env.development?
       }
     end
     module_function :ppl
+  end
+elsif Rails.env.test?
+  module Kernel
+    def ppl(obj); pp obj; end
+  end
+else
+  module Kernel
+    def ppl(obj);end
   end
 end

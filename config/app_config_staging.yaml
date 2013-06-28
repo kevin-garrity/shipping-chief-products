@@ -22,10 +22,11 @@ clients:
       - :aus_post
       - :red_pepper
     service_host: shipping-staging.herokuapp.com
-  lifemap_science.myshopify.com:
-    access:
+  lifemap-bioreagents.myshopify.com:
+    access: 
       all_except: []
     menus: []
-    carriers:
-    - :lifemap_science
     service_host: shipping-staging.herokuapp.com
+    carriers:
+    - :debug
+    - :lifemap_science
