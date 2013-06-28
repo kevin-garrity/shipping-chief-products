@@ -1,7 +1,6 @@
 module Carriers
   module Fabusa
     class Service < ::Carriers::Service
-
       def fetch_rates
         total = 0
         rates_array = Array.new
@@ -59,7 +58,7 @@ module Carriers
               Rails.logger.debug("multiple rates is " + rates.to_s)
             end
             rates_array << rates
-          end
+          end #end items.each
         end
         
         find_rates = Hash.new
@@ -90,12 +89,12 @@ module Carriers
         when 'US'
           case destination.province
            when 'AS', 'GU', 'MP', 'PR', 'VI', 'UM', 'FM', 'MH', 'PW', 'AA', 'AE', 'AP', 'CM'
-             UpsRate.new
+             FabusaUpsRate.new
            else
-             FedexRate.new             
+             FabusaFedexRate.new             
           end
         else
-          UpsRate.new
+          FabusaUpsRate.new
         end
       end
       

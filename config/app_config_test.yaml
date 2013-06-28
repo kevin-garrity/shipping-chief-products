@@ -1,3 +1,35 @@
 # AppConfig settings for test
 dbg:
   env: test
+clients:
+  cronin-group3575.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+  schumm-durgan-and-lang94.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :aus_post
+      - :fabusa
+  red-pepper.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :aus_post
+      - :red_pepper
+  www.foldaboxusa.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :fabusa
+  shop.redpepper.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :aus_post
+      - :red_pepper

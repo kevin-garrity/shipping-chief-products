@@ -85,50 +85,67 @@ describe RatesController do
     JSON.parse(json_shopify_params)
   end
 
-  describe :shipping_rates do
+  describe :fabusa_shop_rates do
 
-    it "responds successfully with HTTP 200 OK!" do
-      post :shipping_rates, valid_parameters_from_shopify
-      expect(response).to be_success
-      expect(response.code).to eq("200")
-    end
+    describe :shipping_rates do
 
-    context "when shipping cross countries" do
-      it "should return rate" do
-      
-        param = valid_parameters_from_shopify
-        param["rate"]["destination"] = JSON.parse(json_ca_dest)
-        post :shipping_rates, param
+      it "responds successfully with HTTP 200 OK!" do
+        preference = FactoryGirl.create :preference_for_fabusa_shop 
+        controller.stub!(:get_shop_prefence_from_request).and_return(preference) 
+        post :shipping_rates, valid_parameters_from_shopify
+        
+        rates_json = JSON.parse(response.body)["rates"]
+        puts("response is" + rates_json.to_s)
         expect(response).to be_success
         expect(response.code).to eq("200")
+        expect(rates_json.length).to eq(6)        
       end
-    end
+
+      context "when shipping cross countries" do
+        it "should return rate" do
+          preference = FactoryGirl.create :preference_for_fabusa_shop 
+          controller.stub!(:get_shop_prefence_from_request).and_return(preference)      
+          param = valid_parameters_from_shopify
+          param["rate"]["destination"] = JSON.parse(json_ca_dest)
+          post :shipping_rates, param
+          expect(response).to be_success
+          expect(response.code).to eq("200")
+        end
+      end
     
-    context "when 'rates' is missing from request params" do
+      context "when 'rates' is missing from request params" do
+        it "should render NOTHING" do
+        
+          preference = FactoryGirl.create :preference_for_fabusa_shop 
+          controller.stub!(:get_shop_prefence_from_request).and_return(preference)        
+          post :shipping_rates
 
-      it "should render NOTHING" do
-        post :shipping_rates
-
-        response.body.strip.should be_empty
-      end
-    end
-
-    context "when shopify passes us incomplete params" do
-
-      it "should render NOTHING when origin is missing" do
-        invalid_params = valid_parameters_from_shopify
-        invalid_params["rate"]["origin"] = {}
-
-        expect { post :shipping_rates, invalid_params }.not_to raise_error(ActiveMerchant::Shipping::ResponseError)
-        response.body.strip.should be_empty
+          response.body.strip.should be_empty
+        end
       end
 
-      it "should render NOTHING when destination is missing" do
-        invalid_params = valid_parameters_from_shopify
-        invalid_params["rate"]["destination"] = {}
+      context "when shopify passes us incomplete params" do
 
-        expect { post :shipping_rates, invalid_params }.not_to raise_error(ActiveMerchant::Shipping::ResponseError)
-        response.body.strip.should be_empty
+        it "should render NOTHING when origin is missing" do
+          preference = FactoryGirl.create :preference_for_fabusa_shop 
+          controller.stub!(:get_shop_prefence_from_request).and_return(preference)        
+          invalid_params = valid_parameters_from_shopify
+          invalid_params["rate"]["origin"] = {}
+
+          expect { post :shipping_rates, invalid_params }.not_to raise_error(ActiveMerchant::Shipping::ResponseError)
+          response.body.strip.should be_empty
+        end
+
+        it "should render NOTHING when destination is missing" do
+          preference = FactoryGirl.create :preference_for_fabusa_shop 
+          controller.stub!(:get_shop_prefence_from_request).and_return(preference)
+                
+          invalid_params = valid_parameters_from_shopify
+          invalid_params["rate"]["destination"] = {}
+
+          expect { post :shipping_rates, invalid_params }.not_to raise_error(ActiveMerchant::Shipping::ResponseError)
+          response.body.strip.should be_empty
+        end
       end
     end
   end

@@ -34,6 +34,7 @@ gem "quiet_assets", ">= 1.0.1", :group => :development
 gem 'pry-rails', :group => :development
 
 gem "active_shipping"
+gem "unicorn"
 
 # aus_controller_development branch added these
 gem "activerecord-postgresql-adapter"

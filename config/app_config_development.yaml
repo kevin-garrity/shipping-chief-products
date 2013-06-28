@@ -17,6 +17,12 @@ clients:
     carriers:
       - :aus_post
       - :red_pepper
+  www.foldaboxusa.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :fabusa
   shop.redpepper.com:
     access: 
       all_except: []

@@ -1,7 +1,9 @@
-require 'active_shipping'
-include ActiveMerchant::Shipping
+module Carriers
+  module Fabusa
 
-class UpsRate
+require 'active_shipping'
+
+class FabusaUpsRate
 
   attr_accessor :origin, :destination, :packages
 
@@ -24,17 +26,14 @@ class UpsRate
     # :account is your FedEx account number
     # :login is your meter number
 
-    ups = UPS.new(:login => 'foldaboxusa', :password => 'Nile1922', :key => '9CB1FB9E94E8C95A')
+    ups = ActiveMerchant::Shipping::UPS.new(:login => 'foldaboxusa', :password => 'Nile1922', :key => '9CB1FB9E94E8C95A')
     response = ups.find_rates(origin, destination, packages)
     
     rates = response.rates
     
     rates = rates.sort_by(&:price).collect do |rate|
         {"service_name" => rate.service_name, 'service_code'=> 'NA', 'total_price' => rate.price.to_i, 'currency' => rate.currency}
-    end
-
-
-   
+    end   
 
     rates
   end
@@ -42,3 +41,5 @@ class UpsRate
 
 end
 
+end
+end
