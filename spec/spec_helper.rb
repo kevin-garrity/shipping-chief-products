@@ -1,7 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
 
-Rails.logger = Logger.new(STDOUT)
+Rails.logger = Logger.new(STDOUT) if ENV['RAILS_TESTS_VERBOSE']
 
 def zeus_running?
   File.exists? '.zeus.sock'

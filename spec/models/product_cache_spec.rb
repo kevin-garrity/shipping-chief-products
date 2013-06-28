@@ -28,7 +28,7 @@ describe ProductCache do
   context "rates queries" do
     describe '#product_ids_in_order' do
       it 'returns the set of product ids' do
-        pp rates_query[:items]
+        # pp rates_query[:items]
         expect(subject.product_ids_in_order(rates_query[:items])).to eq(Set[111, 112, 113])
       end
     end

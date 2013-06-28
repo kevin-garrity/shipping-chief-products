@@ -53,19 +53,19 @@ shared_examples_for "correct rates" do |items, destination, expected_services|
   }
   let(:service){
 
-   puts "@preference: #{@preference.inspect}"
+   # puts "@preference: #{@preference.inspect}"
    ::Carriers::LifemapScience::Service.new(@preference, params) }
   subject{ service.fetch_rates }
 
   it "returning the correct service names and rates" do
-    puts "items: #{items.inspect}"
-    puts "destination: #{destination.inspect}"
-    puts "expected_services: #{expected_services.inspect}"
+    # puts "items: #{items.inspect}"
+    # puts "destination: #{destination.inspect}"
+    # puts "expected_services: #{expected_services.inspect}"
 
     result = subject
-    puts "------------------------------------------------------------------"
-    pp result
-    puts "------------------------------------------------------------------"
+    # puts "------------------------------------------------------------------"
+    # pp result
+    # puts "------------------------------------------------------------------"
     expect(result.length).to eq(expected_services.length)
     expected_services.each do |name, rate|
       service_names = subject.map{|s| s['service_name']}
