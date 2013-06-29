@@ -5,6 +5,8 @@ module Carriers
         total = 0
         rates_array = Array.new
         all_samples = true
+        
+        calculator = get_calculator
         #check if all items are of sample
         items.each do |item|
           if (!item[:sku].include?("SAM/")) #shipped together
@@ -90,18 +92,20 @@ module Carriers
         find_rates.values
       end
 
-      def calculator
-        @calculator ||= case destination.country
-        when 'US'
+      def get_calculator
+        country = destination.country.to_s
+        case country
+        when 'United States'
           case destination.province
            when 'AS', 'GU', 'MP', 'PR', 'VI', 'UM', 'FM', 'MH', 'PW', 'AA', 'AE', 'AP', 'CM'
-             FabusaUpsRate.new
+             calculator = FabusaUpsRate.new
            else
-             FabusaFedexRate.new             
+             calculator = FabusaFedexRate.new
           end
         else
-          FabusaUpsRate.new
-        end
+          calculator = FabusaUpsRate.new
+        end        
+        calculator
       end
       
     end    
