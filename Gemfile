@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
-gem 'rails', '~> 3.2.11'
+ruby "1.9.3"
+
+gem 'rails', '>= 3.2.13'
+gem "activeresource", '3.2.13'
+
 group :assets do
     gem 'sass-rails',   '~> 3.2.3'
       gem 'coffee-rails', '~> 3.2.1'
@@ -40,7 +44,7 @@ gem 'dalli' # memcached client
 gem 'oj' # fast json parser, but mainly to make multi_json stfu
 
 group :development do
-  gem 'shopifydev', :git => "git://github.com/variousauthors/shopifydev.git", :branch => "GLI_commandline_suite"
+  gem 'shopifydev'
   gem "css_canon", :git => "git://github.com/lastobelus/css_canon"
   gem "hpricot", ">= 0.8.6"
   gem "ruby_parser", ">= 2.3.1"
