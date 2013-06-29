@@ -10,8 +10,6 @@ class RatesController < ApplicationController
     service = service_class.new(preference, params[:rate])
 
     rates = service.fetch_rates
-    ppl rates
-    Rails.logger.debug("----- returning " + rates.to_json)
     render :json => {:rates => rates}
   rescue ActiveMerchant::Shipping::ResponseError => e
     Rails.logger.debug e.message

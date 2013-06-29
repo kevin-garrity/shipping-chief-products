@@ -36,10 +36,10 @@ class FabusaFedexRate
     # Rails.logger.info("fedex return unfilter: #{rates.inspect}")
     
     
-    #rates = response.rates.select do |rate|
-    #  service_name = rate.service_name
-    #  service_name == "FedEx Ground"|| service_name == "FedEx Ground Home Delivery"||  service_name == "FedEx Standard Overnight" || service_name == "FedEx 2 Day"|| service_name == "FedEx 3 Day Freight"
-    #end
+    rates = response.rates.select do |rate|
+      service_name = rate.service_name
+      service_name == "FedEx Ground"|| service_name == "FedEx Ground Home Delivery"||  service_name == "FedEx Standard Overnight" || service_name == "FedEx 2 Day"|| service_name == "FedEx 3 Day Freight"
+    end
       
     rates = rates.sort_by(&:price).collect do |rate|
         {"service_name" => rate.service_name, 'service_code'=> rate.service_name, 'total_price' => rate.price.to_i, 'currency' => rate.currency}

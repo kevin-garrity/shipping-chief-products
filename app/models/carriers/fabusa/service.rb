@@ -14,9 +14,7 @@ module Carriers
         
         if (all_samples)
           packages = Array.new
-          
-          Rails.logger.debug("all samples packages")
-          
+                    
           weight = 0
           items.each do |item|
             #total all weight
@@ -40,6 +38,16 @@ module Carriers
             if (item[:sku].include?("SAM/")) #shipped together
               packages << Package.new(item[:grams].to_i * quan, [])
               rates = calculator.get_rates(origin, destination, packages)
+             
+             rates = rates.collect do | rate|
+                service_name = rate["service_name"]
+                #remove fedex or ups brand name
+                service_name = service_name.gsub(/(FedEx )/, '').gsub(/(Home )/, '')
+                service_name = service_name.gsub(/(UPS )/, "INT'L ")
+
+                {"service_name" => service_name, 'service_code'=> rate["service_code"], 'total_price' => rate["total_price"].to_i, 'currency' => rate["currency"]}
+              end
+                              
             else
               # look up one package and multiple by quantity
               Rails.logger.debug("quan is " + quan.to_s)
@@ -48,15 +56,14 @@ module Carriers
               single_rate = calculator.get_rates(origin, destination, packages) 
               rates = single_rate.collect do | rate|
                 service_name = rate["service_name"]
-                
                 #remove fedex or ups brand name
                 service_name = service_name.gsub(/(FedEx )/, '').gsub(/(Home )/, '')
                 service_name = service_name.gsub(/(UPS )/, "INT'L ")
                 
                 {"service_name" => service_name, 'service_code'=> rate["service_code"], 'total_price' => rate["total_price"].to_i * quan, 'currency' => rate["currency"]}
               end
-              Rails.logger.debug("multiple rates is " + rates.to_s)
             end
+            
             rates_array << rates
           end #end items.each
         end
@@ -66,7 +73,6 @@ module Carriers
         rates_array.each do |rate|
           rate.each do |r|
             if (find_rates.has_key?(r["service_name"]))     
-              Rails.logger.info('adding rate' + (r["total_price"].to_i + find_rates[r["service_name"]]["total_price"].to_i).to_s)
               find_rates[r["service_name"]] = { "service_name" =>r["service_name"], 
                                                 "service_code"=>r["service_code"], 
                                                 "total_price" => r["total_price"].to_i + find_rates[r["service_name"]]["total_price"].to_i, 

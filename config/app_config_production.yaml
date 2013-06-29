@@ -7,7 +7,7 @@ clients:
       - :aus_post
       - :fabusa
       - :lifemap_science      
-    service_host: shipping-lifemap-bioreagents.herokuapp.com
+    service_host: shipping-foldabox-staging.herokuapp.com
   red-pepper.myshopify.com:
     access: 
       all_except: []
