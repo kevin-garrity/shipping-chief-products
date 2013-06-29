@@ -27,8 +27,10 @@ module Carriers
 
     def service_url
       case Rails.env
-      when "production", "staging"
+      when "production"
         "http://#{service_host}/shipping-rates?shop_url=#{preference.shop_url}"
+      when "staging"      
+        "http://shipping-staging.herokuapp.com/shipping-rates?shop_url=#{preference.shop_url}"          
       when "development"
         my_ip = Webify::Dev.get_ip
         "http://#{my_ip}:#{port}/shipping-rates?shop_url=#{preference.shop_url}"
