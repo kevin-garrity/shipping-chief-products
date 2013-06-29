@@ -3,19 +3,27 @@ clients:
     access: 
       all_except: []
     menus: []
+    carriers:
+    - :aus_post
+    - :red_pepper
+    - :lifemap_science
+    - :fabusa
+    - :debug
   schumm-durgan-and-lang94.myshopify.com:
     access: 
       all_except: []
     menus: []
     carriers:
-      - :aus_post
-      - :fabusa
+    - :aus_post
+    - :fabusa
+    - :red_pepper
+    - :lifemap_science
+    - :debug
   red-pepper.myshopify.com:
     access: 
       all_except: []
     menus: []
     carriers:
-      - :aus_post
       - :red_pepper
   www.foldaboxusa.com:
     access: 
@@ -28,5 +36,12 @@ clients:
       all_except: []
     menus: []
     carriers:
-      - :aus_post
-      - :red_pepper
+    - :aus_post
+    - :red_pepper
+  lifemap-bioreagents.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :debug
+    - :lifemap_science

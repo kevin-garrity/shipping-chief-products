@@ -1,16 +1,17 @@
+---
 clients:
   default:
-    menus:
+    menus: 
     access:
       all_except: []
     carriers:
-      - :aus_post
+    - :aus_post
   webifytechnology.myshopify.com:
-    access: 
+    access:
       all_except: []
     menus: []
 carriers:
-  aus_post: 
+  aus_post:
     public: true
     description: Australia Post
     service: false
@@ -26,3 +27,13 @@ carriers:
     service: true
     service_discovery: false
     legacy_name: Private_FABUSA
+  lifemap_science:
+    public: false
+    description: Custom Rules -- Lifemap Science
+    service: true
+    service_discovery: false
+  debug:
+    public: false
+    description: Custom Rules -- Debug
+    service: true
+    service_discovery: false

@@ -8,7 +8,7 @@ module Carriers
 
     def initialize(preference, params)
       @preference = preference
-      @params = params
+      @params = params.symbolize_keys
     end
 
     def origin
@@ -36,6 +36,7 @@ module Carriers
     def fetch_rates
       #  implement in subclasses
     end
+
 
   end
 end

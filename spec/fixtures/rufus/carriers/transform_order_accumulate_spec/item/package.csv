@@ -1,0 +1,2 @@
+in:product_type,in:quantity,out:sum:pkg_quantity
+"$(""Differentiation Kit"" ""Human Embryonic Progenitor Package"" ""Growth Media"")",,${quantity}

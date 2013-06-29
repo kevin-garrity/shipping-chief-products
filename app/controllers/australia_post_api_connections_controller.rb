@@ -7,7 +7,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
     @blanks = params[:blanks]
     shop_url = request.headers["HTTP_ORIGIN"].sub(%r{^.*//}, "")
 
-    preference = Preference.find_by_shop_url(shop_url)
+    preference = Preference.find_by_shop_url!(shop_url)
 
     @australia_post_api_connection = AustraliaPostApiConnection.new({
       from_postcode: preference.origin_postal_code,
@@ -35,10 +35,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
     url = params[:australia_post_api_connection][:shop]
 
     #try to find the shop preference using url
-    preference = Preference.find_by_shop_url(url)
-
-    #TODO
-    #raise error if preference.nil?
+    preference = Preference.find_by_shop_url!(url)
 
     # recalculate the weight to include blanks
     calculated_weight = params[:australia_post_api_connection][:blanks].to_i * preference.default_weight.to_f

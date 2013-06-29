@@ -1,0 +1,38 @@
+Description:
+    Generates a new Shipping carrier, with installer class and [optional] service class. Adds the carrier to AppConfig, and adds a 
+
+Example:
+    rails generate carrier nifty_widgets
+
+    This will create:
+        app/models/carriers/nifty_widgets/installer.rb
+        app/models/carriers/nifty_widgets/carrier.rb
+
+        in config/app_config.yaml:
+          carriers:
+            lifemap_science:
+              public: false
+              description: Custom Rules -- Lifemap Science
+              service: true
+              service_discovery: false
+
+        in config/app_config_staging.yaml:
+          clients:
+            lifemap_science.myshopify.com:
+              access:
+                all_except: []
+              menus: []
+              carriers:
+              - :lifemap_science
+              service_host: shipping-staging.herokuapp.com
+
+
+        in config/app_config_production.yaml:
+          clients:
+            lifemap_science.myshopify.com:
+              access:
+                all_except: []
+              menus: []
+              carriers:
+              - :lifemap_science
+              service_host: webify-shipping.herokuapp.com

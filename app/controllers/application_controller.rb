@@ -11,7 +11,11 @@ class ApplicationController < ActionController::Base
 
 
       #if (Rails.env == "production")
-        if (!ShopifyAPI::RecurringApplicationCharge.current && default_client? && !session[:shopify].url.include?("dev-shop") )
+        if (!ShopifyAPI::RecurringApplicationCharge.current && default_client?  \
+          && !session[:shopify].url.include?("dev-shop") \
+          && !session[:shopify].url.include?("schumm-durgan-and-lang94") \
+          && !session[:shopify].url.include?("lifemap") \
+          )
             #place a recurring charge
           charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Shipping Calculator Application", 
                                                              :price => 15, 
@@ -43,7 +47,7 @@ class ApplicationController < ActionController::Base
 
       # return the version of theme currently deployed
     def current_deployed_version
-      3
+      4
     end
 
 end

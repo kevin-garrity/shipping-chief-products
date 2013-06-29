@@ -1,4 +1,4 @@
-<!-- version 3 -->
+<!-- version 4 -->
 
 <!-- we are introducing our own jquery -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js" type="text/javascript"></script>
@@ -52,7 +52,7 @@
 
   webifyJQ(document).ready(function() {
 
-  webifyJQ("form[action='/cart'").find('input[type=submit]').on('click', function (e) {
+  webifyJQ("form[action='/cart']").find('input[type=submit]').on('click', function (e) {
     if (webifyJQ(e.target).attr('name') == 'checkout') {
       if (webifyJQ('.item.shipping').length == 0) {
         // there no Shipping items in the cart

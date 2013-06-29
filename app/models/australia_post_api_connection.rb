@@ -1,3 +1,4 @@
+
 class AustraliaPostApiConnection
   class InvalidError < StandardError
   end
@@ -81,7 +82,7 @@ class AustraliaPostApiConnection
     #   raise InvalidError.new(errors.full_messages)
     # end
 
-    puts "api_errors " + self.api_errors.inspect
+    Rails.logger.info("api_errors " + self.api_errors.inspect)
     valid = true
     unless self.api_errors.empty?
       valid = false
@@ -144,16 +145,16 @@ class AustraliaPostApiConnection
       self.attributes[:weight] = api_max_weight
     end
 
-    puts "total weight: " + total_weight.to_s
-    puts "api max weight : " + api_max_weight.to_s
-    puts "container_weight: " + container_weight.to_s
-    puts "contents_weight: " + contents_weight.to_s
+    Rails.logger.info("total weight: " + total_weight.to_s)
+    Rails.logger.info("api max weight : " + api_max_weight.to_s)
+    Rails.logger.info("container_weight: " + container_weight.to_s)
+    Rails.logger.info("contents_weight: " + contents_weight.to_s)
 
-    puts "number_of_packages : " + number_of_packages.to_s
-    puts "excess_weight : " + excess_weight.to_s
+    Rails.logger.info("number_of_packages : " + number_of_packages.to_s)
+    Rails.logger.info("excess_weight : " + excess_weight.to_s)
 
     result = api_call(request_url)
-    puts "after performing 20 kg call"
+    Rails.logger.info("after performing 20 kg call")
 
     # modify the results so that they represent n packages + the excess
     if self.api_errors.empty?
@@ -162,11 +163,11 @@ class AustraliaPostApiConnection
       # multiply the prices by the number of packages
       services.map do |hash|
         # gsub so that we can work with integers
-        #puts "  service: \n " + hash.inspect
+        #Rails.logger.info("  service: \n " + hash.inspect)
         if hash.has_key?("price")
 
           original_price = hash["price"].to_f
-          puts "  original_price: " + original_price.to_s
+          Rails.logger.info("  original_price: " + original_price.to_s)
           modified_price = ( original_price * number_of_packages).to_f
 
           hash["price"] = modified_price
@@ -174,17 +175,17 @@ class AustraliaPostApiConnection
         end
       end
 
-      puts "after 20 package stuff -- \n\n" + services.inspect
+      Rails.logger.info("after 20 package stuff -- \n\n" + services.inspect)
 
       if excess_weight > 0
-        puts "#{excess_weight.to_s} kg package"
+        Rails.logger.info("#{excess_weight.to_s} kg package")
 
         # set up a mini API call to determine the cost of shipping the excess
         self.attributes[:weight] = excess_weight
         response = api_call(request_url)
 
         response_services = Array.wrap(response[1]["service"]) # same reason as above
-        #puts "  response_services: -- \n\n" + response_services.inspect
+        #Rails.logger.info("  response_services: -- \n\n" + response_services.inspect)
 
         services.to_enum.with_index(0) do |hash, i|
           original_price = hash["price"].to_f
@@ -197,7 +198,7 @@ class AustraliaPostApiConnection
       end
 
       result[1]["service"] = services
-      puts "finally -- \n\n\n" + result[1]["service"].inspect
+      Rails.logger.info("finally -- \n\n\n" + result[1]["service"].inspect)
     end
 
     # set the weight back to its original value
@@ -220,8 +221,8 @@ class AustraliaPostApiConnection
         rescue Exception => e
           # anything else
           self.api_errors.append(e)
-          puts "error: " + e.message
-          puts "api connection will not be saved"
+          Rails.logger.info("error: " + e.message)
+          Rails.logger.info("api connection will not be saved")
         end
       end
 
@@ -234,7 +235,7 @@ class AustraliaPostApiConnection
         self.api_errors.append(@service_list[1]['errorMessage'])
       end
     rescue NoMethodError => e
-      puts "error: " + e.message
+      Rails.logger.info("error: " + e.message)
       # we actually already reported this
       # It refers to flatten above, and comes from
       # the Timeout::Error rescued above
@@ -242,8 +243,8 @@ class AustraliaPostApiConnection
     rescue Exception => e
       # anything else
       self.api_errors.append(e)
-      puts "error: " + e.message
-      puts "api connection will not be saved"
+      Rails.logger.info("error: " + e.message)
+      Rails.logger.info("api connection will not be saved")
     end
 
     @service_list
