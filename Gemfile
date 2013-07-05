@@ -28,6 +28,7 @@ gem "pg"
 gem "config_spartan"
 gem "active_shipping"
 gem "unicorn"
+gem "typhoeus"
 
 # aus_controller_development branch added these
 gem "activerecord-postgresql-adapter"
@@ -68,7 +69,7 @@ end
 group :test do
   gem "rspec-rails", ">= 2.11.0"
   gem "factory_girl_rails", ">= 4.1.0"
-  gem 'simplecov', require: false
+  gem 'simplecov', :require => false
 end
 
 
