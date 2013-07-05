@@ -33,7 +33,7 @@ WorldShippingCalculator::Application.configure do
   
   config.cache_store = :memory_store
 
- # config.log_level = :error
+  config.log_level = :debug
 
 
   # Print deprecation notices to the Rails logger

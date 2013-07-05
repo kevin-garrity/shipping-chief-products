@@ -3,13 +3,14 @@ class RatesController < ApplicationController
 
   def shipping_rates 
     preference = get_shop_prefence_from_request
-    
+   # log_params
     return nothing unless params[:rate] && preference
 
     service_class = carrier_service_class_for(preference.carrier, preference.client_config)
     service = service_class.new(preference, params[:rate])
 
     rates = service.fetch_rates
+        
     render :json => {:rates => rates}
   rescue ActiveMerchant::Shipping::ResponseError => e
     Rails.logger.debug e.message
@@ -29,7 +30,7 @@ class RatesController < ApplicationController
     request.headers['HTTP_X_SHOPIFY_SHOP_DOMAIN']
   end
   
-  def log_params
+  def log_params    
     Rails.logger.debug("shipping origin is" + params[:rate][:origin].to_s)
     Rails.logger.debug("shipping destination is" + params[:rate][:destination].to_s)
     Rails.logger.debug("shipping items is" + params[:rate][:items].to_s)

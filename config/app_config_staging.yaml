@@ -6,6 +6,7 @@ clients:
     carriers:
       - :aus_post
       - :fabusa
+    service_host: shipping-staging.herokuapp.com      
   red-pepper.myshopify.com:
     access: 
       all_except: []
