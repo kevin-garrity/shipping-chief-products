@@ -50,7 +50,6 @@ module Carriers
         end
         
         shipping_items.each do |item|          
-          Rails.logger.debug("item[:sku] is " + item[:sku])       
           if (!item[:sku].include?("SAM/")) #shipped together
             all_samples = false        
           end
@@ -98,8 +97,9 @@ module Carriers
                   request.on_complete do |response|
                     if response.success?
                       # hell yeah
+                      Rails.logger.debug("got response is" + response.body.to_s)    
+                      
                       parsed_rates = JSON.parse(response.body)["rates"]
-                      Rails.logger.debug("got response is" + parsed_rates.to_s)    
                       rates_array << parsed_rates                
                     elsif response.timed_out?
                       # aw hell no
