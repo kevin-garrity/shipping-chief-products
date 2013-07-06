@@ -19,7 +19,8 @@ clients:
     - :red_pepper
     - :lifemap_science
     - :debug
-    service_host: locahost:3000    
+    service_host: localhost:3000
+    local_host: localhost:3000
   red-pepper.myshopify.com:
     access: 
       all_except: []

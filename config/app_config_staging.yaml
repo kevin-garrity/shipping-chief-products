@@ -15,6 +15,7 @@ clients:
       - :aus_post
       - :red_pepper
     service_host: shipping-staging.herokuapp.com
+    local_host: localhost    
   shop.redpepper.com:
     access: 
       all_except: []
