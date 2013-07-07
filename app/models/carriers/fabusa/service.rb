@@ -34,7 +34,7 @@ module Carriers
         total = 0
         rates_array = Array.new
         all_samples = true
-        service_host =  preference.client_config.local_host
+        service_host =  preference.client_config.service_host
         
         #check if all items are of sample
         
