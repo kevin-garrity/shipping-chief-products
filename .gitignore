@@ -73,3 +73,4 @@ pickle-email-*.html
 # vim artifacts
 **.swp
 config/app_config_local.yaml
+rufus/carriers/lifemap_science/order/~*

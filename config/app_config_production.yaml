@@ -6,6 +6,8 @@ clients:
     carriers:
       - :aus_post
       - :fabusa
+      - :lifemap_science      
+    service_host: shipping-foldabox-staging.herokuapp.com
   red-pepper.myshopify.com:
     access: 
       all_except: []
@@ -36,10 +38,20 @@ clients:
     carriers:
       - :aus_post
     service_host: shipping.webifytechnology.com      
-  lifemap_science.myshopify.com:
-    access:
+  lifemap-bioreagents.myshopify.com:
+    access: 
       all_except: []
     menus: []
     carriers:
+    - :debug
     - :lifemap_science
-    service_host: webify-shipping.herokuapp.com
+    service_host: shipping-lifemap-bioreagents.herokuapp.com
+  bioreagents.lifemapsc.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :debug
+    - :lifemap_science
+    service_host: shipping-lifemap-bioreagents.herokuapp.com
+      

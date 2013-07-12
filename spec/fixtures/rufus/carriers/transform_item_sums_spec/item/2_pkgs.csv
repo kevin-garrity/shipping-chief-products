@@ -1,0 +1,4 @@
+in:product_type,out:max:pkg
+"$(VASE, POT)",20_crate
+$(WIDGET),15_box
+,10_box

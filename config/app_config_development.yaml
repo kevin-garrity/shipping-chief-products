@@ -19,17 +19,31 @@ clients:
     - :red_pepper
     - :lifemap_science
     - :debug
+    service_host: localhost:3000
+    local_host: localhost:3000
   red-pepper.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :red_pepper
+  www.foldaboxusa.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :fabusa
+  shop.redpepper.com:
     access: 
       all_except: []
     menus: []
     carriers:
     - :aus_post
     - :red_pepper
-  shop.redpepper.com:
+  lifemap-bioreagents.myshopify.com:
     access: 
       all_except: []
     menus: []
     carriers:
-      - :aus_post
-      - :red_pepper
+    - :debug
+    - :lifemap_science
