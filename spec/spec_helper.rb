@@ -27,7 +27,7 @@ RSpec.configure do |config|
   config.include(EmailSpec::Matchers)
   config.include ShippingHelpers
 
-  config.backtrace_clean_patterns = [
+  config.backtrace_exclusion_patterns = [
     /\/lib\d*\/ruby\//,
     /bin\//,
     # /gems/,

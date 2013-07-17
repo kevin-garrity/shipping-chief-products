@@ -215,8 +215,8 @@ describe Carriers::RufusService do
       @item1 = {"in-1" => "old-1-1", 'in-2' =>'old-1-2'}
       @item2 = {"in-1" => "old-2", 'in-2' =>'old-2-2'}
       subject.stub(:decision_items).and_return([@item1, @item2])
-      @dec_1 = mock('first decision')
-      @dec_2 = mock('second decision')
+      @dec_1 = double('first decision')
+      @dec_2 = double('second decision')
       @dec_1.stub(:transform).with(@item1).and_return(@item1)
       @dec_1.stub(:transform).with(@item2).and_return(@item2)
       @dec_2.stub(:transform).with(@item1).and_return(@item1)

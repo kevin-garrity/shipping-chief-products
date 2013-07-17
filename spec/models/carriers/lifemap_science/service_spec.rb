@@ -143,24 +143,20 @@ describe Carriers::LifemapScience::Service do
     it "does not charge dry ice fee if order only basal medium or glycosan kit"
 
     context "charges by zone" do
-      let(:order){[
-        Products.cells => 2
-      ]}
-
       it_produces "correct rates",
-      new.order,
+      [ Products.cells => 2 ],
       Destinations.US.zone2, { "Overnight" => 6400 }
 
       it_produces "correct rates",
-      new.order,
+      [ Products.cells => 2 ],
       Destinations.US.zone3, { "Overnight" => 7178 }
 
       it_produces "correct rates",
-      new.order,
+      [ Products.cells => 2 ],
       Destinations.US.zone4, { "Overnight" => 7400 }
 
       it_produces "correct rates",
-      new.order,
+      [ Products.cells => 2 ],
       Destinations.US.zone5, { "Overnight" =>7400 }
     end
 
