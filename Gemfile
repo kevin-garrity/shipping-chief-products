@@ -49,6 +49,9 @@ gem 'shydra'
 # gem 'shydra', path: "/Users/lasto/clients/lasto/shydra"
 gem 'oj' # fast json parser, but mainly to make multi_json stfu
 
+# allows use of limit: false in ShopifyAPI calls
+gem 'shopify_unlimited'
+
 group :development do
   gem 'shopifydev'
   gem "css_canon", :git => "git://github.com/lastobelus/css_canon"
