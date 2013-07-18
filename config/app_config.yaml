@@ -6,6 +6,7 @@ clients:
       all_except: []
     carriers:
     - :aus_post
+    - :aus_post_bus
   webifytechnology.myshopify.com:
     access:
       all_except: []
@@ -16,6 +17,11 @@ carriers:
     description: Australia Post
     service: false
     legacy_name: AusPost
+  aus_post_bus:
+    public: true
+    description: Australia Post (For Business plan and up)
+    service: true
+    legacy_name: AusPostBus
   red_pepper:
     public: false
     description: Custom Rules - Red Pepper
