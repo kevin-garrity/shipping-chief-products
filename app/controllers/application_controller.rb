@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
     def check_payment
 
 
-      #if (Rails.env == "production")
+      if (Rails.env == "production")
         if (!ShopifyAPI::RecurringApplicationCharge.current && default_client?  \
           && !session[:shopify].url.include?("dev-shop") \
           && !session[:shopify].url.include?("schumm-durgan-and-lang94") \
@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
 
           redirect_to charge.confirmation_url
         end
-      #end
+      end
 
     end  
     

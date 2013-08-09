@@ -58,6 +58,17 @@ class PreferencesController < ApplicationController
       render :partial => carrier_partial_for( params[:carrier] )
     end
   end
+  
+  def shipping_by_collection_selected
+    colls = ShopifyAPI::CustomCollection.find(:all)
+    
+    shipping_options = Array.new
+    colls.each do |col|
+      free_shipping = get_coll_free_shipping(col)
+      shipping_options << {:collection_name => col.title, :free => free_shipping, :collection_id => col.id}
+    end
+    render :json => shipping_options
+  end
 
   def hide_welcome_note
     @preference = get_preference
@@ -67,6 +78,29 @@ class PreferencesController < ApplicationController
   end
 
   private
+  
+  def update_coll_metafield(col, free_shipping)
+    fields = col.metafields
+    field = fields.find { |f| f.key == 'free_shipping' && f.namespace ='AusPostShipping'}
+    if field.nil?
+      field = ShopifyAPI::Metafield.new({:namespace =>'AusPostShipping',:key=>'free_shipping', :value=>free_shipping, :value_type=>'string' })
+    else
+      field.destroy
+      field = ShopifyAPI::Metafield.new({:namespace =>'AusPostShipping',:key=>'free_shipping', :value=>free_shipping, :value_type=>'string' })
+    end
+    col.add_metafield(field)
+  end
+  
+  def get_coll_free_shipping(col)
+    free_shipping = false
+    
+    fields = col.metafields
+    field = fields.find { |f| f.key == 'free_shipping' && f.namespace ='AusPostShipping'}
+    unless field.nil?
+      free_shipping = (field.value == "true")
+    end
+    free_shipping
+  end
 
   def get_preference
     preference = Preference.find_by_shop(current_shop)    

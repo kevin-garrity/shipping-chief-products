@@ -25,7 +25,9 @@
   = label_tag :flat_rate, "Charges", :id=>"float_rate_charge_label"
   = text_field :preference, :flat_rate
 %fieldset
-
+  = label_tag :free_shipping_by_collection, "Free Shipping by Shopify Collection <span class='has-tip' data-width='380' title='If you offer free shipping for cases where customers can pick up from your store.'>?</span>".html_safe
+  = check_box :preference, :free_shipping_by_collection, :onchange =>'free_shipping_by_collection_checked(this.value);'  
+%fieldset
   = label_tag :height, "Approximate dimensions of your parcel <br/>(Length, Width, Height)<br/>See <a href='http://auspost.com.au/parcels-mail/size-and-weight-guidelines.html' target='_blank'>parcel dimensions</a> for Dimension restrictions.<span class='has-tip' data-width='280' title='Enter the size of your container. We assume you will use the same box for all your items.'>?</span>".html_safe
   = select :preference, :default_box_size,  options_for_select(AusDefBoxSize(), selected = @preference.default_box_size)
   %br
@@ -146,6 +148,14 @@ $(document).ready( function() {
   $('.hide_node').bind('ajax:success', function(){
      $('.welcome_note').hide();
   });
+  
+  function free_shipping_by_collection_checked(show_free) 
+   {
+     if(show_free)
+       alert("show free");
+   }
     
 });
+
+
 

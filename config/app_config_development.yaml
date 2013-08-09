@@ -19,8 +19,22 @@ clients:
     - :red_pepper
     - :lifemap_science
     - :debug
+    - :aus_post_bus
     service_host: localhost:3000
     local_host: localhost:3000
+  aus-post-calculator-dev-shop.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :aus_post
+    - :fabusa
+    - :red_pepper
+    - :lifemap_science
+    - :debug
+    - :aus_post_bus
+    service_host: localhost:3001
+    local_host: localhost:3001
   red-pepper.myshopify.com:
     access: 
       all_except: []

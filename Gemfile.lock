@@ -296,11 +296,6 @@ GEM
       omniauth-shopify-oauth2 (= 1.1.0)
       rails (>= 3.1, < 5.0)
       shopify_api (~> 3.0.0)
-    shopify_unlimited (0.0.3)
-      activeresource (= 3.2.13)
-      activesupport
-      shopify_api (>= 3.0.0)
-      shopifydev (>= 0.0.10)
     shopifydev (0.0.10)
       activeresource (= 3.2.13)
       activesupport
@@ -407,8 +402,8 @@ DEPENDENCIES
   rudelo
   rufus-decision!
   sass-rails (~> 3.2.3)
+  shopify_api
   shopify_app
-  shopify_unlimited
   shopifydev
   shydra
   simple_form (>= 2.0.4)

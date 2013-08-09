@@ -56,8 +56,7 @@ module Carriers
         format: "json"
       }
 
-      services = ShopifyAPI::CarrierService.find(:all, params:
-        {name: service_name})
+      services = ShopifyAPI::CarrierService.find(:all)
 
       Rails.logger.info("destroying #{services.length} existing services")
       services.each{ |service| service.destroy }

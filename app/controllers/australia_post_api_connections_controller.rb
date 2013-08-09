@@ -49,7 +49,6 @@ class AustraliaPostApiConnectionsController < ApplicationController
         @service_list.append({ name: "Shipping",
                       code: "Shipping",
                       price: preference.flat_rate.to_s})    
-        puts("++++++++++++++++++flat rat" + calculated_weight.to_s)
         respond_to do |format|        
           format.js { render content_type: 'text/html', layout: false }
           format.html { render content_type: 'text/html', layout: false }                          

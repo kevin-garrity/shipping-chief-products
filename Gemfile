@@ -50,7 +50,7 @@ gem 'shydra'
 gem 'oj' # fast json parser, but mainly to make multi_json stfu
 
 # allows use of limit: false in ShopifyAPI calls
-gem 'shopify_unlimited'
+gem 'shopify_api'
 
 group :development do
   gem 'shopifydev'
