@@ -196,10 +196,28 @@ module Carriers
             themes <<  mobile_theme unless mobile_theme.nil?
             #changes for theme
             asset_files = [
-                  "snippets/webify-request-shipping-form.liquid",
+                  "snippets/webify-request-shipping-form.liquid"
                 ]
             replace_theme_files(asset_files, themes)
             shop.version = 4
+            shop.save!          
+        end
+        
+        if (version == 4)
+          Rails.logger.info("upgrading #{app_shop.domain} to version 4")
+            themes = ShopifyAPI::Theme.find(:all)
+            theme = themes.find { |t| t.role == 'main' }
+            mobile_theme = themes.find { |t| t.role == 'mobile' }
+            themes = Array.new
+            themes << theme
+            themes <<  mobile_theme unless mobile_theme.nil?
+            #changes for theme
+            asset_files = [
+                  "assets/webify_inject_shipping_calculator.js.liquid",
+                  "snippets/webify-request-shipping-form.liquid"
+                ]
+            replace_theme_files(asset_files, themes)
+            shop.version = 5
             shop.save!          
         end
       end
