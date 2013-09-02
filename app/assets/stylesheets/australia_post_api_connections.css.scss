@@ -189,27 +189,16 @@ table .header {
 
 .welcome_note {
   padding:10px;
-  height:360px;
+  height:auto!important;
   font-size: 0.9em;
 }
 
 
 #preference_flat_rate {
-  margin-left:100px;
-}
-
-#offers_flat_rate_label {
- margin-top:8px;
- width:290px;
- float:left;
- clear:both;
-}
-
-#float_rate_charge_label {
-  width:140px;
   margin-top:8px;
-  margin-left: 70px;
 }
+
+
 
 #preference_under_weight {
  display:inline;
