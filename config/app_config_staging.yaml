@@ -6,6 +6,7 @@ clients:
     carriers:
       - :aus_post
       - :fabusa
+      - :aus_post_bus      
     service_host: shipping-staging.herokuapp.com
     local_host: localhost
   red-pepper.myshopify.com:
