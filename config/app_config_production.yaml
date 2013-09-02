@@ -5,8 +5,9 @@ clients:
     menus: []
     carriers:
       - :aus_post
+      - :aus_post_bus      
       - :fabusa
-      - :lifemap_science      
+      - :lifemap_science
     service_host: shipping-foldabox-staging.herokuapp.com
   red-pepper.myshopify.com:
     access: 
