@@ -7,7 +7,11 @@ module Carriers
         @preference.shipping_methods_desc_dom = params[:shipping_methods_desc_dom]
         @preference.shipping_methods_desc_int = params[:shipping_methods_desc_int]
       end
-
+      
+      def current_deployed_version
+        5
+      end
+      
       def install
         update_shop_metafield(@preference.default_charge)          
         check_shipping_product_exists
@@ -50,33 +54,35 @@ module Carriers
         @vars = ShopifyAPI::Variant.find(:all, :params=>{:product_id => prod.id})
 
         #save product id in shop metafield for liquid template to consume
-        shop = session[:shopify].shop
+        withShopify do
+          shopify_shop = self.shop
 
 
-        if (@vars.length > 0)
-          fields = shop.metafields
-          field = fields.find { |f| f.key == 'product_id' && f.namespace ='AusPostShipping'}
+          if (@vars.length > 0)
+            fields = shopify_shop.metafields
+            field = fields.find { |f| f.key == 'product_id' && f.namespace ='AusPostShipping'}
 
-          if field.nil?
-            field = ShopifyAPI::Metafield.new({:namespace =>'AusPostShipping',:key=>'product_id', :value=>@vars[0].id, :value_type=>'string' })
-            field.save
-          elsif (field.value.to_s != @vars[0].id.to_s) #only save if variant id has changed
-            field.destroy
-            field = ShopifyAPI::Metafield.new({:namespace =>'AusPostShipping',:key=>'product_id', :value=>@vars[0].id, :value_type=>'string' })
-            field.save!
+            if field.nil?
+              field = ShopifyAPI::Metafield.new({:namespace =>'AusPostShipping',:key=>'product_id', :value=>@vars[0].id, :value_type=>'string' })
+              field.save
+            elsif (field.value.to_s != @vars[0].id.to_s) #only save if variant id has changed
+              field.destroy
+              field = ShopifyAPI::Metafield.new({:namespace =>'AusPostShipping',:key=>'product_id', :value=>@vars[0].id, :value_type=>'string' })
+              field.save!
+            end
           end
         end
 
       end
 
       def check_shopify_files_present
-        url = session[:shopify].url
-        shop = Shop.find_by_url(url)
-        if (shop.theme_modified)      
+
+        app_shop = self.app_shop
+        if (app_shop.theme_modified)      
           #check if need to upgrade theme files
 
-          if (shop.version != current_deployed_version)
-            upgrade_theme(shop.version, shop)
+          if (app_shop.version != current_deployed_version)
+            upgrade_theme(app_shop.version, app_shop)
           end
           return
         end
@@ -136,14 +142,14 @@ module Carriers
             end
           end
         end
-        shop.theme_modified = true
-        shop.save!
+        app_shop.theme_modified = true
+        app_shop.save!
 
       end
 
       def upgrade_theme(version, shop)
         if (version == 1 || version.nil?)
-          Rails.logger.info("upgrading #{shop.url} to version 2")      
+          Rails.logger.info("upgrading #{app_shop.domain} to version 2")      
           themes = ShopifyAPI::Theme.find(:all)
           theme = themes.find { |t| t.role == 'main' }
           mobile_theme = themes.find { |t| t.role == 'mobile' }
@@ -163,7 +169,7 @@ module Carriers
           version = 2
         end
         if (version == 2)
-          Rails.logger.info("upgrading #{shop.url} to version 3")
+          Rails.logger.info("upgrading #{app_shop.domain} to version 3")
           themes = ShopifyAPI::Theme.find(:all)
           theme = themes.find { |t| t.role == 'main' }
           mobile_theme = themes.find { |t| t.role == 'mobile' }
@@ -181,7 +187,7 @@ module Carriers
           shop.save!
         end    
         if (version == 3)
-          Rails.logger.info("upgrading #{shop.url} to version 4")
+          Rails.logger.info("upgrading #{app_shop.domain} to version 4")
             themes = ShopifyAPI::Theme.find(:all)
             theme = themes.find { |t| t.role == 'main' }
             mobile_theme = themes.find { |t| t.role == 'mobile' }

@@ -1,6 +1,7 @@
 //VERSION 2
 
 //VERSION 3
+//VERSION 5
 // Show shipping line after submit field
 
 var request_params;
@@ -47,6 +48,8 @@ ajax_request_calculation = function(data) {
   var width = webifyJQ("input#australia_post_api_connection_width").val();
   var length = webifyJQ("input#australia_post_api_connection_length").val();
   var blanks = webifyJQ("input#australia_post_api_connection_blanks").val();
+  var items = webifyJQ("input#australia_post_api_connection_items").val();
+  
   var shop_url = window.location.hostname;
 
   // get the shopify cart ID and fashion our own cookie
@@ -63,6 +66,7 @@ ajax_request_calculation = function(data) {
     width: width,
     length: length,
     blanks: blanks,
+    items: items,
     shop: shop_url
   }
 

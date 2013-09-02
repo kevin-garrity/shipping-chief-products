@@ -9,11 +9,12 @@ class AustraliaPostApiConnection
 
   attr_accessor :attributes, :api_errors
 
-  attr_accessor :height, :length, :weight, :width, :blanks, :thickness #for letter mail
+  attr_accessor :items, :height, :length, :weight, :width, :blanks,  :thickness #for letter mail
   attr_accessor :country_code, :air_mail_price, :sea_mail_price
   attr_accessor :domestic, :from_postcode, :to_postcode
   attr_accessor :regular_price, :priority_price, :express_price
   attr_accessor :container_weight
+  attr_accessor :has_free_shipping_items
 
   class Girth < ActiveModel::Validator
     # implement the method where the validation logic must reside
@@ -38,6 +39,7 @@ class AustraliaPostApiConnection
   end
 
   validates :from_postcode, presence: true
+  
   validates :to_postcode, presence: true, :if => Proc.new {|record| record.domestic }
 
   validates_with ResponseErrors
@@ -122,6 +124,8 @@ class AustraliaPostApiConnection
     #     make 1 API call at excess weight
     #
     total_weight = self.attributes[:weight].to_f
+    
+    #get total weight 
 
     # the max weight for a single AUS api call
     # the weight of the container
@@ -145,16 +149,15 @@ class AustraliaPostApiConnection
       self.attributes[:weight] = api_max_weight
     end
 
-    Rails.logger.info("total weight: " + total_weight.to_s)
-    Rails.logger.info("api max weight : " + api_max_weight.to_s)
-    Rails.logger.info("container_weight: " + container_weight.to_s)
-    Rails.logger.info("contents_weight: " + contents_weight.to_s)
+    Rails.logger.debug("total weight: " + total_weight.to_s)
+    Rails.logger.debug("container_weight: " + container_weight.to_s)
+    Rails.logger.debug("contents_weight: " + contents_weight.to_s)
 
-    Rails.logger.info("number_of_packages : " + number_of_packages.to_s)
-    Rails.logger.info("excess_weight : " + excess_weight.to_s)
+    Rails.logger.debug("number_of_packages : " + number_of_packages.to_s)
+    Rails.logger.debug("excess_weight : " + excess_weight.to_s)
 
     result = api_call(request_url)
-    Rails.logger.info("after performing 20 kg call")
+    Rails.logger.debug("after performing 20 kg call")
 
     # modify the results so that they represent n packages + the excess
     if self.api_errors.empty?
@@ -167,7 +170,7 @@ class AustraliaPostApiConnection
         if hash.has_key?("price")
 
           original_price = hash["price"].to_f
-          Rails.logger.info("  original_price: " + original_price.to_s)
+          Rails.logger.debug("  original_price: " + original_price.to_s)
           modified_price = ( original_price * number_of_packages).to_f
 
           hash["price"] = modified_price
@@ -175,10 +178,10 @@ class AustraliaPostApiConnection
         end
       end
 
-      Rails.logger.info("after 20 package stuff -- \n\n" + services.inspect)
+      Rails.logger.debug("after 20 package stuff -- \n\n" + services.inspect)
 
       if excess_weight > 0
-        Rails.logger.info("#{excess_weight.to_s} kg package")
+        Rails.logger.debug("#{excess_weight.to_s} kg package")
 
         # set up a mini API call to determine the cost of shipping the excess
         self.attributes[:weight] = excess_weight
@@ -198,7 +201,7 @@ class AustraliaPostApiConnection
       end
 
       result[1]["service"] = services
-      Rails.logger.info("finally -- \n\n\n" + result[1]["service"].inspect)
+      Rails.logger.debug("finally -- \n\n\n" + result[1]["service"].inspect)
     end
 
     # set the weight back to its original value
@@ -221,8 +224,8 @@ class AustraliaPostApiConnection
         rescue Exception => e
           # anything else
           self.api_errors.append(e)
-          Rails.logger.info("error: " + e.message)
-          Rails.logger.info("api connection will not be saved")
+          Rails.logger.debug("error: " + e.message)
+          Rails.logger.debug("api connection will not be saved")
         end
       end
 
@@ -235,7 +238,7 @@ class AustraliaPostApiConnection
         self.api_errors.append(@service_list[1]['errorMessage'])
       end
     rescue NoMethodError => e
-      Rails.logger.info("error: " + e.message)
+      Rails.logger.debug("error: " + e.message)
       # we actually already reported this
       # It refers to flatten above, and comes from
       # the Timeout::Error rescued above
@@ -243,8 +246,8 @@ class AustraliaPostApiConnection
     rescue Exception => e
       # anything else
       self.api_errors.append(e)
-      Rails.logger.info("error: " + e.message)
-      Rails.logger.info("api connection will not be saved")
+      Rails.logger.debug("error: " + e.message)
+      Rails.logger.debug("api connection will not be saved")
     end
 
     @service_list

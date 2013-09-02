@@ -5,6 +5,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
   def new
     @weight = params[:weight]
     @blanks = params[:blanks]
+    @items = params[:items]
     shop_url = request.headers["HTTP_ORIGIN"].sub(%r{^.*//}, "")
 
     preference = Preference.find_by_shop_url!(shop_url)
@@ -18,6 +19,8 @@ class AustraliaPostApiConnectionsController < ApplicationController
 
     @australia_post_api_connection.weight = @weight
     @australia_post_api_connection.blanks = @blanks
+    @australia_post_api_connection.items = @items
+    
     @countries = get_country_list(@australia_post_api_connection)
 
     respond_to do |format|
@@ -29,6 +32,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
   # POST /australia_post_api_connections
   # POST /australia_post_api_connections.json
   def create
+
     # merge the raw post data into the params
     params.merge!(Rack::Utils.parse_nested_query(request.raw_post))
 
@@ -40,8 +44,8 @@ class AustraliaPostApiConnectionsController < ApplicationController
     # recalculate the weight to include blanks
     calculated_weight = params[:australia_post_api_connection][:blanks].to_i * preference.default_weight.to_f
     calculated_weight += params[:australia_post_api_connection][:weight].to_f
-    params[:australia_post_api_connection][:blanks] = '0'
-    params[:australia_post_api_connection][:weight] = calculated_weight.to_s
+
+    items =  params[:australia_post_api_connection][:items]
     
     if (preference.offers_flat_rate)
       if (calculated_weight <= preference.under_weight)
@@ -53,20 +57,70 @@ class AustraliaPostApiConnectionsController < ApplicationController
           format.js { render content_type: 'text/html', layout: false }
           format.html { render content_type: 'text/html', layout: false }                          
         end
-        return
+        return  #evil...
       end
     end
     
+    weight = params[:australia_post_api_connection][:weight]
+    
+    if (preference.free_shipping_by_collection)
+      subtract_weight = 0
+      
+      #get free shipping items weight and subtract total weight.
+      item_array = items.split(',')
+      
+      app_shop =  Shop.find_by_url(url)
+      
+      ShopifyAPI::Session.temp(app_shop.myshopify_domain, app_shop.token) do      
+        item_array.each do |item|
+          variant = ShopifyAPI::VariantWithProduct.find(item)          
+          p = ShopifyAPI::Product.find(variant.product_id)
+          
+          p.collections.each do |col|
+            fields = col.metafields
+            field = fields.find { |f| f.key == 'free_shipping' && f.namespace ='AusPostShipping'}
+            unless field.nil?
+              subtract_weight += variant.grams if field.value == "true"            
+            end
+          end
+        
+          p.smart_collections.each do |col|
+            fields = col.metafields
+            field = fields.find { |f| f.key == 'free_shipping' && f.namespace ='AusPostShipping'}
+            unless field.nil?
+              subtract_weight += variant.grams if field.value == "true"            
+            end
+          end
+        end
+      end
+      
+          
+      weight = weight.to_f - subtract_weight/1000
+    end
 
-    @australia_post_api_connection = AustraliaPostApiConnection.new({:weight=> params[:australia_post_api_connection][:weight],
-                                                                    :blanks => params[:australia_post_api_connection][:blanks],
-                                                                    :from_postcode => preference.origin_postal_code,
-                                                                    :country_code => params[:australia_post_api_connection][:country_code],
-                                                                    :to_postcode => params[:australia_post_api_connection][:to_postcode],
-                                                                    :height=>preference.height, :width=>preference.width, :length=>preference.length,
-                                                                    :container_weight => preference.container_weight
-    })
 
+    if (weight.to_f == 0.0)
+      #no need to call australia post. no weight of item
+       @service_list = Array.new
+        @service_list.append({ name: "Free Shipping",
+                      code: "Free Shipping",
+                      price: "0.0"})    
+        respond_to do |format|        
+          format.js { render content_type: 'text/html', layout: false }
+          format.html { render content_type: 'text/html', layout: false }                          
+        end
+        return
+    else    
+      @australia_post_api_connection = AustraliaPostApiConnection.new({:weight=> weight,
+                                                                      :blanks => params[:australia_post_api_connection][:blanks],
+                                                                      :from_postcode => preference.origin_postal_code,
+                                                                      :country_code => params[:australia_post_api_connection][:country_code],
+                                                                      :to_postcode => params[:australia_post_api_connection][:to_postcode],
+                                                                      :height=>preference.height, :width=>preference.width, :length=>preference.length,
+                                                                      :container_weight => preference.container_weight, :items => items
+      })
+    end
+    
     @australia_post_api_connection.domestic = ( @australia_post_api_connection.country_code == "AUS" )
 
     # get country list from the API -- we'll format these if there were no errors

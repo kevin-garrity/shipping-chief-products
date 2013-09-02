@@ -16,10 +16,21 @@ module Carriers
     def configure(params=nil)
       # implement in subclasses
     end
+    
+    def app_shop
+      Shop.find_by_url(preference.shop_url)
+    end
+    
 
     def install
       # implement in subclasses
     end
+    
+    def withShopify
+       ShopifyAPI::Session.temp(app_shop.myshopify_domain, app_shop.token) do
+         yield
+       end
+     end
 
     def service_host
       client_config.service_host || "foldaboxusa.herokuapp.com"

@@ -19,7 +19,7 @@ carriers:
     legacy_name: AusPost
   aus_post_bus:
     public: true
-    description: Australia Post (For Business plan and up)
+    description: Australia Post (with Shopify Real-time carrier shipping)
     service: true
     legacy_name: AusPostBus
   red_pepper:

@@ -19,8 +19,8 @@ gem "cucumber-rails", ">= 1.3.0", :group => :test, :require => false
 gem "database_cleaner", ">= 0.9.1", :group => :test
 gem "launchy", ">= 2.1.2", :group => :test
 gem "capybara", ">= 1.1.2", :group => :test
-gem "compass-rails", ">= 1.0.3", :group => :assets
-gem "zurb-foundation", ">= 3.2.5", :group => :assets
+gem "compass-rails", ">=1.0.3", :group => :assets
+gem "zurb-foundation", ">=4.0", :group => :assets
 gem "simple_form", ">= 2.0.4"
 gem "shopify_app"
 gem "nokogiri"

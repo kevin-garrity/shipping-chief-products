@@ -42,22 +42,26 @@
       .field.hidden(style='display:none')
         = f.label :blanks
         = f.number_field :blanks
+        
+      .field.hidden()
+        = f.label :items
+        = f.text_field :items, step: "any"        
 
-      .field.hidden(style='display:none')
+      .field.hidden()
         = f.label :height
         = f.number_field :height, step: "any"
 
-      .field.hidden(style='display:none')
+      .field.hidden()
         = f.label :width
         = f.number_field :width, step: "any"
 
-      .field.hidden(style='display:none')
+      .field.hidden()
         = f.label :length
         = f.number_field :length, step: "any"
-
-      .field.hidden(style='display:none')
+          
+      .field.hidden()
         = f.label :from_postcode
-        = f.number_field :from_postcode
-
-      .field.hidden(style='display:none')
+        = f.number_field :from_postcode      
+          
+      .field.hidden()
         %input#tokentag{:name => "authenticity_token", :type => "hidden", :value => form_authenticity_token}

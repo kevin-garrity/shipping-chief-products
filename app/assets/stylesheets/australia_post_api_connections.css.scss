@@ -1,3 +1,225 @@
 // Place all the styles related to the AustraliaPostAPIConnections controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+body{ 
+  color: $text_color_light;
+  background-color: $background_color_light;
+  font-family:$serif_font;
+}
+
+@media only screen and (min-device-width: 481px){
+
+  .shadowed {
+    -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 2px;
+    -moz-box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 2px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 2px;
+  }
+
+  .rounded-top-corners {
+    @include border-top-radius(5px);
+  }
+
+  .rounded-bottom-corners {
+    @include border-bottom-radius(5px);
+  }
+
+  .rounded-corners {
+    @include border-radius(5px);
+  }
+}
+
+.top-bar {
+  margin-bottom: 0px;
+  font-family: $sanserif_font;
+}
+
+.alert-box {
+  margin:15px 0px;
+}
+
+.row {
+  background-color: #FEFEFE;
+}
+
+footer.row {
+  background-color: $background_color_light;
+  margin-top: 20px;
+}
+
+
+
+
+h1 {
+ font-size:24px;
+}
+
+h2 {
+  font-size:18px;
+}
+
+h3 {
+  font-size:16px;
+}
+
+
+form fieldset {
+  margin-top:0px;
+}
+
+form label {
+  display:inline;
+  float:left;
+  width:450px;
+  line-height:20px;
+  margin-right:20px;
+  font-weight:400;
+}
+form input[type=text] {
+  width:190px;
+}
+
+
+form select {
+ width:200px;
+ margin-bottom:10px;
+}
+form span.has-tip {
+  margin-left:10px;
+}
+
+#preference_carrier {
+  width:80%;
+}
+
+.panel {
+  height:1000px;
+}
+
+.actions {
+  margin-top:70px;
+  margin-left:450px;
+}
+
+.actions input[type=submit]{
+  margin-right:15px;
+}
+
+#error_explanation h2 {
+  font-size:18px;
+}
+
+#error_explanation ul {
+  margin-left:30px;
+
+}
+
+#error_explanation ul li {
+  font-weight:bold;
+}
+
+#preference_origin_postal_code {
+  width:70px;
+}
+
+#preference_height, #preference_width, #preference_length {
+  width:50px;
+  display:inline;
+}
+
+form .field_with_errors {
+  display:inline;
+}
+
+form .field_with_errors input {
+  border:1px solid red;
+}
+
+form .postfix {
+  display:inline;
+  background:#fff;
+  border:0px;
+  margin-left:3px;
+}
+
+.hidden-prefix {
+  visibility:hidden;
+}
+
+form .prefix {
+  display:inline;
+  background:#fff;
+  border:0px;
+  margin-right:3px;
+}
+
+.edit_preference .prefix {
+  width:15px;
+}
+
+.edit_preference form .field_with_errors{
+  display:inline;
+}
+
+
+#shop-url-text {
+  width:400px;
+  display:inline;
+}
+
+
+#more-carriers {
+  text-align:right;
+}
+
+table .header {
+  background-color: #E6E6E6;
+}
+
+
+
+
+
+#preference_surcharge_percentage, #preference_default_weight, #preference_items_per_box,#preference_default_charge,
+#preference_container_weight, #preference_flat_rate  {
+  display:inline;
+  width:70px;
+}
+
+
+.welcome_note {
+  padding:10px;
+  height:360px;
+  font-size: 0.9em;
+}
+
+
+#preference_flat_rate {
+  margin-left:100px;
+}
+
+#offers_flat_rate_label {
+ margin-top:8px;
+ width:290px;
+ float:left;
+ clear:both;
+}
+
+#float_rate_charge_label {
+  width:140px;
+  margin-top:8px;
+  margin-left: 70px;
+}
+
+#preference_under_weight {
+ display:inline;
+ margin:0;
+
+ width:50px;
+}
+
+#flat_rate_kg {
+  margin-top:8px;
+  width: 20px;
+}
+

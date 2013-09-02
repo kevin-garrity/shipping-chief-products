@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130502043517) do
+ActiveRecord::Schema.define(:version => 20130719045854) do
 
   create_table "preference", :force => true do |t|
     t.string  "shop_url"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(:version => 20130502043517) do
     t.boolean "offers_flat_rate"
     t.decimal "under_weight"
     t.decimal "flat_rate"
+    t.boolean "free_shipping_by_collection"
   end
 
   create_table "shops", :force => true do |t|

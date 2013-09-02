@@ -1,6 +1,6 @@
 
 %fieldset
-  = label_tag :origin_postal_code, "Enter the Australian Postcode your items would be shipping from(4 characters) <span class='has-tip' data-width='280' title='This will be passed to Australia Post for calculation purpose.'>?</span>".html_safe
+  = label_tag :origin_postal_code, "Enter the Australian Postcode your items would be shipping from(4 characters) <span data-tooltip class='has-tip tip-bottom'  title='This will be passed to Australia Post for calculation purpose.'>?</span>".html_safe
   = text_field :preference, :origin_postal_code
   = label_tag :default_weight, "Enter the default product weight to used in calculation when there is no weight stored for items <span class='has-tip' data-width='280' title='If you choose not to use weight in Shopify, enter a default weight to pass to Australia Post for calculation.'>?</span>".html_safe
   = text_field :preference, :default_weight
@@ -10,7 +10,7 @@
   = text_field :preference, :default_charge
 %br
 %fieldset
-  %br 
+  %br
   = label_tag :free_shipping_option, "Offer free shipping option at checkout <span class='has-tip' data-width='380' title='If you offer free shipping for cases where customers can pick up from your store.'>?</span>".html_safe
   = check_box :preference, :free_shipping_option
   = label_tag :free_shipping_description, "Description of the free shipping option"
@@ -21,12 +21,15 @@
   %br
   = label_tag :under_weight, "If weight of cart items is under or equal to", :id=>"offers_flat_rate_label"
   = text_field :preference, :under_weight  
-  %span(id="flat_rate_kg") kg  
+  %span(id="flat_rate_kg") kg
+  %br
   = label_tag :flat_rate, "Charges", :id=>"float_rate_charge_label"
   = text_field :preference, :flat_rate
 %fieldset
-  = label_tag :free_shipping_by_collection, "Free Shipping by Shopify Collection <span class='has-tip' data-width='380' title='If you offer free shipping for cases where customers can pick up from your store.'>?</span>".html_safe
-  = check_box :preference, :free_shipping_by_collection, :onchange =>'free_shipping_by_collection_checked(this.value);'  
+  = label_tag :free_shipping_by_collection, "Free Shipping by Shopify Collection <span class='has-tip' data-width='380' title='If you offer free shipping for certain items in your store. You can set the free shipping at Shopify Collection level.'>?</span>".html_safe
+  = check_box :preference, :free_shipping_by_collection, :onchange =>'free_shipping_by_collection_checked(this.checked);'  
+  %div(id="free_shipping_collection")
+    = render :partial => "/carriers/free_shipping_by_collection", :locals=>{:options => @free_shipping_options }
 %fieldset
   = label_tag :height, "Approximate dimensions of your parcel <br/>(Length, Width, Height)<br/>See <a href='http://auspost.com.au/parcels-mail/size-and-weight-guidelines.html' target='_blank'>parcel dimensions</a> for Dimension restrictions.<span class='has-tip' data-width='280' title='Enter the size of your container. We assume you will use the same box for all your items.'>?</span>".html_safe
   = select :preference, :default_box_size,  options_for_select(AusDefBoxSize(), selected = @preference.default_box_size)
@@ -95,6 +98,8 @@
 
 :javascript
 $(document).ready( function() {
+
+  free_shipping_by_collection_checked($('#preference_free_shipping_by_collection').val() );
   $('#preference_default_box_size').change(function() {
    switch(this.value)
    {
@@ -152,7 +157,9 @@ $(document).ready( function() {
   function free_shipping_by_collection_checked(show_free) 
    {
      if(show_free)
-       alert("show free");
+        $('#free_shipping_collection').show();
+    else
+      $('#free_shipping_collection').hide();    
    }
     
 });

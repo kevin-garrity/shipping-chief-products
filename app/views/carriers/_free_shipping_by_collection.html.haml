@@ -1,0 +1,12 @@
+%table
+  %tr
+    %td
+      %b Collection Name
+    %td
+      %b Free Shipping?
+  - @free_shipping_options.each do |option|
+    %tr
+      %td
+        = label_tag option[:collection_name]
+      %td
+        = check_box_tag option[:collection_name], "1", checked = option[:free]
