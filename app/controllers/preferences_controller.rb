@@ -71,6 +71,7 @@ class PreferencesController < ApplicationController
   
   def carrier_selected
     @preference = get_preference
+    @free_shipping_options = get_collection_shipping_options
     
     if (params[:carrier].blank?)
       render :text => ""
@@ -87,7 +88,7 @@ class PreferencesController < ApplicationController
   
 
   def hide_welcome_note
-    @preference = get_preference
+    @preference = get_preference 
     @preference.hide_welcome_note = true
     @preference.save
     render :json =>{:result => "ok"}
