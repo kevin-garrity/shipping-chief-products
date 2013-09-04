@@ -1,4 +1,11 @@
 clients:
+  default:
+    menus: 
+    access:
+      all_except: []
+    carriers:
+    - :aus_post
+    - :aus_post_bus  
   schumm-durgan-and-lang94.myshopify.com:
     access: 
       all_except: []
