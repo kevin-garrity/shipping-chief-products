@@ -99,7 +99,7 @@
 :javascript
 $(document).ready( function() {
 
-  free_shipping_by_collection_checked($('#preference_free_shipping_by_collection').val() );
+  free_shipping_by_collection_checked($('#preference_free_shipping_by_collection').is(':checked') );
   $('#preference_default_box_size').change(function() {
    switch(this.value)
    {
