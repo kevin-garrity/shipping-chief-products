@@ -18,6 +18,10 @@ module Carriers
     def destination
       @destination ||= Location.new(params[:destination])
     end
+    
+    def get_currency    
+      params[:currency]
+    end
 
     def items
       params[:items]

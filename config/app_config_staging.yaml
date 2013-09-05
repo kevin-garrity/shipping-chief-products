@@ -33,3 +33,9 @@ clients:
     carriers:
     - :debug
     - :lifemap_science
+  iconicbook.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :ridgewood

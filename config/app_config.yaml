@@ -43,3 +43,9 @@ carriers:
     description: Custom Rules -- Debug
     service: true
     service_discovery: false
+  ridgewood:
+    public: false
+    description: Custom Rules -- Ridgewood
+    service: true
+    service_discovery: false    
+    

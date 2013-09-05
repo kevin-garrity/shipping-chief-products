@@ -8,9 +8,9 @@ class RatesController < ApplicationController
 
     service_class = carrier_service_class_for(preference.carrier, preference.client_config)
     service = service_class.new(preference, params[:rate])
-
+    
     rates = service.fetch_rates
-        
+
     render :json => {:rates => rates}
   rescue ActiveMerchant::Shipping::ResponseError => e
     Rails.logger.debug e.message

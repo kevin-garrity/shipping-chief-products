@@ -62,4 +62,9 @@ clients:
     - :debug
     - :lifemap_science
     service_host: shipping-lifemap-bioreagents.herokuapp.com
-      
+  iconicbook.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :ridgewood      
