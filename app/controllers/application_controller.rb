@@ -15,6 +15,8 @@ class ApplicationController < ActionController::Base
           && !session[:shopify].url.include?("dev-shop") \
           && !session[:shopify].url.include?("schumm-durgan-and-lang94") \
           && !session[:shopify].url.include?("lifemap") \
+          && !session[:shopify].url.include?("iconicbook") \
+          
           )
             #place a recurring charge
           charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Shipping Calculator Application", 
