@@ -53,7 +53,7 @@ module Carriers
               else
                 rates = response.rates.select {|r| r.service_name.include?("USPS Priority Mail")}
 
-                rates.delete_if {|r| r.service_name.include?("Special") ||   r.service_name.include?("Express") }
+                rates.delete_if {|r| r.service_name.include?("Special") ||   r.service_name.include?("Priority Mail Express International") }
               end
 
               ret_rates = rates.sort_by(&:price).collect do |rate|

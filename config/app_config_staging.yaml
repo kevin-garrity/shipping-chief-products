@@ -39,3 +39,5 @@ clients:
     menus: []
     carriers:
     - :ridgewood
+    service_host: shipping-ridgewood.herokuapp.com
+        
