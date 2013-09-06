@@ -33,6 +33,8 @@ module Carriers
                 rate_array << {:service_name => "USPS Priority Mail International", :total_price => 5995 * quan, :currency => self.get_currency, :service_code=>"NA" }
               end
               
+              puts("flat rate is " + rate_array.to_s)
+              
             end
             
             match = item[:sku].include?('SPECIALEDITION')
@@ -69,7 +71,7 @@ module Carriers
                 
                 #change to match the description for regular so the rates can be merged properly
                 service_name = "USPS Priority Mail Express 2-Day" if (rate.service_name == "USPS Priority Mail Express 1-Day")
-                  {:service_name => service_name, :service_code=> 'NA', :total_price => rate.price.to_i, :currency => rate.currency}
+                {:service_name => service_name, :service_code=> 'NA', :total_price => rate.price.to_i, :currency => rate.currency}
                   
               end              
 
@@ -113,7 +115,7 @@ module Carriers
 
       def multiple_charge(rates, multiplier)
         rates.each do|rate|
-          rate['total_price'] = rate['total_price'] .to_i * multiplier      
+          rate[:total_price] = rate[:total_price] .to_i * multiplier      
         end
         rates
       end
