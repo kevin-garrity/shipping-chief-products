@@ -60,6 +60,8 @@ module Carriers
                 rates = response.rates.select {|r| r.service_name.include?("International")}
 
                 rates.delete_if {|r| r.service_name.include?("Special") ||   r.service_name.include?("Priority Mail Express International") }
+                puts("foreign rate is " + rates.to_s)
+                
               end
 
               ret_rates = rates.sort_by(&:price).collect do |rate|
@@ -68,6 +70,7 @@ module Carriers
                 #change to match the description for regular so the rates can be merged properly
                 service_name = "USPS Priority Mail Express 2-Day" if (rate.service_name == "USPS Priority Mail Express 1-Day")
                   {:service_name => service_name, :service_code=> 'NA', :total_price => rate.price.to_i, :currency => rate.currency}
+                  
               end              
 
               ret_rates = multiple_charge(ret_rates, quan) if (quan > 1)
