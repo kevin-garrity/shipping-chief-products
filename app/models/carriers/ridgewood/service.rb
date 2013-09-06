@@ -56,9 +56,8 @@ module Carriers
                 if (express_rates.size > 1)
                   rates.delete_if {|r| r.service_name.include?("USPS Priority Mail Express 2-Day") }                  
                 end                
-
               else
-                rates = response.rates.select {|r| r.service_name.include?("USPS Priority Mail")}
+                rates = response.rates.select {|r| r.service_name.include?("International")}
 
                 rates.delete_if {|r| r.service_name.include?("Special") ||   r.service_name.include?("Priority Mail Express International") }
               end
