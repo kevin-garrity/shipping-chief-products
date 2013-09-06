@@ -7,6 +7,7 @@ class PreferencesController < ApplicationController
 
   def show
     @preference = get_preference
+    @carrier_preference = get_carrier_preference(@preference.carrier)
     @free_shipping_options = get_collection_shipping_options
 
     Rails.logger.info("session[:shopify].url: #{session[:shopify].url.inspect}")
@@ -19,6 +20,8 @@ class PreferencesController < ApplicationController
   # GET /preference/edit
   def edit
     @preference = get_preference
+    @carrier_preference = get_carrier_preference(@preference.carrier)
+    
     @free_shipping_options = get_collection_shipping_options
     
   end
@@ -28,6 +31,7 @@ class PreferencesController < ApplicationController
   def update
     
     @preference = get_preference()
+    @carrier_preference = get_carrier_preference(@preference.carrier)
 
     @preference.shop_url = session[:shopify].shop.domain
 
@@ -58,6 +62,11 @@ class PreferencesController < ApplicationController
       installer.configure(params)
 
       if @preference.save
+        #save carrier preference
+        @carrier_preference.attributes = params[:carrier_preference]        
+        @carrier_preference.shop_url = @preference.shop_url
+        
+        @carrier_preference.save
         installer.install
 
         format.html { redirect_to preferences_url, notice: 'Preference was successfully updated.' }
@@ -71,6 +80,8 @@ class PreferencesController < ApplicationController
   
   def carrier_selected
     @preference = get_preference
+    @carrier_preference = get_carrier_preference(params[:carrier])
+
     @free_shipping_options = get_collection_shipping_options
     
     if (params[:carrier].blank?)
@@ -112,7 +123,6 @@ class PreferencesController < ApplicationController
     free_shipping = false    
     fields = col.metafields
     
-    puts("found " + fields.to_s)
     field = fields.find { |f| f.key == 'free_shipping' && f.namespace ='AusPostShipping'}
     unless field.nil?
       free_shipping = (field.value == "true")
@@ -142,6 +152,17 @@ class PreferencesController < ApplicationController
   def get_preference
     preference = Preference.find_by_shop(current_shop)    
     preference ||= Preference.new
+  end
+  
+  def get_carrier_preference(carrier)
+    unless carrier.nil?
+      pre_class = carrier_preference_for(carrier)
+      puts("current shop is " + current_shop.myshopify_domain.to_s)
+      preference = pre_class.find_by_shop(current_shop)
+      preference ||= pre_class.new
+    else
+      nil
+    end  
   end
   
 

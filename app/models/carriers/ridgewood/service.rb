@@ -3,6 +3,9 @@ module Carriers
     
     class Service < ::Carriers::Service    
 
+      def get_ridgewood_preference
+        RidgewoodPreference.find_by_shop(self.shop)
+      end
 
       def get_calculator
         cal = ActiveMerchant::Shipping::USPS.new(:login=>"337RIDGE0587", :test =>false, commercial_base:true)        
@@ -14,6 +17,7 @@ module Carriers
       
       def fetch_rates
         
+        ridge_preference = get_ridgewood_preference
         rate_array = Array.new
         withShopify do
           
@@ -27,14 +31,11 @@ module Carriers
               quan = item[:quantity].to_i               
 
               if (is_domestic)
-                rate_array << {:service_name => "USPS Priority Mail 2-Day", :total_price => 1100 * quan, :currency => self.get_currency, :service_code=>"NA" }
-                rate_array << {:service_name => "USPS Priority Mail Express 2-Day", :total_price => 3995 * quan, :currency => self.get_currency, :service_code=>"NA" }
+                rate_array << {:service_name => "USPS Priority Mail 2-Day", :total_price => ridge_preference.in_cents(:domestic_regular_flat_rate) * quan, :currency => self.get_currency, :service_code=>"NA" }
+                rate_array << {:service_name => "USPS Priority Mail Express 2-Day", :total_price => ridge_preference.in_cents(:domestic_express_flat_rate) * quan, :currency => self.get_currency, :service_code=>"NA" }
               else
-                rate_array << {:service_name => "USPS Priority Mail International", :total_price => 5995 * quan, :currency => self.get_currency, :service_code=>"NA" }
-              end
-              
-              puts("flat rate is " + rate_array.to_s)
-              
+                rate_array << {:service_name => "USPS Priority Mail International", :total_price => ridge_preference.in_cents(:international_flat_rate) * quan, :currency => self.get_currency, :service_code=>"NA" }
+              end                          
             end
             
             match = item[:sku].include?('SPECIALEDITION')
@@ -45,7 +46,7 @@ module Carriers
               weight = item[:grams].to_i
               packages = Array.new      
               
-              packages << ActiveMerchant::Shipping::Package.new(Quantified::Mass.new(weight, :grams), [18, 16, 9].map {|m| Quantified::Length.new(m, :inches)} ) 
+              packages << ActiveMerchant::Shipping::Package.new(Quantified::Mass.new(weight, :grams), [@preference.length, @preference.width, @preference.height].map {|m| Quantified::Length.new(m, :inches)} ) 
               response = cal.find_rates(origin, destination, packages)
               
               if (is_domestic)              
@@ -62,7 +63,6 @@ module Carriers
                 rates = response.rates.select {|r| r.service_name.include?("International")}
 
                 rates.delete_if {|r| r.service_name.include?("Special") ||   r.service_name.include?("Priority Mail Express International") }
-                puts("foreign rate is " + rates.to_s)
                 
               end
 

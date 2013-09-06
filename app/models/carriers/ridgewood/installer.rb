@@ -1,6 +1,6 @@
 module Carriers
   module Ridgewood
-    class Installer < ::Carriers::Installer
+    class Installer < ::Carriers::Installer      
       def configure(params=nil)
         Rails.logger.info("#{self.class.name}#configure")
       end

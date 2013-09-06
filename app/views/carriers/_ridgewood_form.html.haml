@@ -1,4 +1,27 @@
-%h3 You are all set to use the application!
+%div Your container size
+%br
+%span(class="prefix") Length
+= text_field :preference,  :length
+%span(class="postfix") Inch
+%br 
+%span(class="prefix") Width
+= text_field :preference,  :width
+%div(class="postfix") Inch
+%br
+%span(class="prefix") Height
+= text_field :preference,  :height
+%span(class="postfix") Inch
+%br
+  
+= label_tag :domestic_regular_flat_rate, "Enter flat rate for domestic shipping"   
+= text_field :carrier_preference,  :domestic_regular_flat_rate
+
+= label_tag :domestic_express_flat_rate, "Enter flat rate for express domestic shipping"   
+= text_field :carrier_preference,  :domestic_express_flat_rate
+
+= label_tag :international_flat_rate , "Enter flat rate for international shipping"   
+= text_field :carrier_preference,  :international_flat_rate 
+
 .actions
   = submit_tag 'Save', :class=>"button"
   = link_to 'Cancel', preferences_path
