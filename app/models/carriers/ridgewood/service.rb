@@ -30,7 +30,7 @@ module Carriers
                 rate_array << {:service_name => "USPS Priority Mail 2-Day", :total_price => 1100 * quan, :currency => self.get_currency, :service_code=>"NA" }
                 rate_array << {:service_name => "USPS Priority Mail Express 2-Day", :total_price => 3995 * quan, :currency => self.get_currency, :service_code=>"NA" }
               else
-                rate_array << {:service_name => "USPS Priority Mail Internationa", :total_price => 5995 * quan, :currency => self.get_currency, :service_code=>"NA" }
+                rate_array << {:service_name => "USPS Priority Mail International", :total_price => 5995 * quan, :currency => self.get_currency, :service_code=>"NA" }
               end
               
             end
