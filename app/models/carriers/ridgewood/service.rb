@@ -48,8 +48,15 @@ module Carriers
               
               if (is_domestic)              
                 rates = response.rates.select {|r| r.service_name.include?("USPS Priority Mail") || r.service_name.include?("USPS Priority Mail Express")}
-
                 rates.delete_if {|r| r.service_name.include?("Hold For Pickup") }
+
+                # only show one express rate (most expensive one)
+                express_rates = rates.select {|r| r.service_name.include?("USPS Priority Mail Express 1-Day") || r.service_name.include?("USPS Priority Mail Express 2-Day")}
+                
+                if (express_rates.size > 1)
+                  rates.delete_if {|r| r.service_name.include?("USPS Priority Mail Express 2-Day") }                  
+                end                
+
               else
                 rates = response.rates.select {|r| r.service_name.include?("USPS Priority Mail")}
 
@@ -57,7 +64,11 @@ module Carriers
               end
 
               ret_rates = rates.sort_by(&:price).collect do |rate|
-                  {:service_name => rate.service_name, :service_code=> 'NA', :total_price => rate.price.to_i, :currency => rate.currency}
+                service_name = rate.service_name
+                
+                #change to match the description for regular so the rates can be merged properly
+                service_name = "USPS Priority Mail Express 2-Day" if (rate.service_name == "USPS Priority Mail Express 1-Day")
+                  {:service_name => service_name, :service_code=> 'NA', :total_price => rate.price.to_i, :currency => rate.currency}
               end              
 
               ret_rates = multiple_charge(ret_rates, quan) if (quan > 1)
