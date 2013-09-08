@@ -20,8 +20,11 @@ class SessionsController < ApplicationController
         puts("@@@@@@ creating shop")
         puts("@@@@@@ params[:shop] is " + params[:shop].to_s)  
         shop = Shop.new
+        
+        shopify_api_shop = ShopifyAPI::Shop.current
+        
         shop.myshopify_domain = params[:shop]
-        shop.domain = params[:shop]
+        shop.domain = shopify_api_shop.domain
         
         shop.token = sess.token
         shop.version = current_deployed_version
