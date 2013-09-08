@@ -5,7 +5,7 @@
 
 <div style="width:100%; margin:0 auto;">
   <%= form_tag login_path, :class => 'form-search' do %>
-    <%= label_tag 'Enter your store address (mystore.com):'%><br clear="all"/>
+    <%= label_tag 'Enter your store address (mystore.myshopify.com):'%><br clear="all"/>
     <span class="prefix" style="display:inline;">http://</span>
     <%= text_field_tag 'shop', nil,:class => 'btn-large', :id=>"shop-url-text" %>
     <%= submit_tag 'Install', :class => 'button' %>
