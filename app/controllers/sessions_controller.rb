@@ -13,22 +13,29 @@ class SessionsController < ApplicationController
     if response = request.env['omniauth.auth']
       token = response['credentials']['token']
       sess = ShopifyAPI::Session.new(params[:shop], token)
+      ShopifyAPI::Base.activate_session(sess) 
+      
       shop = Shop.find_by_url(params[:shop])
       if shop.nil?
+        Rails.logger.info("@@@@@@ creating shop")
+        Rails.logger.info("@@@@@@ params[:shop] is " + params[:shop].to_s)  
         shop = Shop.new
         shop.myshopify_domain = params[:shop]
+        shop.domain = params[:shop]
+        
         shop.token = sess.token
         shop.version = current_deployed_version
         shop.save!
       else
         #update token
         shop.token = sess.token
-        shop.save!        
+        shop.save!
       end
               
       session[:shopify] = sess        
 
       flash[:notice] = "Logged in"
+      Rails.logger.info("redirect to #{return_address}")
       redirect_to return_address
     else
       flash[:error] = "Could not log in to Shopify store."

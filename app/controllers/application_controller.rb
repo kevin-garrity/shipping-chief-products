@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   private
     def current_shop
       return nil unless session[:shopify]
-      @shop ||= Shop.find_by_url(session[:shopify].shop.domain)
+      @shop ||= Shop.find_by_url(session[:shopify].shop.myshopify_domain)
     end
     
     def check_payment
@@ -15,6 +15,8 @@ class ApplicationController < ActionController::Base
           && !session[:shopify].url.include?("dev-shop") \
           && !session[:shopify].url.include?("schumm-durgan-and-lang94") \
           && !session[:shopify].url.include?("lifemap") \
+          && !session[:shopify].url.include?("iconicbook") \
+          
           )
             #place a recurring charge
           charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Shipping Calculator Application", 
