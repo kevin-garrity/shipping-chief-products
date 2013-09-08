@@ -17,8 +17,8 @@ class SessionsController < ApplicationController
       
       shop = Shop.find_by_url(params[:shop])
       if shop.nil?
-        Rails.logger.info("@@@@@@ creating shop")
-        Rails.logger.info("@@@@@@ params[:shop] is " + params[:shop].to_s)  
+        puts("@@@@@@ creating shop")
+        puts("@@@@@@ params[:shop] is " + params[:shop].to_s)  
         shop = Shop.new
         shop.myshopify_domain = params[:shop]
         shop.domain = params[:shop]
