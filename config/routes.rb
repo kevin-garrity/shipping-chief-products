@@ -19,9 +19,7 @@ WorldShippingCalculator::Application.routes.draw do
   match '/preferences/carrier_selected' => 'preferences#carrier_selected', :via=>[:post]
 
   match '/australia_post_api_connections' => 'australia_post_api_connections#new', :via => :get
-
-  match '/australia_post_api_connections' => 'shipping#new', :via => :get
-  
+    
   resources 'shipping'
 
   match '/webhooks/app/uninstalled' => 'webhooks#uninstall_app', :via => :post
