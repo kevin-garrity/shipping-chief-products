@@ -16,7 +16,6 @@ class HomeController < ApplicationController
     # the old method of checking for params[:accepted] is deprecated.
     puts("params is" + params.to_s)
     charge = ShopifyAPI::RecurringApplicationCharge.find(params[:charge_id])
-    puts("charge is" + charge.status.to_s)
     
     if (charge.status == 'accepted')
       charge.activate
