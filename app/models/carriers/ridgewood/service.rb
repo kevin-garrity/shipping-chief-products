@@ -86,7 +86,7 @@ module Carriers
         end # end with shopify
         
         rate_array.map do |r|
-          { :service_name => r[:service_name].sub("Priority Mail Express 2-Day", "Priority Mail Express (1-2 Days)").sub("Priority Mail 2-Day", "Priority Mail(1-3 Days)"),
+          { :service_name => r[:service_name].sub("Priority Mail Express 2-Day", "Priority Mail Express ( 1-2 Days)").sub("Priority Mail 2-Day", "Priority Mail( 1-3 Days)"),
             :service_code => r[:service_code], :total_price => r[:total_price], :currency => r[:currency]
           }
         end
