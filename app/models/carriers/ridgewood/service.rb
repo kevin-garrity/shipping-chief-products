@@ -25,7 +25,7 @@ module Carriers
           flat_rate = 0.0
             # get all the collections by looking at pattern XXX-
           items.each do |item|
-            match = item[:sku].include?('REGULAR')
+            match = item[:sku].include?('CLASSIC')
             if match
               #flat rate shipping
               quan = item[:quantity].to_i               
