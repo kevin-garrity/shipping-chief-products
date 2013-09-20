@@ -68,3 +68,5 @@ clients:
     carriers:
     - :debug
     - :ridgewood
+    service_host: localhost:3000
+    
