@@ -69,11 +69,13 @@ module Carriers
               ret_rates = rates.sort_by(&:price).collect do |rate|
                 service_name = rate.service_name
                 
-                #change to match the description for regular so the rates can be merged properly
+                #change to match the description for regular so the rates can be merged properly We want to show rates as 1-3 days .                              
                 service_name = "USPS Priority Mail Express 2-Day" if (rate.service_name == "USPS Priority Mail Express 1-Day")
+                service_name = "Priority Mail 2-Day" if (rate.service_name == "Priority Mail 1-Day")
+                
                 {:service_name => service_name, :service_code=> 'NA', :total_price => rate.price.to_i, :currency => rate.currency}
                   
-              end              
+              end
 
               ret_rates = multiple_charge(ret_rates, quan) if (quan > 1)
               
