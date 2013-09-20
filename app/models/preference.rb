@@ -43,6 +43,20 @@ class Preference < ActiveRecord::Base
     ).first
   end
 
+  def self.find_by_shop_url(url)
+    preference = Preference.arel_table
+    
+    domain = url
+    domain2 = url.sub("www.", "") if url.include?("www.")
+    domain2 = "www." + url unless url.include?("www.")
+       
+    Preference.where(
+      preference[:shop_url].eq( domain ).
+      or(
+      preference[:shop_url].eq( domain2))
+    ).first
+  end
+  
   def self.AusPostParcelServiceListInt
     {:INTL_SERVICE_ECI_M =>"Express Courier International Merchandise",
       :INTL_SERVICE_ECI_D => "Express Courier International Documents",

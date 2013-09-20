@@ -8,7 +8,7 @@ class AustraliaPostApiConnectionsController < ApplicationController
     @items = params[:items]
     shop_url = request.headers["HTTP_ORIGIN"].sub(%r{^.*//}, "")
 
-    preference = Preference.find_by_shop_url!(shop_url)
+    preference = Preference.find_by_shop_url(shop_url)
 
     @australia_post_api_connection = AustraliaPostApiConnection.new({
       from_postcode: preference.origin_postal_code,
