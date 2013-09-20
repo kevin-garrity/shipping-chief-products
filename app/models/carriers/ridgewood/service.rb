@@ -71,7 +71,7 @@ module Carriers
                 
                 #change to match the description for regular so the rates can be merged properly We want to show rates as 1-3 days .                              
                 service_name = "USPS Priority Mail Express 2-Day" if (rate.service_name == "USPS Priority Mail Express 1-Day")
-                service_name = "Priority Mail 2-Day" if (rate.service_name == "Priority Mail 1-Day")
+                service_name = "USPS Priority Mail 2-Day" if (rate.service_name == "USPS Priority Mail 1-Day")
                 
                 {:service_name => service_name, :service_code=> 'NA', :total_price => rate.price.to_i, :currency => rate.currency}
                   
