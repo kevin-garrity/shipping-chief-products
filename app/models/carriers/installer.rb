@@ -73,8 +73,8 @@ module Carriers
       services.each{ |service| service.destroy }
       carrier_service = ShopifyAPI::CarrierService.create(params)
       if carrier_service.errors.size > 0
-        Rails.logger.debug("Error creating CarrierService " + carrier_service.errors.to_s)
-        Rails.logger.debug carrier_service.inspect
+        Rails.logger.info("Error creating CarrierService " + carrier_service.errors.to_s)
+        Rails.logger.info carrier_service.inspect
       else
         Rails.logger.info("Installed CarrierService: #{carrier_service.inspect}")
       end
