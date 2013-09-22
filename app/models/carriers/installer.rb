@@ -51,7 +51,7 @@ module Carriers
     def service_name
       case Rails.env
       when "production"
-        client_config.service_name || "Webify Custom Shipping Service"
+        client_config.service_name unless client_config.nil? || "Webify Custom Shipping Service"
       when "staging", "development"
         (client_config.service_name || "Webify Custom Shipping Service") + " " + Rails.env.capitalize
       end
