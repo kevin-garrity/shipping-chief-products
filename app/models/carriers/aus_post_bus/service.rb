@@ -19,7 +19,6 @@ module Carriers
            weight = weight + item[:grams].to_i * quan if (item[:requires_shipping])             
          end
          
-         
          calculated_weight = weight
          rate_list = Array.new
 
@@ -68,7 +67,6 @@ module Carriers
          end
          
          # in grams, convert to kg
-         calculated_weight = calculated_weight / 1000
          if (calculated_weight.to_f == 0.0)
            #no need to call australia post. no weight of item
             @service_list = Array.new
@@ -79,6 +77,8 @@ module Carriers
 
             return @service_list
          end
+         
+         calculated_weight = calculated_weight.to_f / 1000
          @australia_post_api_connection = AustraliaPostApiConnection.new({:weight=> calculated_weight,
                                                                          :from_postcode => preference.origin_postal_code,
                                                                          :country_code =>  destination.country_code.to_s,
