@@ -6,6 +6,7 @@ clients:
     carriers:
       - :aus_post
       - :aus_post_bus  
+    service_name: Webify Custom Shipping Calculator
     service_host: shipping.herokuapp.com
   schumm-durgan-and-lang94.myshopify.com:
     access: 
