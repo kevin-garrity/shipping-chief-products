@@ -27,6 +27,9 @@ module Carriers
           items.each do |item|
             match = item[:sku].include?('CLASSIC')
             if match
+              
+              Rails.logger.debug("----Getting rates for flat shipping ")
+              
               #flat rate shipping
               quan = item[:quantity].to_i               
 
@@ -40,7 +43,7 @@ module Carriers
             
             match = item[:sku].include?('SPECIALEDITION')
             if match
-              
+              Rails.logger.debug("---- Getting rates for real time shipping ")
               #real time rate shipping
               quan = item[:quantity].to_i               
               weight = item[:grams].to_i
@@ -84,6 +87,7 @@ module Carriers
           end
                     
           rate_array = consolidate_rates(rate_array)          
+          Rails.logger.debug("---- Returning rates as " + rate_array.to_s)
           
         end # end with shopify
         
