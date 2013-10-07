@@ -22,6 +22,9 @@
 = label_tag :international_flat_rate , "Enter flat rate for international shipping"   
 = text_field :carrier_preference,  :international_flat_rate 
 
+= label_tag :international_flat_rate_canada , "Enter flat rate for international shipping(Canada)"   
+= text_field :carrier_preference,  :international_flat_rate_canada
+
 .actions
   = submit_tag 'Save', :class=>"button"
   = link_to 'Cancel', preferences_path

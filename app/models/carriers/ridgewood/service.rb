@@ -15,6 +15,11 @@ module Carriers
          return destination.country.to_s == "United States"
       end
       
+      def is_canada
+         return destination.country.to_s == "Canada"
+      end
+      
+      
       def fetch_rates
         
         ridge_preference = get_ridgewood_preference
@@ -37,7 +42,11 @@ module Carriers
                 rate_array << {:service_name => "USPS Priority Mail 2-Day", :total_price => ridge_preference.in_cents(:domestic_regular_flat_rate) * quan, :currency => self.get_currency, :service_code=>"NA" }
                 rate_array << {:service_name => "USPS Priority Mail Express 2-Day", :total_price => ridge_preference.in_cents(:domestic_express_flat_rate) * quan, :currency => self.get_currency, :service_code=>"NA" }
               else
-                rate_array << {:service_name => "USPS Priority Mail International", :total_price => ridge_preference.in_cents(:international_flat_rate) * quan, :currency => self.get_currency, :service_code=>"NA" }
+                if (is_canada)
+                  rate_array << {:service_name => "USPS Priority Mail International", :total_price => ridge_preference.in_cents(:international_flat_rate_canada) * quan, :currency => self.get_currency, :service_code=>"NA" }
+                else
+                  rate_array << {:service_name => "USPS Priority Mail International", :total_price => ridge_preference.in_cents(:international_flat_rate) * quan, :currency => self.get_currency, :service_code=>"NA" }
+                end  
               end                          
             end
             
