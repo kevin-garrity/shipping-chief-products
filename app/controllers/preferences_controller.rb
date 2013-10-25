@@ -155,14 +155,17 @@ class PreferencesController < ApplicationController
   end
   
   def get_carrier_preference(carrier)
-    unless carrier.nil?
-      pre_class = carrier_preference_for(carrier)
-      puts("current shop is " + current_shop.myshopify_domain.to_s)
-      preference = pre_class.find_by_shop(current_shop)
-      preference ||= pre_class.new
-    else
-      nil
-    end  
+    begin
+      unless carrier.nil?
+        pre_class = carrier_preference_for(carrier)
+        preference = pre_class.find_by_shop(current_shop)
+        preference ||= pre_class.new
+      else
+        nil
+      end  
+    rescue
+      return nil
+    end
   end
   
 

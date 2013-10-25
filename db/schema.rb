@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131007055954) do
+ActiveRecord::Schema.define(:version => 20131025210555) do
 
   create_table "postal_code_range_preference", :force => true do |t|
     t.string "shop_url"
@@ -57,6 +57,12 @@ ActiveRecord::Schema.define(:version => 20131007055954) do
     t.decimal "domestic_express_flat_rate"
     t.decimal "international_flat_rate"
     t.decimal "international_flat_rate_canada"
+    t.decimal "height_2"
+    t.decimal "width_2"
+    t.decimal "length_2"
+    t.decimal "height_3"
+    t.decimal "width_3"
+    t.decimal "length_3"
   end
 
   create_table "shops", :force => true do |t|

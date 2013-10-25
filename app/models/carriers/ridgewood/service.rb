@@ -33,7 +33,7 @@ module Carriers
             match = item[:sku].include?('CLASSIC')
             if match
               
-              Rails.logger.debug("----Getting rates for flat shipping ")
+              Rails.logger.debug("----Getting rates for CLASSIC shipping ")
               
               #flat rate shipping
               quan = item[:quantity].to_i               
@@ -45,7 +45,79 @@ module Carriers
                 if (is_canada)
                   rate_array << {:service_name => "USPS Priority Mail International", :total_price => ridge_preference.in_cents(:international_flat_rate_canada) * quan, :currency => self.get_currency, :service_code=>"NA" }
                 else
-                  rate_array << {:service_name => "USPS Priority Mail International", :total_price => ridge_preference.in_cents(:international_flat_rate) * quan, :currency => self.get_currency, :service_code=>"NA" }
+                  remaining_quan = quan
+                  charge = 0
+                  
+                  flat_rate_1 = ridge_preference.in_cents(:international_flat_rate)                  
+ 
+                  
+                   #real time rate shipping if quantity is more than 2
+                  weight = item[:grams].to_i
+                  
+                  if remaining_quan >= 5
+                    multiple = (remaining_quan.to_i / 5).to_i
+                    packages = Array.new
+                    #look up flat_rate_5
+                    packages << ActiveMerchant::Shipping::Package.new(Quantified::Mass.new(weight * 5, :grams), [ridge_preference.length_3, ridge_preference.width_3, ridge_preference.height_3].map {|m| Quantified::Length.new(m, :inches)} ) 
+                    response = cal.find_rates(origin, destination, packages)                      
+                    rates = remove_unoffered_rates(response.rates)              
+                                        
+                    puts("rates[0].price.to_i is " + rates[0].price.to_i.to_s)
+                    charge += multiple * rates[0].price.to_i
+                    remaining_quan = remaining_quan % 5
+                    response = nil
+                  end
+                                  
+                  if remaining_quan == 4
+                    multiple = (remaining_quan.to_i / 4).to_i
+                    packages = Array.new
+                    packages << ActiveMerchant::Shipping::Package.new(Quantified::Mass.new(weight * 4, :grams), [ridge_preference.length_3, ridge_preference.width_3, ridge_preference.height_3].map {|m| Quantified::Length.new(m, :inches)} ) 
+                    response = cal.find_rates(origin, destination, packages)                      
+                    rates = remove_unoffered_rates(response.rates)
+                  
+                    charge += multiple * rates[0].price.to_i
+                    puts("rates[0].price.to_i is " + rates[0].price.to_i.to_s)
+                    
+                    remaining_quan = remaining_quan % 4
+                  end                  
+                
+                  if remaining_quan == 3
+                    multiple = (remaining_quan.to_i / 3).to_i
+                    packages = Array.new
+                    packages << ActiveMerchant::Shipping::Package.new(Quantified::Mass.new(weight * 3, :grams), [ridge_preference.length_2, ridge_preference.width_2, ridge_preference.height_2].map {|m| Quantified::Length.new(m, :inches)} ) 
+                    response = cal.find_rates(origin, destination, packages)                      
+                    rates = remove_unoffered_rates(response.rates)
+                  
+                    charge += multiple * rates[0].price.to_i
+                    puts("rates[0].price.to_i is " + rates[0].price.to_i.to_s)
+                    
+                    remaining_quan = remaining_quan % 3
+                  end
+                
+                  if remaining_quan == 2
+                    multiple = (remaining_quan.to_i / 2).to_i
+                    packages = Array.new
+                  
+                    packages << ActiveMerchant::Shipping::Package.new(Quantified::Mass.new(weight * 2, :grams), [ridge_preference.length_2, ridge_preference.width_2, ridge_preference.height_2].map {|m| Quantified::Length.new(m, :inches)} ) 
+                    response = cal.find_rates(origin, destination, packages)                      
+                    rates = remove_unoffered_rates(response.rates)
+                  
+                    charge += multiple * rates[0].price.to_i
+                    puts("rates[0].price.to_i is " + rates[0].price.to_i.to_s)
+                    
+                    remaining_quan = remaining_quan % 2
+                  end
+                
+                  if remaining_quan == 1
+                    multiple = 1
+                    charge += multiple * flat_rate_1
+                    remaining_quan = 0
+                  end
+                    
+                 
+                  
+                 rate_array << {:service_name => "USPS Priority Mail International", :total_price => charge, :currency => self.get_currency, :service_code=>"NA" }
+                  
                 end  
               end                          
             end
@@ -72,10 +144,7 @@ module Carriers
                   rates.delete_if {|r| r.service_name.include?("USPS Priority Mail Express 2-Day") }                  
                 end                
               else
-                rates = response.rates.select {|r| r.service_name.include?("International")}
-
-                rates.delete_if {|r| r.service_name.include?("Special") ||   r.service_name.include?("Priority Mail Express International") }
-                
+                rates = remove_unoffered_rates(response.rates)              
               end
 
               ret_rates = rates.sort_by(&:price).collect do |rate|
@@ -106,6 +175,11 @@ module Carriers
           }
         end
         
+      end
+      
+      def remove_unoffered_rates(rates)
+        ret_rates = rates.select {|r| r.service_name.include?("International")}
+        ret_rates.delete_if {|r| r.service_name.include?("Special") ||   r.service_name.include?("Priority Mail Express International") }
       end
 
       def consolidate_rates(rates_array)

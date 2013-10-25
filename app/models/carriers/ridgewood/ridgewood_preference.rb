@@ -3,8 +3,8 @@ module Carriers
     class RidgewoodPreference < ActiveRecord::Base
       
       attr_accessible :domestic_regular_flat_rate, :domestic_express_flat_rate, :international_flat_rate
+      attr_accessible :international_flat_rate_canada, :length_2, :width_2, :height_2, :length_3, :width_3, :height_3
       
-      attr_accessible :international_flat_rate_canada
       
       class UnknownShopError < StandardError; end
    

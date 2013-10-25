@@ -1,4 +1,4 @@
-%div Your container size
+%div Your container size ( 1 item )
 %br
 %span(class="prefix") Length
 = text_field :preference,  :length
@@ -12,6 +12,38 @@
 = text_field :preference,  :height
 %span(class="postfix") Inch
 %br
+
+
+%div Your container size (2 - 3 books)
+%br
+%span(class="prefix") Length
+= text_field :carrier_preference,  :length_2
+%span(class="postfix") Inch
+%br 
+%span(class="prefix") Width
+= text_field :carrier_preference,  :width_2
+%div(class="postfix") Inch
+%br
+%span(class="prefix") Height
+= text_field :carrier_preference,  :height_2
+%span(class="postfix") Inch
+%br
+
+%div Your container size (4 - 5 books)
+%br
+%span(class="prefix") Length
+= text_field :carrier_preference,  :length_3
+%span(class="postfix") Inch
+%br 
+%span(class="prefix") Width
+= text_field :carrier_preference,  :width_3
+%div(class="postfix") Inch
+%br
+%span(class="prefix") Height
+= text_field :carrier_preference,  :height_3
+%span(class="postfix") Inch
+%br
+
   
 = label_tag :domestic_regular_flat_rate, "Enter flat rate for domestic shipping"   
 = text_field :carrier_preference,  :domestic_regular_flat_rate
@@ -19,7 +51,7 @@
 = label_tag :domestic_express_flat_rate, "Enter flat rate for express domestic shipping"   
 = text_field :carrier_preference,  :domestic_express_flat_rate
 
-= label_tag :international_flat_rate , "Enter flat rate for international shipping"   
+= label_tag :international_flat_rate , "Enter flat rate for international shipping 1 item"
 = text_field :carrier_preference,  :international_flat_rate 
 
 = label_tag :international_flat_rate_canada , "Enter flat rate for international shipping(Canada)"   
