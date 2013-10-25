@@ -42,7 +42,7 @@ module Carriers
                 rate_array << {:service_name => "USPS Priority Mail 2-Day", :total_price => ridge_preference.in_cents(:domestic_regular_flat_rate) * quan, :currency => self.get_currency, :service_code=>"NA" }
                 rate_array << {:service_name => "USPS Priority Mail Express 2-Day", :total_price => ridge_preference.in_cents(:domestic_express_flat_rate) * quan, :currency => self.get_currency, :service_code=>"NA" }
               else
-                if (is_canada)
+                if (is_canada && quan == 1)
                   rate_array << {:service_name => "USPS Priority Mail International", :total_price => ridge_preference.in_cents(:international_flat_rate_canada) * quan, :currency => self.get_currency, :service_code=>"NA" }
                 else
                   remaining_quan = quan
@@ -62,7 +62,6 @@ module Carriers
                     response = cal.find_rates(origin, destination, packages)                      
                     rates = remove_unoffered_rates(response.rates)              
                                         
-                    puts("rates[0].price.to_i is " + rates[0].price.to_i.to_s)
                     charge += multiple * rates[0].price.to_i
                     remaining_quan = remaining_quan % 5
                     response = nil
@@ -76,7 +75,6 @@ module Carriers
                     rates = remove_unoffered_rates(response.rates)
                   
                     charge += multiple * rates[0].price.to_i
-                    puts("rates[0].price.to_i is " + rates[0].price.to_i.to_s)
                     
                     remaining_quan = remaining_quan % 4
                   end                  
@@ -89,7 +87,6 @@ module Carriers
                     rates = remove_unoffered_rates(response.rates)
                   
                     charge += multiple * rates[0].price.to_i
-                    puts("rates[0].price.to_i is " + rates[0].price.to_i.to_s)
                     
                     remaining_quan = remaining_quan % 3
                   end
@@ -103,7 +100,6 @@ module Carriers
                     rates = remove_unoffered_rates(response.rates)
                   
                     charge += multiple * rates[0].price.to_i
-                    puts("rates[0].price.to_i is " + rates[0].price.to_i.to_s)
                     
                     remaining_quan = remaining_quan % 2
                   end
