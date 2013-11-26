@@ -9,6 +9,7 @@
         - @preference.errors.full_messages.each do |msg|
           %li= msg
   = f.label :carrier, "Select the shipping carrier to use for calculation"
+  = @preference.carrier
   = f.select(:carrier, client_carrier_choices, {include_blank: true}, :onchange=>"carrier_selected(this.value)")
   %p(id="more-carriers")
     %b More carrier support coming soon!
