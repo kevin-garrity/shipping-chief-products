@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
     def current_shop
       return nil unless session[:shopify]
       @shop ||= Shop.find_by_url(session[:shopify].shop.myshopify_domain)
+      @shop = Shop.find_by_url(session[:shopify].shop.domain) if @shop.nil?
     end
     
     def check_payment
@@ -22,7 +23,7 @@ class ApplicationController < ActionController::Base
           charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Shipping Calculator Application", 
                                                              :price => 15, 
                                                              :test=>(Rails.env != "production"),
-                                                             :trial_days => 30,
+                                                             :trial_days => 15,
                                                              :return_url => "http://#{DOMAIN_NAMES[Rails.env]}/confirm_charge")
 
           redirect_to charge.confirmation_url
