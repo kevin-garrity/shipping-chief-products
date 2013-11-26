@@ -17,8 +17,6 @@ class SessionsController < ApplicationController
       
       shop = Shop.find_by_url(params[:shop])
       if shop.nil?
-        puts("@@@@@@ creating shop")
-        puts("@@@@@@ params[:shop] is " + params[:shop].to_s)  
         shop = Shop.new
         
         shopify_api_shop = ShopifyAPI::Shop.current
@@ -31,6 +29,11 @@ class SessionsController < ApplicationController
         shop.save!
       else
         #update token
+        shopify_api_shop = ShopifyAPI::Shop.current
+        
+        if (shop.domain != shopify_api_shop.domain)
+          shop.domain = shopify_api_shop.domain
+        end  
         shop.token = sess.token
         shop.save!
       end
