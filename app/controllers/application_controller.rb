@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
       puts("@shop1 is " + @shop.inspect)
       @shop ||= Shop.find_by_url(session[:shopify].shop.domain) if @shop.nil?
       puts("@shop2 is " + @shop.inspect)
-      shop
+      @shop
     end
     
     def check_payment
