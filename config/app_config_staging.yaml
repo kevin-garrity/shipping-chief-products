@@ -33,3 +33,16 @@ clients:
     carriers:
     - :debug
     - :lifemap_science
+  aus-post-calculator-dev-shop.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :aus_post
+    - :fabusa
+    - :red_pepper
+    - :lifemap_science
+    - :debug
+    - :aus_post_bus
+    service_host: shipping-staging.herokuapp.com
+    
