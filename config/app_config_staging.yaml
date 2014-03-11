@@ -6,7 +6,8 @@ clients:
     carriers:
       - :aus_post
       - :fabusa
-      - :aus_post_bus      
+      - :aus_post_bus
+      - :ridgewood
     service_host: shipping-staging.herokuapp.com
     local_host: localhost
   red-pepper.myshopify.com:
@@ -34,15 +35,19 @@ clients:
     - :debug
     - :lifemap_science
   aus-post-calculator-dev-shop.myshopify.com:
-    access: 
-      all_except: []
-    menus: []
-    carriers:
     - :aus_post
     - :fabusa
     - :red_pepper
     - :lifemap_science
     - :debug
     - :aus_post_bus
+    - :chief_products
     service_host: shipping-staging.herokuapp.com
+  iconicbook.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :ridgewood
+    service_host: shipping-ridgewood.herokuapp.com
     

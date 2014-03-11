@@ -20,6 +20,7 @@ clients:
     - :lifemap_science
     - :debug
     - :aus_post_bus
+    - :ridgewood
     service_host: localhost:3000
     local_host: localhost:3000
   aus-post-calculator-dev-shop.myshopify.com:
@@ -62,3 +63,12 @@ clients:
     carriers:
     - :debug
     - :lifemap_science
+  iconicbook.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :debug
+    - :ridgewood
+    service_host: localhost:3000
+    

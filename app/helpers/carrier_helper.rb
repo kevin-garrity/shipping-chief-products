@@ -20,6 +20,10 @@ module CarrierHelper
     "carriers/#{carrier_name_for(name, config).to_s}_form"
   end
 
+  def carrier_preference_for(name)
+    "carriers/#{carrier_name_for(name)}/#{name}_preference".camelize.constantize
+  end
+  
   def client_carrier_choices
      client_config.carriers.map{|key| [AppConfig.carriers[key.to_s].description, key.to_s]}
   end

@@ -8,7 +8,7 @@ module Carriers
 
     def initialize(preference, params)
       @preference = preference
-      @params = params.symbolize_keys
+      @params = params.symbolize_keys      
     end
 
     def origin
@@ -17,6 +17,10 @@ module Carriers
 
     def destination
       @destination ||= Location.new(params[:destination])
+    end
+    
+    def get_currency    
+      params[:currency]
     end
 
     def items

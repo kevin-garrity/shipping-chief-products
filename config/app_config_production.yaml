@@ -17,7 +17,8 @@ clients:
       - :aus_post_bus      
       - :fabusa
       - :lifemap_science
-    service_host: shipping-foldabox-staging.herokuapp.com
+      - :ridgewood      
+    service_host: shipping-staging.herokuapp.com
   red-pepper.myshopify.com:
     access: 
       all_except: []
@@ -64,4 +65,10 @@ clients:
     - :debug
     - :lifemap_science
     service_host: shipping-lifemap-bioreagents.herokuapp.com
-      
+  iconicbook.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :ridgewood      
+    service_host: shipping-ridgewood.herokuapp.com
