@@ -38,6 +38,11 @@ carriers:
     description: Custom Rules -- Lifemap Science
     service: true
     service_discovery: false
+  chief_products:
+    public: false
+    description: Custom Rules -- Chief Products
+    service: true
+    service_discovery: false    
   debug:
     public: false
     description: Custom Rules -- Debug

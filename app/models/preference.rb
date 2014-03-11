@@ -93,8 +93,10 @@ class Preference < ActiveRecord::Base
 
   def client_config
     config = AppConfig.clients[shop_url]
+    
     #load default if none can be found
     config = AppConfig.clients["default"] if config.nil?
+    config
   end
   
 end

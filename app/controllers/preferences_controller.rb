@@ -1,3 +1,5 @@
+require 'savon'
+
 class PreferencesController < ApplicationController
   include ApplicationHelper
   include CarrierHelper
@@ -58,6 +60,7 @@ class PreferencesController < ApplicationController
       installer.configure(params)
 
       if @preference.save
+        installer.preference = @preference
         installer.install
 
         format.html { redirect_to preferences_url, notice: 'Preference was successfully updated.' }
@@ -112,7 +115,6 @@ class PreferencesController < ApplicationController
     free_shipping = false    
     fields = col.metafields
     
-    puts("found " + fields.to_s)
     field = fields.find { |f| f.key == 'free_shipping' && f.namespace ='AusPostShipping'}
     unless field.nil?
       free_shipping = (field.value == "true")

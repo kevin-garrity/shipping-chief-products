@@ -5,9 +5,7 @@ class ApplicationController < ActionController::Base
     def current_shop
       return nil unless session[:shopify]
       @shop ||= Shop.find_by_url(session[:shopify].shop.myshopify_domain)
-      puts("@shop1 is " + @shop.inspect)
       @shop ||= Shop.find_by_url(session[:shopify].shop.domain) if @shop.nil?
-      puts("@shop2 is " + @shop.inspect)
       @shop
     end
     

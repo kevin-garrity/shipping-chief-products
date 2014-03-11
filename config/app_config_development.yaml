@@ -33,8 +33,9 @@ clients:
     - :lifemap_science
     - :debug
     - :aus_post_bus
-    service_host: localhost:3001
-    local_host: localhost:3001
+    - :chief_products
+    service_host: localhost:3000
+    local_host: localhost:3000
   red-pepper.myshopify.com:
     access: 
       all_except: []
