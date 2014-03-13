@@ -1,0 +1,10 @@
+chief_products_test_shop:
+  id: 1
+  myshopify_domain: test-shop.myshopify.com
+  token: 123
+  active_subscriber: true
+  signup_date: "2013/1/1"
+  status: active
+  theme_modified: false
+  version: 4
+  domain: test-shop.com

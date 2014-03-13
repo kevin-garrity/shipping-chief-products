@@ -5,16 +5,18 @@ class RatesController < ApplicationController
     preference = get_shop_prefence_from_request
    # log_params
     return nothing unless params[:rate] && preference
-
     Rails.logger.debug("---- Received rate request " + params.to_s)
+        
     service_class = carrier_service_class_for(preference.carrier, preference.client_config)
     service = service_class.new(preference, params[:rate])
     
     rates = service.fetch_rates
+    puts "rates_controller\#shipping_rates: rates fetched are #{pp rates}" if Rails.env.test?
 
     render :json => {:rates => rates}
   rescue ActiveMerchant::Shipping::ResponseError => e
     Rails.logger.debug e.message
+    puts e.message  unless Rails.env.production?
     render nothing: true
   end
 

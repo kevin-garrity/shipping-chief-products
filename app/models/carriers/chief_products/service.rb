@@ -1,185 +1,100 @@
 module Carriers
   module ChiefProducts
     class Service < ::Carriers::Service
-      
 
-      def checkForFoodItems
-        has_non_food_items = has_food_item = false
-         items.each do |item|
-          sku = item[:sku]
-          if (sku.start_with?("FOOD-")) 
-            has_food_item = true
-          else
-            has_non_food_items = true
-          end
-        end
-        [has_non_food_items, has_food_item]
-      end
+      def get_aus_post_rates
+         preference = @preference 
 
-      def fetch_rates
-        Rails.logger.info("#{self.class.name}#fetch_rates aaaaargh")
-        withShopify do
-          
-          has_non_food_items, has_food_item = checkForFoodItems
-          #only giftcards
-          
-          collection_sku_prefixs = Array.new
-
-
-            # get all the collections by looking at pattern XXX-
-          items.each do |item|
-            match = item[:sku].match('[^-]*-')
-            unless match.nil?  
-              if (!collection_sku_prefixs.include?(match[0]))
-                collection_sku_prefixs << match[0]
-              end
-            end
-          end
-          
-          weight = 0
-          # if there is no food item, only need to query once
-          if (has_non_food_items && !has_food_item)
-            #make one query to fedex
-            items.each do |item|
-              quan = item[:quantity].to_i               
-              weight = weight + item[:grams].to_i * quan
-            end
-            packages = Array.new
-            
-            packages << Package.new(weight, [])
-            
-            rates = calculator.get_rates(origin, destination, packages)
-            return rates;
-          end
-          # flat shipping if only giftcards
-#          return [] if (only_giftcards) 
-          
-          
-          rates_array = Array.new
-          total_cooler_charge = 0
-          extra_charge = 0
-          
-          
-          # shipping rate is calculated at a per collection level.
-          # item in the food collection is shipped individually
-          # items in other collections can be shipped together
-          collection_sku_prefixs.each do |coll_prefix|
-            collect_items = items.select {|item| item[:sku].starts_with?(coll_prefix)}
-            #all items are shipped seperately
-            if (coll_prefix == 'FOOD-')
-               collect_items.each do |item|
-                packages = Array.new
-               
-                quan = item[:quantity].to_i               
-                weight = item[:grams].to_i
-
-                packages << Package.new(weight, [])
-                  
-                rates = calculator.get_rates(origin, destination, packages)
-                Rails.logger.info("rates: #{rates.inspect}")
-
-                rates = overnight_only(rates)
-                #each item is shipped seperately
-                rates = multiple_charge(rates, quan) if quan > 1
- 
-                total_cooler_charge = total_cooler_charge + 2700 * quan
-                rates_array << rates
-                 
-              end # end each collect_items
-            else  # if not food items
-              if (has_food_item && has_non_food_items)
-                # giftcards items can be shipped together with other items                
-                packages = Array.new
-                weight = 0
-                collect_items.each do |item|                 
-                  extra_charge = extra_charge + 500 #assume all other itmems wil cost 5 dollar to ship
-                end # end each                              
-              end  
-            end 
+         new_items = add_dimension_to_items()         
+         service_array = Array.new
+         #one lookup per item
+         #make one query to fedex
+         new_items.each do |item|
+           quan = item[:quantity].to_i               
+           weight = item[:grams].to_i * quan
            
-          end # end each collection_sku_prefixs
+           weight_kg = weight / 1000
+           @australia_post_api_connection = AustraliaPostApiConnection.new({:weight=> weight_kg,
+                                                                           :from_postcode => origin.postal_code,
+                                                                           :country_code =>  destination.country_code.to_s,
+                                                                           :to_postcode => destination.postal_code,
+                                                                           :height=>item[:height], :width=>item[:width], :length=>item[:length],
+                                                                           :container_weight => 0.0 })
+          @australia_post_api_connection.domestic = ( destination.country_code.to_s == "AU" )
           
-          rates = consolidate_rates(rates_array)          
-          
-          rates = addCoolerCharge(rates, total_cooler_charge) if total_cooler_charge > 0 
-          rates = addExtraCharge(rates, extra_charge) if extra_charge > 0 
-          
-          Rails.logger.info('final rate is ' + rates.inspect)
-          return rates
-          
-        end # end with shopify
-      end
+          if @australia_post_api_connection.domestic
+             shipping_methods = preference.shipping_methods_allowed_dom
+             shipping_desc = preference.shipping_methods_desc_dom
+           else
+             shipping_methods = preference.shipping_methods_allowed_int
+             shipping_desc = preference.shipping_methods_desc_int
+           end           
 
-      def consolidate_rates(rates_array)
-        find_rates = Hash.new
-        #go through all the rates and total them up
-        rates_array.each do |rate|
-          rate.each do |r|
-            if (find_rates.has_key?(r["service_name"]))     
-              Rails.logger.info('adding rate' + (r["total_price"].to_i + find_rates[r["service_name"]]["total_price"].to_i).to_s)
-              find_rates[r["service_name"]] = { "service_name" =>r["service_name"], 
-                                                "service_code"=>r["service_code"], 
-                                                "total_price" => r["total_price"].to_i + find_rates[r["service_name"]]["total_price"].to_i, 
-                                                "currency" => r["currency"] 
-                                                }
-            else          
-              find_rates[r["service_name"]] = { "service_name" =>r["service_name"], 
-                                                "service_code" =>r["service_code"], 
-                                                "total_price" => r["total_price"].to_i, 
-                                                "currency" => r["currency"]
-                                              }                                            
+          service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
+          service_list = Array.wrap( service_list[1]['service'] ).inject([]) do |list, service|
+              Rails.logger.debug("service code is " + service['code'])              
+              code = service['code']
+              if shipping_methods[code]
+                price_to_charge = service['price'].to_f
+                shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]
+
+
+                list.append({ "service_name"=> shipping_name,
+                            "service_code"=> code,
+                            "total_price"=> price_to_charge,
+                            "currency"=> "AUD"})
+              end
+
+              list
             end
-          end # end rate.each
-        end # end rates_array.each
-        find_rates.values
+            
+            service_array << service_list                                                                                       
+         end #end each
+               
+        service_array
       end
       
-      def overnight_only(rates)
-        rates.select { |rate| rate["service_name"].downcase.include?('overnight') }
-      end
-
-      def multiple_charge(rates, multiplier)
-        rates.each do|rate|
-          rate['total_price'] = rate['total_price'] .to_i * multiplier      
-        end
-        rates
-      end
+      
+      def fetch_rates
+        @carrier_preference = ChiefProductsPreference.find_by_shop_url(@preference.shop_url)
+        Rails.logger.debug("#{self.class.name}#fetch_rates")
+        new_items = add_dimension_to_items()
+        ego_service_list = Array.new
+        aus_post_service_list = Array.new
+        
+        if @carrier_preference.offer_e_go        
+          ego = EgoApiWrapper.new        
+          ego_service_list = ego.get_rates(self.origin, self.destination, new_items, "")
+          puts("ego_service_list is #{ego_service_list}")
+          ego_service_list = consolidate_rates(ego_service_list)          
           
-      def calculator
-        @calculator ||= FedexRate.new
-      end      
-
-      def addCoolerCharge(rates, total_charge)
-        rates.each do|rate|
-          rate['total_price'] = rate['total_price'] .to_i + total_charge      
-          total_charge_dollar = total_charge / 100     
-          rate['service_name'] =  rate['service_name'] + " (includes $#{total_charge_dollar} refundable cooler deposit)"          
+          puts("consolided ego_service_list is #{ego_service_list}")
+          
         end
-        rates
-        
-      end
-      
-      
-      def addExtraCharge(rates, total_charge)
-        rates.each do|rate|
-          rate['total_price'] = rate['total_price'] .to_i + total_charge      
-          total_charge_dollar = total_charge / 100         
+        if (@carrier_preference.offer_australia_post)
+          aus_post_service_list = get_aus_post_rates().flatten
+          
+          puts("aus_post_service_list is #{ aus_post_service_list}")          
+          aus_post_service_list = consolidate_rates(aus_post_service_list)                              
         end
-        rates
+ 
         
-      end      
-
-      def packages
-        weight = items.inject(0) { |w, item| w += item[:grams].to_i * item[:quantity].to_i }
-        [Package.new(weight, [])]
+        
+        list = ego_service_list.concat(aus_post_service_list)
+        puts("consoidated list is #{list}")
+        
+        return list
       end
-
-      def contains_food?
-        items.any? { |item| food_item?( item ) }
-      end
-
-      def food_item?(item)
-        food_items.include?( item[:sku] )
+    
+      # go to shopify metafields and get the product dimension
+      def add_dimension_to_items
+        new_items = Array.new
+        items.each do |i|
+          p = CachedProduct.find_by_product_id(i[:product_id])
+          i = i.merge({:height=>p.height, :width=>p.width, :length =>p.length})
+          new_items << i
+        end
+        new_items
       end
 
       def food_items
@@ -196,9 +111,6 @@ module Carriers
         end
       end
 
-      def food_collection
-        @food_collection ||= ShopifyAPI::CustomCollection.find(:first, params: {handle: 'food'})
-      end
 
     end    
   end

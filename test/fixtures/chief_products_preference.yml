@@ -1,0 +1,6 @@
+chief_products_preference:
+  id: 1
+  shop_url: test-shop.com
+  offer_australia_post: true
+  offer_e_go: true
+  e_go_booking_type: true

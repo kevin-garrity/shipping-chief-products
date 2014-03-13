@@ -33,3 +33,15 @@ clients:
     carriers:
       - :aus_post
       - :red_pepper
+  test-shop.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :chief_products      
+  test-shop.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+      - :chief_products          

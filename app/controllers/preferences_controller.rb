@@ -1,5 +1,3 @@
-require 'savon'
-
 class PreferencesController < ApplicationController
   include ApplicationHelper
   include CarrierHelper
