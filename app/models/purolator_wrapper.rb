@@ -28,7 +28,7 @@ class PurolatorWrapper
       </soap:Header>
       <soap:Body>
         <GetQuickEstimateRequest xmlns="http://purolator.com/pws/datatypes/v1">
-          <BillingAccountNumber>9999999999</BillingAccountNumber>
+          <BillingAccountNumber>BillingAccountNumberValue</BillingAccountNumber>
           <SenderPostalCode>SenderPostalCodeValue</SenderPostalCode>
           <ReceiverAddress>
             <City>ReceiverAddressCity</City>
@@ -47,11 +47,12 @@ class PurolatorWrapper
 
     template = template.sub("total_weight_lb", total_weight_lb.ceil.to_s)
     template = template.sub("SenderPostalCodeValue", origin.postal_code)
-    template = template.sub("ReceiverPostalCodeValue", destination.postal_code)
-    template = template.sub("ReceiverAddressCity", destination.city)
-    template = template.sub("ReceiverAddressProv", destination.province)
-    template = template.sub("ReceiverAddressCountry", destination.country)
-    
+    template = template.sub("ReceiverPostalCodeValue", destination.postal_code.to_s)
+    template = template.sub("ReceiverAddressCity", destination.city.to_s)
+    template = template.sub("ReceiverAddressProv", destination.province.to_s)
+    template = template.sub("ReceiverAddressCountry", destination.country.to_s)
+    template = template.sub("BillingAccountNumberValue", get_account_id)
+        
     return template
   end
   
