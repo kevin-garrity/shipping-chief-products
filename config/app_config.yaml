@@ -53,4 +53,8 @@ carriers:
     description: Custom Rules -- Ridgewood
     service: true
     service_discovery: false    
-    
+  purolator:
+    public: false
+    description: Purolator
+    service: true
+    service_discovery: false    

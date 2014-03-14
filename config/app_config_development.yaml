@@ -35,6 +35,7 @@ clients:
     - :debug
     - :aus_post_bus
     - :chief_products
+    - :purolator
     service_host: localhost:3000
     local_host: localhost:3000
   red-pepper.myshopify.com:
