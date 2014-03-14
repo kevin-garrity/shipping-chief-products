@@ -52,14 +52,31 @@ class PurolatorWrapper
     return template
   end
   
+  def get_key()
+    dev_key = ["f9ce98cd171b4472b5074e30146e8fd2","61pbAQHg"]
+    live_key = ["77f25c5b9f01406abc781c2bbc2c16c7", "9RRaTp6s"]
+    
+    return Rails.env.development? ? dev_key : live_key
+  end
+  
+  def get_account_id()
+    dev_acct ="9999999999"
+    live_acct = "4628770"
+    
+    return Rails.env.development? ? dev_acct : live_acct
+    
+  end
+  
   #items should contain the proper size of all the items
   #origin and destination are activeshipping location object
   def get_rates(origin, destination, items)
+    
+
     client = Savon.client(
     wsdl: "https://webservices.purolator.com/EWS/V1/Estimating/WSDLs/EstimatingService.wsdl", 
     namespace: "http://purolator.com/pws/service/v1", 
     endpoint:"https://devwebservices.purolator.com/EWS/V1/Estimating/EstimatingService.asmx",
-    basic_auth:["f9ce98cd171b4472b5074e30146e8fd2","61pbAQHg"],
+    basic_auth:self.get_key,
     env_namespace: "soap",
     soap_header:   {  
     "RequestContext"=>
@@ -74,7 +91,7 @@ class PurolatorWrapper
     
     message = 
     {
-      BillingAccountNumber: "9999999999",
+      BillingAccountNumber: self.get_account_id,
       SenderPostalCode: "L4W5M8",
       ReceiverAddress: 
       {
@@ -101,7 +118,7 @@ class PurolatorWrapper
       xml: xml_message
     ) 
     res = response.hash
-    Rails.logger.info("response.hash is #{pp response.hash}" )
+    Rails.logger.info("response.hash is #{response.hash}" )
     error = false
     error_msg = ""
     unless ( res[:envelope][:body][:get_quick_estimate_response][:response_information][:errors].nil?)
