@@ -63,10 +63,12 @@ class PreferencesController < ApplicationController
 
       if @preference.save
         #save carrier preference
-        @carrier_preference.attributes = params[:carrier_preference]        
-        @carrier_preference.shop_url = @preference.shop_url
+        unless params[:carrier_preference].nil?
+          @carrier_preference.attributes = params[:carrier_preference]        
+          @carrier_preference.shop_url = @preference.shop_url
         
-        @carrier_preference.save
+          @carrier_preference.save
+        end
         installer.install
 
         format.html { redirect_to preferences_url, notice: 'Preference was successfully updated.' }

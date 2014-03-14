@@ -9,7 +9,7 @@ class PurolatorWrapper
     
     items.each do |item|
       weight_grams=item[:grams].to_i
-      weight_kg = weight_grams / 1000
+      weight_kg = weight_grams.to_f / 1000
       weight_lb = 2.20462 * weight_kg
       quan = item[:quantity].to_i
       
@@ -101,11 +101,22 @@ class PurolatorWrapper
       xml: xml_message
     ) 
     res = response.hash
-        
-    rates = res[:envelope][:body][:get_quick_estimate_response][:shipment_estimates][:shipment_estimate]
-        
-    return_array = rates.collect{ |service| {"service_name" => service[:service_id], 'service_code'=> service[:service_id], 'total_price' => service[:total_price], 'currency' => "CAD"} }
-    
-    puts("return array is #{pp return_array}")
+    Rails.logger.info("response.hash is #{pp response.hash}" )
+    error = false
+    error_msg = ""
+    unless ( res[:envelope][:body][:get_quick_estimate_response][:response_information][:errors].nil?)
+      error_msg = res[:envelope][:body][:get_quick_estimate_response][:response_information][:errors][:error][:description]
+      error = true
+    end
+    if (error)
+      #return an error array
+      
+      return [ {"service_name" => error_msg.to_s, 'service_code'=> service[:service_id], 'total_price' =>0.0, 'currency' => "CAD"} ]
+    else
+      rates = res[:envelope][:body][:get_quick_estimate_response][:shipment_estimates][:shipment_estimate]        
+      # rates should be in cents
+      return_array = rates.collect{ |service| {"service_name" => service[:service_id], 'service_code'=> service[:service_id], 'total_price' => service[:total_price].to_f*100, 'currency' => "CAD"} }
+    end
+    return_array
   end
 end
