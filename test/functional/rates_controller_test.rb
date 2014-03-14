@@ -77,4 +77,17 @@ class RatesControllerTest < ActionController::TestCase
 
   end
   
+  
+  def test_purolator_rates
+     @request.env["HTTP_X_SHOPIFY_SHOP_DOMAIN"] = shops(:chief_products_test_shop).domain
+
+     post :shipping_rates, {:rate=>@rates_hash}
+     puts("response is #{@response.body.inspect}")
+     json = ActiveSupport::JSON.decode @response.body
+     puts("response json #{json}")
+
+     assert_response :success
+
+   end
+  
 end
