@@ -78,4 +78,12 @@ clients:
     menus: []
     carriers:
     - :purolator
+    service_host: shipping-titika-active-wear.herokuapp.com    
+  shop.titika.ca:    
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :purolator
     service_host: shipping-titika-active-wear.herokuapp.com
+    
