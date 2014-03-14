@@ -72,3 +72,10 @@ clients:
     carriers:
     - :ridgewood      
     service_host: shipping-ridgewood.herokuapp.com
+  titika-active-wear.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :purolator
+    service_host: shipping-titika-active-wear.herokuapp.com
