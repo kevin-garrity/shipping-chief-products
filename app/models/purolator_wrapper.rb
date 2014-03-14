@@ -31,9 +31,9 @@ class PurolatorWrapper
           <BillingAccountNumber>9999999999</BillingAccountNumber>
           <SenderPostalCode>SenderPostalCodeValue</SenderPostalCode>
           <ReceiverAddress>
-            <City>Burnaby</City>
-            <Province>BC</Province>
-            <Country>CA</Country>
+            <City>ReceiverAddressCity</City>
+            <Province>ReceiverAddressProv</Province>
+            <Country>ReceiverAddressCountry</Country>
             <PostalCode>ReceiverPostalCodeValue</PostalCode>
           </ReceiverAddress>
           <PackageType>CustomerPackaging</PackageType>
@@ -48,6 +48,9 @@ class PurolatorWrapper
     template = template.sub("total_weight_lb", total_weight_lb.ceil.to_s)
     template = template.sub("SenderPostalCodeValue", origin.postal_code)
     template = template.sub("ReceiverPostalCodeValue", destination.postal_code)
+    template = template.sub("ReceiverAddressCity", destination.city)
+    template = template.sub("ReceiverAddressProv", destination.province)
+    template = template.sub("ReceiverAddressCountry", destination.country)
     
     return template
   end
@@ -134,7 +137,7 @@ class PurolatorWrapper
     if (error)
       #return an error array
       
-      return [ {"service_name" => error_msg.to_s, 'service_code'=> service[:service_id], 'total_price' =>0.0, 'currency' => "CAD"} ]
+      return [ {"service_name" => error_msg.to_s, 'service_code'=> error_msg, 'total_price' =>0.0, 'currency' => "CAD"} ]
     else
       rates = res[:envelope][:body][:get_quick_estimate_response][:shipment_estimates][:shipment_estimate]        
       # rates should be in cents
