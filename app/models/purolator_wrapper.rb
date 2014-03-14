@@ -56,21 +56,21 @@ class PurolatorWrapper
     dev_key = ["f9ce98cd171b4472b5074e30146e8fd2","61pbAQHg"]
     live_key = ["77f25c5b9f01406abc781c2bbc2c16c7", "9RRaTp6s"]
     
-    return Rails.env.development? ? dev_key : live_key
+    return Rails.env.development? ? dev_key : dev_key
   end
   
   def get_account_id()
     dev_acct ="9999999999"
     live_acct = "4628770"
     
-    return Rails.env.development? ? dev_acct : live_acct
+    return Rails.env.development? ? dev_acct : dev_acct
     
   end
   
   def get_endpoint()
     dev_endpoint ="https://devwebservices.purolator.com/EWS/V1/Estimating/EstimatingService.asmx"
     live_endpoint = "https://webservices.purolator.com/EWS/V1/Estimating/EstimatingService.asmx"
-    return Rails.env.development? ? dev_endpoint : live_endpoint    
+    return Rails.env.development? ? dev_endpoint : dev_endpoint    
   end
   
   #items should contain the proper size of all the items
