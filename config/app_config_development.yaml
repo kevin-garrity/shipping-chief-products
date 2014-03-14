@@ -72,4 +72,12 @@ clients:
     - :debug
     - :ridgewood
     service_host: localhost:3000
+  titika-active-wear.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :debug
+    - :purolator
+    service_host: localhost:3001
     
