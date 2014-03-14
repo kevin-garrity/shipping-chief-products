@@ -81,7 +81,7 @@ class PurolatorWrapper
     client = Savon.client(
     wsdl: "https://webservices.purolator.com/EWS/V1/Estimating/WSDLs/EstimatingService.wsdl", 
     namespace: "http://purolator.com/pws/service/v1", 
-    endpoint:"https://devwebservices.purolator.com/EWS/V1/Estimating/EstimatingService.asmx",
+    endpoint: self.get_endpoint,
     basic_auth:self.get_key,
     env_namespace: "soap",
     soap_header:   {  
