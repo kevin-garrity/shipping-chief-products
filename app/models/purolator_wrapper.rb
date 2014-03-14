@@ -67,6 +67,12 @@ class PurolatorWrapper
     
   end
   
+  def get_endpoint()
+    dev_endpoint ="https://devwebservices.purolator.com/EWS/V1/Estimating/EstimatingService.asmx"
+    live_endpoint = "https://webservices.purolator.com/EWS/V1/Estimating/EstimatingService.asmx"
+    return Rails.env.development? ? dev_endpoint : live_endpoint    
+  end
+  
   #items should contain the proper size of all the items
   #origin and destination are activeshipping location object
   def get_rates(origin, destination, items)
