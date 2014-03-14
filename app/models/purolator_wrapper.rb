@@ -50,7 +50,7 @@ class PurolatorWrapper
     template = template.sub("ReceiverPostalCodeValue", destination.postal_code.to_s)
     template = template.sub("ReceiverAddressCity", destination.city.to_s)
     template = template.sub("ReceiverAddressProv", destination.province.to_s)
-    template = template.sub("ReceiverAddressCountry", destination.country.to_s)
+    template = template.sub("ReceiverAddressCountry", destination.country_code.to_s)
     template = template.sub("BillingAccountNumberValue", get_account_id)
         
     return template
