@@ -58,7 +58,6 @@ group :development do
   gem "css_canon", :git => "git://github.com/lastobelus/css_canon"
   gem "hpricot", ">= 0.8.6"
   gem "ruby_parser", ">= 2.3.1"
-  gem "rspec-rails", ">= 2.11.0"
   gem "factory_girl_rails", ">= 4.1.0"
   gem "quiet_assets", ">= 1.0.1"
   gem 'pry-rails'
