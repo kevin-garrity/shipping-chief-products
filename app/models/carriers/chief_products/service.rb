@@ -8,7 +8,8 @@ module Carriers
          new_items = add_dimension_to_items()         
          service_array = Array.new
          #one lookup per item
-         #make one query to fedex
+         final_list = Array.new
+         
          new_items.each do |item|
            quan = item[:quantity].to_i               
            weight = item[:grams].to_i * quan
@@ -31,27 +32,46 @@ module Carriers
            end           
 
           service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
-          service_list = Array.wrap( service_list[1]['service'] ).inject([]) do |list, service|
-              Rails.logger.debug("service code is " + service['code'])              
-              code = service['code']
-              if shipping_methods[code]
-                price_to_charge = service['price'].to_f
-                shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]
-
-
-                list.append({ "service_name"=> shipping_name,
-                            "service_code"=> code,
-                            "total_price"=> price_to_charge,
-                            "currency"=> "AUD"})
-              end
-
-              list
-            end
+          puts("service_list is " + pp(service_list[1].to_s))
+          
+          #service_list[1]['service'] is array of hashes
+          
+          
+          list = Array.new
+          service_list[1]['service'].each do |service|
+            code = service['code']            
+            price_to_charge = service['price'].to_f
+            shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]
             
-            service_array << service_list                                                                                       
+            if (final_list.empty?)
+              list << { "service_name"=> shipping_name,
+                          "service_code"=> code,
+                          "total_price"=> price_to_charge,
+                          "currency"=> "AUD"}
+            else
+              list << { "service_name"=> shipping_name,
+                          "service_code"=> code,
+                          "total_price"=> price_to_charge,
+                          "currency"=> "AUD"}
+              #try to merge with the rates in final_list
+              #find service in final_list using service code
+              index = final_list.find_index {|item| item['service_code'] == code}
+              final_list[index]['total_price'] =  final_list[index]['total_price'].to_f +  price_to_charge unless (index.nil?)
+            end
+          end          
+          
+          if (final_list.empty?)
+            final_list = list 
+          else
+            #see if any of the rates current in final_list needs to be removed if they are not found within the current array
+            final_list.each do |l|
+              final_list.delete(l) if (list.find_index {|item| item['service_code'] == l['service_code']}).nil?
+            end            
+          end
+                                                                                      
          end #end each
-               
-        service_array
+#        puts("final_array is " + final_list.to_s)
+        final_list
       end
       
       
@@ -65,28 +85,19 @@ module Carriers
         if @carrier_preference.offer_e_go        
           ego = EgoApiWrapper.new        
           ego_service_list = ego.get_rates(self.origin, self.destination, new_items, "")
-          puts("ego_service_list is #{ego_service_list}")
-          ego_service_list = consolidate_rates(ego_service_list)          
-          
-          puts("consolided ego_service_list is #{ego_service_list}")
-          
+          ego_service_list = consolidate_rates(ego_service_list)                              
         end
         if (@carrier_preference.offer_australia_post)
-          aus_post_service_list = get_aus_post_rates().flatten
-          
-          puts("aus_post_service_list is #{ aus_post_service_list}")          
-          aus_post_service_list = consolidate_rates(aus_post_service_list)                              
+          aus_post_service_list = get_aus_post_rates()          
         end
- 
-        
-        
+                 
         list = ego_service_list.concat(aus_post_service_list)
         puts("consoidated list is #{list}")
         
         return list
       end
     
-      # go to shopify metafields and get the product dimension
+      # get the product dimensions
       def add_dimension_to_items
         new_items = Array.new
         items.each do |i|
@@ -96,22 +107,6 @@ module Carriers
         end
         new_items
       end
-
-      def food_items
-        Rails.logger.debug(shop.token)
-        @food_items ||= begin
-          products = ShopifyAPI::Product.find(:all, 
-            params: {collection_id: food_collection.id, limit: 250, fields: 'id'})
-          skus = []
-          products.each do |product|
-            variant = ShopifyAPI::Variant.find(:all,  params:{limit: 250, fields: 'sku', product_id: product.id})
-            skus += variant.map(&:sku)
-          end
-          skus
-        end
-      end
-
-
-    end    
+    end
   end
 end
