@@ -81,7 +81,7 @@ class PurolatorWrapper
   #origin and destination are activeshipping location object
   def get_rates(origin, destination, items)
     
-
+    HTTPI.adapter = :net_http_persistent
     client = Savon.client(
    # wsdl: "https://webservices.purolator.com/EWS/V1/Estimating/WSDLs/EstimatingService.wsdl", 
     namespace: "http://purolator.com/pws/service/v1", 

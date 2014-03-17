@@ -31,6 +31,7 @@ gem "config_spartan"
 gem "active_shipping"
 gem "unicorn"
 gem "typhoeus"
+gem "net-http-persistent"
 
 # aus_controller_development branch added these
 gem "activerecord-postgresql-adapter"
