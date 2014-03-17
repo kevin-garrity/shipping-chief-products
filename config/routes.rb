@@ -2,6 +2,7 @@ WorldShippingCalculator::Application.routes.draw do
 
   match 'util/welcome' => 'util#welcome'
   match 'util' => 'util#index'
+  
   controller :sessions do
     get 'login' => :new
     post 'login' => :create
@@ -21,6 +22,12 @@ WorldShippingCalculator::Application.routes.draw do
   match '/australia_post_api_connections' => 'australia_post_api_connections#new', :via => :get
     
   resources 'shipping'
+  
+  resources :cached_product do
+    collection do
+      post :update_all
+    end
+  end  
 
   match '/webhooks/app/uninstalled' => 'webhooks#uninstall_app', :via => :post
 
