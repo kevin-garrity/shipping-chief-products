@@ -128,7 +128,6 @@ class PurolatorWrapper
       xml: xml_message
     ) 
     res = response.hash
-    Rails.logger.info("response.hash is #{response.hash}" )
     error = false
     error_msg = ""
     unless ( res[:envelope][:body][:get_quick_estimate_response][:response_information][:errors].nil?)
@@ -138,7 +137,7 @@ class PurolatorWrapper
     if (error)
       #return an error array
       
-      return [ {"service_name" => error_msg.to_s, 'service_code'=> error_msg, 'total_price' =>0.0, 'currency' => "CAD"} ]
+      return [ {"service_name" => "ERROR:" + error_msg.to_s, 'service_code'=> error_msg, 'total_price' =>0.0, 'currency' => "CAD"} ]
     else
       rates = res[:envelope][:body][:get_quick_estimate_response][:shipment_estimates][:shipment_estimate]        
       # rates should be in cents
