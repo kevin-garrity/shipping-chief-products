@@ -1,31 +1,10 @@
-
-%fieldset
-  = label_tag :origin_postal_code, "Enter the Australian Postcode your items would be shipping from(4 characters) <span data-tooltip class='has-tip tip-bottom'  title='This will be passed to Australia Post for calculation purpose.'>?</span>".html_safe
-  = text_field :preference, :origin_postal_code
-  = label_tag :default_weight, "Enter the default product weight to used in calculation when there is no weight stored for items <span class='has-tip' data-width='280' title='If you choose not to use weight in Shopify, enter a default weight to pass to Australia Post for calculation.'>?</span>".html_safe
-  = text_field :preference, :default_weight
-  %span(class="postfix") kg
-  %br 
-  = label_tag :default_charge, "Enter the fallback price to charge for shipping if Australia Post is not available <span class='has-tip' data-width='380' title='If Australia Post is down for whatever reason, we need to keep checkout working so we do not stop customers from purchasing. Enter a default shipping amount to charge. Specify an amount that you think will cover your cost most of the time.'>?</span>".html_safe
-  = text_field :preference, :default_charge
+= label_tag :off_aus_post, "Offer Australia Post Rates".html_safe
+= check_box :carrier_preference, :offer_australia_post
 %br
-%fieldset
-  %br
-  = label_tag :free_shipping_option, "Offer free shipping option at checkout <span class='has-tip' data-width='380' title='If you offer free shipping for cases where customers can pick up from your store.'>?</span>".html_safe
-  = check_box :preference, :free_shipping_option
-  = label_tag :free_shipping_description, "Description of the free shipping option"
-  = text_field :preference, :free_shipping_description
-  %br
-  = label_tag :offers_flat_rate, "Use flat rate for orders under certain weight"
-  = check_box :preference, :offers_flat_rate
-  %br
-  = label_tag :under_weight, "If weight of cart items is under or equal to", :id=>"offers_flat_rate_label"
-  = text_field :preference, :under_weight  
-  %span(id="flat_rate_kg") kg
-  %br
-  = label_tag :flat_rate, "Charges", :id=>"float_rate_charge_label"
-  = text_field :preference, :flat_rate
-%br    
+= label_tag :off_ego, "Offer E-Go rates".html_safe
+= check_box :carrier_preference, :offer_e_go
+
+
 %h3 The list of shipping methods you want to offer to international customers
 %br
 %table

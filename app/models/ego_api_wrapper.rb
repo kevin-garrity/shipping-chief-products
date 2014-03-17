@@ -28,7 +28,7 @@ class EgoApiWrapper
       unless booking_type.blank?
         query+= "&bookingtype=#{booking_type}"
       end
-      
+      puts("Qeury is #{query}")
       uri = URI.parse(query)
       
       http = Net::HTTP.new(uri.host, uri.port)
@@ -43,7 +43,7 @@ class EgoApiWrapper
     return_array = Array.new
     service_name ="E-Go"
     service_code ="E-Go"
-    return_array = rates.collect{ |r| {"service_name" => service_name, 'service_code'=> service_code, 'total_price' => r[:price], 'currency' => "AUD"} }
+    return_array = rates.collect{ |r| {"service_name" => service_name, 'service_code'=> service_code, 'total_price' => r[:price].to_f*100, 'currency' => "AUD"} }
     puts("return_array is #{return_array.to_s}") if Rails.env.test?
     
     return return_array    

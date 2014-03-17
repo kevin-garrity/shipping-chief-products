@@ -1,0 +1,24 @@
+<%= form_tag update_all_cached_product_index_path do %>
+  <% @cached_products.each_with_index do |cached_product,i| %> 
+  <h2>
+    Product Title: <%=cached_product.product_name%>
+  </h2>
+    <%= fields_for "cached_products[#{i}]", cached_product do |pf| %>
+       <%= pf.hidden_field :id %>
+       <%= pf.hidden_field :product_id %>
+       <%= pf.hidden_field :shop_id %>
+       <div>
+       <label>Height:</label> <%= pf.text_field :height%>
+       </div>
+       <div>
+       <label>Width: </label> <%= pf.text_field :width%>
+       </div>
+       <div>
+       <label>Length: </label><%= pf.text_field :length%>       
+       </div>
+    <% end %>
+    <hr/>
+  <% end %>
+  <%= submit_tag %>
+  
+<% end %>

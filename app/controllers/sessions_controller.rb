@@ -38,8 +38,8 @@ class SessionsController < ApplicationController
         shop.save!
       end
               
-      session[:shopify] = sess        
-
+      session[:shopify] = sess  
+puts("session[:shopify] is #{session[:shopify].inspect}")
       flash[:notice] = "Logged in"
       Rails.logger.info("redirect to #{return_address}")
       redirect_to return_address

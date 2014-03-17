@@ -40,7 +40,7 @@ module Carriers
           list = Array.new
           service_list[1]['service'].each do |service|
             code = service['code']            
-            price_to_charge = service['price'].to_f
+            price_to_charge = service['price'].to_f * 100
             shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]
             
             if (final_list.empty?)

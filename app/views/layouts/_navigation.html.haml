@@ -6,6 +6,7 @@
     - if shop_session
       %ul.right
         %li= link_to("Preferences", preferences_url)      
+        %li= link_to("Product Dimensions", cached_product_index_url)
         %li= link_to shop_session.url, "http://"+shop_session.url, :target => 'blank'
         %li= link_to raw('Shopify Admin'), "http://"+shop_session.url+"/admin", :target => 'blank'
         %li= link_to raw('Logout'), logout_path, :method => :delete

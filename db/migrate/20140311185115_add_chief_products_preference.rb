@@ -14,6 +14,7 @@ class AddChiefProductsPreference < ActiveRecord::Migration
       t.integer :height
       t.integer :width
       t.integer :length
+      t.string :product_name
     end
   end
 
