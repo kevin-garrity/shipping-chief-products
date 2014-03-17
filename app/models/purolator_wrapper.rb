@@ -88,6 +88,7 @@ class PurolatorWrapper
     endpoint: self.get_endpoint,
     basic_auth:self.get_key,
     env_namespace: "soap",
+    log: !Rails.env.production?,
     soap_header:   {  
     "RequestContext"=>
       {
@@ -98,27 +99,7 @@ class PurolatorWrapper
         }
     }
     )
-    
-    message = 
-    {
-      BillingAccountNumber: self.get_account_id,
-      SenderPostalCode: "L4W5M8",
-      ReceiverAddress: 
-      {
-        City: "Burnaby",
-        Province: "BC",
-        Country: "CA",
-        PostalCode: "V3N2G9"
-        
-      },
-      PackageType: "CustomerPackaging",
-      TotalWeight: 
-      {
-        Value: "10",
-        WeightUnit: "lb"        
-      }            
-    }
-    
+
     xml_message = build_xml(origin, destination, items)
     
     response = client.call(
