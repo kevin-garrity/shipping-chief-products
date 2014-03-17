@@ -123,7 +123,7 @@ class PurolatorWrapper
     
     response = client.call(
       :get_quick_estimate, 
-      message: message,
+#      message: message,
       soap_action: "http://purolator.com/pws/service/v1/GetQuickEstimate",
       xml: xml_message
     ) 
