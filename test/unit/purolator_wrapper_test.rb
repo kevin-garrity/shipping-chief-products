@@ -82,7 +82,8 @@ class PurolatorWrapperTest < ActiveSupport::TestCase
     o = Location.new(@origin)
     d = Location.new(@destination)
 
-    p.get_rates(o,d, @item)
+    rates = p.get_rates(o,d, @item)
+    puts "Rates are " + rates.to_s
   end
   
 end
