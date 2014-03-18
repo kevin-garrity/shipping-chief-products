@@ -54,6 +54,9 @@ gem 'oj' # fast json parser, but mainly to make multi_json stfu
 gem 'shopify_api'
 gem 'savon'
 
+gem 'foreman'
+gem 'puma'
+
 group :development do
   gem 'shopifydev'
   gem "css_canon", :git => "git://github.com/lastobelus/css_canon"
