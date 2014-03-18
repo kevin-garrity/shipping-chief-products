@@ -108,6 +108,7 @@ GEM
       cucumber (>= 1.2.0)
       nokogiri (>= 1.5.0)
       rails (>= 3.0.0)
+    curb (0.8.5)
     daemons (1.1.9)
     dalli (2.6.4)
     database_cleaner (1.1.1)
@@ -403,6 +404,7 @@ DEPENDENCIES
   config_spartan
   css_canon!
   cucumber-rails (>= 1.3.0)
+  curb
   dalli
   database_cleaner (>= 0.9.1)
   email_spec (>= 1.2.1)

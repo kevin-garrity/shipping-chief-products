@@ -56,6 +56,7 @@ gem 'savon'
 
 gem 'foreman'
 gem 'puma'
+gem 'curb'
 
 group :development do
   gem 'shopifydev'
