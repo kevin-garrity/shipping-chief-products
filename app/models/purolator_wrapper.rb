@@ -89,6 +89,7 @@ class PurolatorWrapper
     basic_auth:self.get_key,
     env_namespace: "soap",
     log: !Rails.env.production?,
+    ssl_verify_mode: :none,
     soap_header:   {  
     "RequestContext"=>
       {
