@@ -20,6 +20,8 @@ class ApplicationController < ActionController::Base
           && !session[:shopify].url.include?("lifemap") \
           && !session[:shopify].url.include?("iconicbook") \
           && !session[:shopify].url.include?("titika") \
+          && !session[:shopify].url.include?("chief") \
+          
           
           
           )
