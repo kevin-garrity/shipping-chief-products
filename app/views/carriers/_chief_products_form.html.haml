@@ -5,7 +5,7 @@
 = check_box :carrier_preference, :offer_e_go
 
 
-%h3 The list of shipping methods you want to offer to international customers
+%h3 The list of shipping methods you want to offer to international customers for Australia Post
 %br
 %table
   %tr(class="header") 
@@ -22,7 +22,7 @@
       = check_box_tag("shipping_methods_int[#{key}]", value=1, @preference.shipping_methods_allowed_int[key.to_s])
   -}    
 %br 
-%h3 The list of shipping methods you want to offer to domestic customers
+%h3 The list of shipping methods you want to offer to domestic customers for Australia Post
 %br
 %table(class="twelve")
   %tr(class="header") 

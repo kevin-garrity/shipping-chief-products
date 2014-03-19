@@ -26,6 +26,22 @@ class CachedProductController < ApplicationController
     end    
   end
   
+  def load_new_products
+    @shop = current_shop
+    
+    @shopify_products = update_list 
+    
+    #see if there is any new product in @shopify_products
+    @shopify_products.each do |sp|
+      cp = CachedProduct.find_by_product_id(sp.id)
+      if cp.nil?
+        p = CachedProduct.new(product_id: sp.id, shop_id:current_shop.id,product_name: sp.title)
+        p.save!
+      end
+    end
+    
+  end
+  
   def update_all
     @shop = current_shop    
     @cached_products = params[:cached_products]
@@ -50,7 +66,7 @@ class CachedProductController < ApplicationController
 
     count = ShopifyAPI::Product.count(search_params)        
 
-    page_size = 10
+    page_size = 250
     @total_page = count / page_size
     @total_page = @total_page + 1 if (count % page_size > 0)
 

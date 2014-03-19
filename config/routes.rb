@@ -26,6 +26,7 @@ WorldShippingCalculator::Application.routes.draw do
   resources :cached_product do
     collection do
       post :update_all
+      post :load_new_products
       get :index
     end
   end  

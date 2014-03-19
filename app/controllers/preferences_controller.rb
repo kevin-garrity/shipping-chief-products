@@ -31,12 +31,13 @@ class PreferencesController < ApplicationController
   def update
     
     @preference = get_preference()
-    @carrier_preference = get_carrier_preference(@preference.carrier)
 
     @preference.shop_url = session[:shopify].shop.domain
 
     respond_to do |format|
       @preference.attributes = params[:preference]
+      @carrier_preference = get_carrier_preference(@preference.carrier)
+      
       
       #get free shipping option
     if @preference.free_shipping_by_collection

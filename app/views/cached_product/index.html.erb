@@ -1,3 +1,8 @@
+<%= form_tag load_new_products_cached_product_index_path do %>
+  <label>Load new products from Shopify</label>
+  <%= submit_tag "Load" %>
+<% end %>
+
 <%= form_tag update_all_cached_product_index_path do %>
   <% @cached_products.each_with_index do |cached_product,i| %> 
   <h2>
@@ -22,3 +27,5 @@
   <%= submit_tag %>
   
 <% end %>
+
+
