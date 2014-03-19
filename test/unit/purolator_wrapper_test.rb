@@ -19,9 +19,9 @@ class PurolatorWrapperTest < ActiveSupport::TestCase
             }
      @destination =
                {   country: "CA",
-                   postal_code: "V3N2G9",
-                   province: "BC",
-                   city: "Burnaby",
+                   postal_code: "L3R 0L7",
+                   province: "ON",
+                   city: "Markham",
                    name: "Jason Normore",
                    address1: "520 Cambridge Street South Apt. 5",
                    address2: "",
