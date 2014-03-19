@@ -19,6 +19,8 @@ class ApplicationController < ActionController::Base
           && !session[:shopify].url.include?("schumm-durgan-and-lang94") \
           && !session[:shopify].url.include?("lifemap") \
           && !session[:shopify].url.include?("iconicbook") \
+          && !session[:shopify].url.include?("titika") \
+          
           
           )
             #place a recurring charge

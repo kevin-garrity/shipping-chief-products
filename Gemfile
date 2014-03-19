@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby "1.9.3"
 
-gem 'rails', '>= 3.2.13'
+gem 'rails', '3.2.13'
 gem "activeresource", '3.2.13'
 
 group :assets do
@@ -31,6 +31,7 @@ gem "config_spartan"
 gem "active_shipping"
 gem "unicorn"
 gem "typhoeus"
+gem "net-http-persistent"
 
 # aus_controller_development branch added these
 gem "activerecord-postgresql-adapter"
@@ -51,13 +52,17 @@ gem 'oj' # fast json parser, but mainly to make multi_json stfu
 
 # allows use of limit: false in ShopifyAPI calls
 gem 'shopify_api'
+gem 'savon'
+
+gem 'foreman'
+gem 'puma'
+gem 'curb'
 
 group :development do
   gem 'shopifydev'
   gem "css_canon", :git => "git://github.com/lastobelus/css_canon"
   gem "hpricot", ">= 0.8.6"
   gem "ruby_parser", ">= 2.3.1"
-  gem "rspec-rails", ">= 2.11.0"
   gem "factory_girl_rails", ">= 4.1.0"
   gem "quiet_assets", ">= 1.0.1"
   gem 'pry-rails'

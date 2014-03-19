@@ -1,8 +1,6 @@
 class AddPreference < ActiveRecord::Migration
   def up
     create_table :preference do |t|
-      t.id :shop_url
-      
       t.string :shop_url
       t.string :origin_postal_code
       t.string :default_weight

@@ -11,7 +11,6 @@ class RatesController < ApplicationController
     service = service_class.new(preference, params[:rate])
     
     rates = service.fetch_rates
-    puts "rates_controller\#shipping_rates: rates fetched are #{pp rates}" if Rails.env.test?
 
     render :json => {:rates => rates}
   rescue ActiveMerchant::Shipping::ResponseError => e

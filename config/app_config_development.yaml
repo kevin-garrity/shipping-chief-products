@@ -35,6 +35,7 @@ clients:
     - :debug
     - :aus_post_bus
     - :chief_products
+    - :purolator
     service_host: localhost:3000
     local_host: localhost:3000
   red-pepper.myshopify.com:
@@ -71,4 +72,12 @@ clients:
     - :debug
     - :ridgewood
     service_host: localhost:3000
+  titika-active-wear.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :debug
+    - :purolator
+    service_host: localhost:3001
     
