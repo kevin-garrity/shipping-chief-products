@@ -1,6 +1,6 @@
 <%= form_tag load_new_products_cached_product_index_path do %>
   <label>Load new products from Shopify</label>
-  <%= submit_tag "Load" %>
+  <%= submit_tag "Get New Products" %>
 <% end %>
 
 <%= form_tag update_all_cached_product_index_path do %>
@@ -13,13 +13,13 @@
        <%= pf.hidden_field :product_id %>
        <%= pf.hidden_field :shop_id %>
        <div>
-       <label>Height:</label> <%= pf.text_field :height%>
+       <label>Height(cm):</label> <%= pf.text_field :height%>
        </div>
        <div>
-       <label>Width: </label> <%= pf.text_field :width%>
+       <label>Width(cm): </label> <%= pf.text_field :width%>
        </div>
        <div>
-       <label>Length: </label><%= pf.text_field :length%>       
+       <label>Length(cm): </label><%= pf.text_field :length%>       
        </div>
     <% end %>
     <hr/>

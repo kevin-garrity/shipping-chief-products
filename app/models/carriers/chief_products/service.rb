@@ -32,7 +32,7 @@ module Carriers
            end           
 
           service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
-          puts("service_list is " + pp(service_list[1].to_s))
+          puts("service_list is " + (service_list[1].to_s))
           
           #service_list[1]['service'] is array of hashes
           

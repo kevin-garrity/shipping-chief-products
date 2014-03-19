@@ -39,7 +39,8 @@ class CachedProductController < ApplicationController
         p.save!
       end
     end
-    
+    flash[:notice] = "saved"
+    redirect_to :action=> :index
   end
   
   def update_all
