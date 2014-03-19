@@ -85,5 +85,12 @@ clients:
     menus: []
     carriers:
     - :purolator
-    service_host: shipping-titika-active-wear.herokuapp.com
+    service_host: shipping-titika-active-wear.herokuapp.com    
+  aus-post-calculator-dev-shop.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :chief_products
+    service_host: shipping-chief-products.herokuapp.com
     
