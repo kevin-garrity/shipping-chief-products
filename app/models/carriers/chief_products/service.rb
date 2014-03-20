@@ -31,9 +31,7 @@ module Carriers
              shipping_desc = preference.shipping_methods_desc_int
            end           
 
-          service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list
-          puts("service_list is " + (service_list[1].to_s))
-          
+          service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list          
           #service_list[1]['service'] is array of hashes
           
           
@@ -43,6 +41,7 @@ module Carriers
             price_to_charge = service['price'].to_f * 100
             shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]
             
+            shipping_name = "Australia Post (#{shipping_name})"
             if (final_list.empty?)
               list << { "service_name"=> shipping_name,
                           "service_code"=> code,
@@ -71,6 +70,7 @@ module Carriers
                                                                                       
          end #end each
 #        puts("final_array is " + final_list.to_s)
+
         final_list
       end
       
@@ -82,9 +82,10 @@ module Carriers
         ego_service_list = Array.new
         aus_post_service_list = Array.new
         
-        if @carrier_preference.offer_e_go        
+        # only offer ego rate for australia destination
+        if @carrier_preference.offer_e_go  && destination.country_code.to_s == "AU"
           ego = EgoApiWrapper.new        
-          ego_service_list = ego.get_rates(self.origin, self.destination, new_items, "")
+          ego_service_list = ego.get_rates(self.origin, self.destination, new_items, @carrier_preference.ego_depot_option)
           ego_service_list = consolidate_rates(ego_service_list)                              
         end
         if (@carrier_preference.offer_australia_post)

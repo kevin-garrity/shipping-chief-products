@@ -14,7 +14,7 @@ class EgoApiWrapper
     puts("origin EgoApiWrapper:get_rates is #{origin.class.to_s}") if Rails.env.test?
     pickup = origin.postal_code
     delivery=destination.postal_code
-    
+        
     rates = Array.new
     items.each do |item|
       width=item[:width]
@@ -42,11 +42,11 @@ class EgoApiWrapper
     
     return_array = Array.new
     service_name ="E-Go"
-    service_code ="E-Go"
+
     if (rates.empty?)
-      return_array = [{"service_name" => "ERROR getting rates from e-go",  'service_code'=> "", 'total_price' => 0.0, 'currency' => "AUD"}]
+      return_array = [{"service_name" => "ERROR getting rates from e-go",  'service_code'=> "E-go", 'total_price' => 0.0, 'currency' => "AUD"}]
     else
-      return_array = rates.collect{ |r| {"service_name" => service_name, 'service_code'=> service_code, 'total_price' => r[:price].to_f*100, 'currency' => "AUD"} }
+      return_array = rates.collect{ |r| {"service_name" => "#{service_name} (#{r[:eta]})", 'service_code'=> r[:eta], 'total_price' => r[:price].to_f*100, 'currency' => "AUD"} }
     end
     puts("return_array is #{return_array.to_s}") if Rails.env.test?
     

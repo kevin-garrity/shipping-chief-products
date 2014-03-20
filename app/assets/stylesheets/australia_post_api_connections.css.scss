@@ -70,7 +70,7 @@ form fieldset {
 form label {
   display:inline;
   float:left;
-  width:450px;
+  width:250px;
   line-height:20px;
   margin-right:20px;
   font-weight:400;
@@ -92,8 +92,8 @@ form span.has-tip {
   width:80%;
 }
 
-.panel {
-  height:1000px;
+.left-panel {
+  min-height:800px;
 }
 
 .actions {
@@ -211,4 +211,6 @@ table .header {
   margin-top:8px;
   width: 20px;
 }
+
+
 

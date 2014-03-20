@@ -2,7 +2,7 @@ module Carriers
   module ChiefProducts
     class ChiefProductsPreference < ActiveRecord::Base
       
-      attr_accessible :product_dimension_metafields_key, :product_dimension_metafields_namespace, :offer_australia_post, :offer_e_go
+      attr_accessible :offer_australia_post, :offer_e_go, :ego_depot_option, :aus_post_explanation, :ego_explanation
 
       
       class UnknownShopError < StandardError; end

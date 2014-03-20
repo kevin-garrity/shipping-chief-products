@@ -87,7 +87,7 @@ class EgoWrapperTest < ActiveSupport::TestCase
     array = ego.get_rates(o, d, @item, booking_type)
     
     assert array.length == 1
-    assert array[0]["service_name"] == "E-Go", "Service name should be E-go"
+    assert array[0]["service_name"].include?("E-Go"), "Service name should be E-go"
     assert !array[0]["total_price"].nil?, "price should not be nil"
     
   end
@@ -101,11 +101,40 @@ class EgoWrapperTest < ActiveSupport::TestCase
      d = Location.new(@destination)
      array = ego.get_rates(o, d, @items, booking_type)
      assert array.length == 2
-     assert array[0]["service_name"] == "E-Go", "Service name should be E-go"
+     assert array[0]["service_name"].include?("E-Go"), "Service name should be E-go"
      assert !array[0]["total_price"].nil?, "price should not be nil"
      
-     assert array[1]["service_name"] == "E-Go", "Service name should be E-go"
+     assert array[1]["service_name"].include?("E-Go"), "Service name should be E-go"
      assert !array[1]["total_price"].nil?, "price should not be nil"     
    end
+   
+   def test_ego_multiple_items2
+      booking_type = "depot2depot"
+
+      ego = EgoApiWrapper.new
+      @origin[:postal_code] = "2163"
+      o = Location.new(@origin)
+      d = Location.new(@destination)
+      array = ego.get_rates(o, d, @items, booking_type)
+      assert array.length == 2
+      assert array[0]["service_name"].include?("E-Go"), "Service name should be E-go"
+      assert !array[0]["total_price"].nil?, "price should not be nil"
+
+      assert array[1]["service_name"].include?("E-Go"), "Service name should be E-go"
+      assert !array[1]["total_price"].nil?, "price should not be nil"     
+    end
+   
+   
+   def test_ego_bad_post_code_in_origin
+      booking_type = ""
+
+      ego = EgoApiWrapper.new
+      @origin[:postal_code] = "zz0000"
+      o = Location.new(@origin)
+      d = Location.new(@destination)
+      array = ego.get_rates(o, d, @items, booking_type)
+      assert array.length == 1
+      assert array[0]["service_name"].include?("ERROR"), "should contain error"
+  end
   
 end

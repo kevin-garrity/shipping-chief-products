@@ -1,50 +1,83 @@
+%hr
+= label_tag :off_ego, "Offer E-Go rates".html_safe
+= check_box :carrier_preference, :offer_e_go
+%div{:class=>"ego_options panel"}
+  = label_tag :ego_depot_option, "EGO depot option"
+  = select :carrier_preference, :ego_depot_option, options_for_select([['None',''], ['depot2depot', 'depot2depot'],['depot2door','depot2door'],['door2depot','door2depot']])
+  = label_tag :ego_explanation, "Tooltip text for E-Go delivery options" 
+  = text_area :carrier_preference, :ego_explanation
+%hr
 = label_tag :off_aus_post, "Offer Australia Post Rates".html_safe
 = check_box :carrier_preference, :offer_australia_post
 %br
-= label_tag :off_ego, "Offer E-Go rates".html_safe
-= check_box :carrier_preference, :offer_e_go
-
-
-%h3 The list of shipping methods you want to offer to international customers for Australia Post
-%br
-%table
-  %tr(class="header") 
-    %td Shipping Methods
-    %td Description to show to customer <span class='has-tip' data-width='280' title='Provide a shorter description for your customers and include estimated delivery time ideally.'>?</span>
-    %td Offer this choice to customer<span class='has-tip' data-width='280' title='Allow customers to pick this option'>?</span>
-  - Preference.AusPostParcelServiceListInt.each {|key, value|
-  %tr 
-    %td 
-      = value
-    %td
-      = text_field_tag("shipping_methods_desc_int[#{key}]", @preference.shipping_methods_desc_int[key.to_s].nil? ? value : @preference.shipping_methods_desc_int[key.to_s])        
-    %td
-      = check_box_tag("shipping_methods_int[#{key}]", value=1, @preference.shipping_methods_allowed_int[key.to_s])
-  -}    
-%br 
-%h3 The list of shipping methods you want to offer to domestic customers for Australia Post
-%br
-%table(class="twelve")
-  %tr(class="header") 
-    %td Shipping Methods
-    %td Description to show to customer<span class='has-tip' data-width='280' title='Provide a shorter description for your customers and include estimated delivery time ideally.'>?</span>
-    %td Offer this choice to customer <span class='has-tip' data-width='280' title='Allow customers to pick this option'>?</span>  
-  - Preference.AusPostParcelServiceListDom.each {|key, value|
-  %tr 
-    %td 
-      = value
-    %td
-      = text_field_tag("shipping_methods_desc_dom[#{key}]", @preference.shipping_methods_desc_dom[key.to_s].nil? ? value : @preference.shipping_methods_desc_dom[key.to_s])        
-    %td
-      = check_box_tag("shipping_methods_dom[#{key}]", value=1, @preference.shipping_methods_allowed_dom[key.to_s])
-  -}    
+%div{:class=>"aus_post_options"}
+  = label_tag :aus_post_explanation, "Tooltip text for Australia Post delivery options" 
+  = text_area :carrier_preference, :aus_post_explanation
+  %h3 The list of shipping methods you want to offer to international customers for Australia Post
+  %br
+  %table
+    %tr(class="header") 
+      %td Shipping Methods
+      %td Description to show to customer <span class='has-tip' data-width='280' title='Provide a shorter description for your customers and include estimated delivery time ideally.'>?</span>
+      %td Offer this choice to customer<span class='has-tip' data-width='280' title='Allow customers to pick this option'>?</span>
+    - Preference.AusPostParcelServiceListInt.each {|key, value|
+    %tr 
+      %td 
+        = value
+      %td
+        = text_field_tag("shipping_methods_desc_int[#{key}]", @preference.shipping_methods_desc_int[key.to_s].nil? ? value : @preference.shipping_methods_desc_int[key.to_s])        
+      %td
+        = check_box_tag("shipping_methods_int[#{key}]", value=1, @preference.shipping_methods_allowed_int[key.to_s])
+    -}    
+  %br 
+  %h3 The list of shipping methods you want to offer to domestic customers for Australia Post
+  %br
+  %table(class="twelve")
+    %tr(class="header") 
+      %td Shipping Methods
+      %td Description to show to customer<span class='has-tip' data-width='280' title='Provide a shorter description for your customers and include estimated delivery time ideally.'>?</span>
+      %td Offer this choice to customer <span class='has-tip' data-width='280' title='Allow customers to pick this option'>?</span>  
+    - Preference.AusPostParcelServiceListDom.each {|key, value|
+    %tr 
+      %td 
+        = value
+      %td
+        = text_field_tag("shipping_methods_desc_dom[#{key}]", @preference.shipping_methods_desc_dom[key.to_s].nil? ? value : @preference.shipping_methods_desc_dom[key.to_s])        
+      %td
+        = check_box_tag("shipping_methods_dom[#{key}]", value=1, @preference.shipping_methods_allowed_dom[key.to_s])
+    -}
+%hr  
 .actions
   = submit_tag 'Save', :class=>"button"
   = link_to 'Cancel', preferences_path
 
 :javascript
 $(document).ready( function() {
+  $("#carrier_preference_offer_australia_post").change(function() {
+    if(this.checked)
+      $(".aus_post_options").show();
+    else
+      $(".aus_post_options").hide();    
+    }
+  );
+  
+  $("#carrier_preference_offer_e_go").change(function() {
+    if(this.checked)
+      $(".ego_options").show();
+    else
+      $(".ego_options").hide();    
+    }
+  );
+  if ($('#carrier_preference_offer_australia_post').is(':checked'))
+    $(".aus_post_options").show();
+  else
+    $(".aus_post_options").hide();
 
+  if ($('#carrier_preference_offer_e_go').is(':checked'))
+    $(".ego_options").show();
+  else
+    $(".ego_options").hide();
+        
   $('#preference_default_box_size').change(function() {
    switch(this.value)
    {
