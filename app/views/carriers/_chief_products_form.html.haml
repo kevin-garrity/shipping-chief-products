@@ -3,7 +3,7 @@
 = check_box :carrier_preference, :offer_e_go
 %div{:class=>"ego_options panel"}
   = label_tag :ego_depot_option, "EGO depot option"
-  = select :carrier_preference, :ego_depot_option, options_for_select([['None',''], ['depot2depot', 'depot2depot'],['depot2door','depot2door'],['door2depot','door2depot']])
+  = select :carrier_preference, :ego_depot_option, options_for_select([['None',''],['depot2door','depot2door']])
   = label_tag :ego_explanation, "Tooltip text for E-Go delivery options" 
   = text_area :carrier_preference, :ego_explanation
 %hr
@@ -13,14 +13,18 @@
 %div{:class=>"aus_post_options"}
   = label_tag :aus_post_explanation, "Tooltip text for Australia Post delivery options" 
   = text_area :carrier_preference, :aus_post_explanation
-  %h3 The list of shipping methods you want to offer to international customers for Australia Post
+  %div The list of shipping methods you want to offer to international customers for Australia Post
   %br
   %table
     %tr(class="header") 
       %td Shipping Methods
       %td Description to show to customer <span class='has-tip' data-width='280' title='Provide a shorter description for your customers and include estimated delivery time ideally.'>?</span>
       %td Offer this choice to customer<span class='has-tip' data-width='280' title='Allow customers to pick this option'>?</span>
-    - Preference.AusPostParcelServiceListInt.each {|key, value|
+      
+    - service_list_int =  {:INTL_SERVICE_ECI_M =>"Express Courier International Merchandise",
+      :INTL_SERVICE_EPI => "Express Post International",
+      :INTL_SERVICE_AIR_MAIL => "Air Mail"}
+    - service_list_int.each {|key, value|
     %tr 
       %td 
         = value
@@ -30,14 +34,17 @@
         = check_box_tag("shipping_methods_int[#{key}]", value=1, @preference.shipping_methods_allowed_int[key.to_s])
     -}    
   %br 
-  %h3 The list of shipping methods you want to offer to domestic customers for Australia Post
+  - service_list_aus = {:AUS_PARCEL_REGULAR =>"Regular Parcel",
+                        :AUS_PARCEL_EXPRESS => "Express Post Parcel",
+                        :AUS_PARCEL_PLATINUM => "Express Post Platinum Parcel"}
+  %div The list of shipping methods you want to offer to domestic customers for Australia Post
   %br
   %table(class="twelve")
     %tr(class="header") 
       %td Shipping Methods
       %td Description to show to customer<span class='has-tip' data-width='280' title='Provide a shorter description for your customers and include estimated delivery time ideally.'>?</span>
       %td Offer this choice to customer <span class='has-tip' data-width='280' title='Allow customers to pick this option'>?</span>  
-    - Preference.AusPostParcelServiceListDom.each {|key, value|
+    - service_list_aus.each {|key, value|
     %tr 
       %td 
         = value

@@ -14,7 +14,7 @@ module Carriers
            quan = item[:quantity].to_i               
            weight = item[:grams].to_i * quan
            
-           weight_kg = weight / 1000
+           weight_kg = weight.to_f / 1000
            @australia_post_api_connection = AustraliaPostApiConnection.new({:weight=> weight_kg,
                                                                            :from_postcode => origin.postal_code,
                                                                            :country_code =>  destination.country_code.to_s,
@@ -34,7 +34,7 @@ module Carriers
           service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list          
           #service_list[1]['service'] is array of hashes
           
-          
+          puts("service_list is #{service_list.to_s}")
           list = Array.new
           service_list[1]['service'].each do |service|
             code = service['code']            

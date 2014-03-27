@@ -123,6 +123,7 @@ class AustraliaPostApiConnection
     #     make 1 API call at max_weight and multiply the result
     #     make 1 API call at excess weight
     #
+    
     total_weight = self.attributes[:weight].to_f
     
     #get total weight 

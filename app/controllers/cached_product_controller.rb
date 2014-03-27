@@ -73,9 +73,9 @@ class CachedProductController < ApplicationController
 
     @page = 1 if (@page.to_i > @total_page.to_i)
 
-    fields = "id,title,images,options,variants"
+    fields = "id,title"
 
-    search_params = {:fields=>fields, :limit => page_size, :page=>@page}      
+    search_params = {:fields=>fields, :limit => page_size}      
     # ppl search_params
     @products = ShopifyAPI::Product.find(:all, :params => search_params)
     # ppl @product
