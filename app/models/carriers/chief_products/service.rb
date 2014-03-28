@@ -40,7 +40,7 @@ module Carriers
             price_to_charge = service['price'].to_f * 100 #convert to cents
             shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]                        
             
-            next !is_aus_post_service_allowed(shipping_methods, code)
+            next unless is_aus_post_service_allowed(shipping_methods, code)
             shipping_name = "Australia Post (#{shipping_name})"
             if (final_list.empty?)
               list << { "service_name"=> shipping_name,
@@ -79,7 +79,7 @@ module Carriers
         
         puts("allowed_methods[service_name] is #{allowed_methods[service_name]}")
         
-        if (allowed_methods[service_name])
+        if (allowed_methods[service_name] == 1)
           return true
         else
           #see if this is a recognized service, if not, allow this to be displayed to the user
