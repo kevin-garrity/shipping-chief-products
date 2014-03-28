@@ -21,9 +21,13 @@ class EgoApiWrapper
       height=item[:height]
       length=item[:length]
       weight_grams=item[:grams].to_i
-      weight_kg = weight_grams / 1000
+      weight_kg = weight_grams.to_f / 1000
       quan = item[:quantity]
-      query = "#{base_url}?pickup=#{pickup}&delivery=#{delivery}&type=Carton&width=#{width}&height=#{height}&depth=#{length}&weight=#{weight_kg.to_s}&items=#{quan}"
+      
+      #only get rate for one box
+      query = "#{base_url}?pickup=#{pickup}&delivery=#{delivery}&type=Carton&width=#{width}&height=#{height}&depth=#{length}&weight=#{weight_kg.to_s}&items=1"
+      
+      
       
       unless booking_type.blank?
         query+= "&bookingtype=#{booking_type}"
@@ -46,7 +50,7 @@ class EgoApiWrapper
     if (rates.empty?)
       return_array = [{"service_name" => "ERROR getting rates from e-go",  'service_code'=> "E-go", 'total_price' => 0.0, 'currency' => "AUD"}]
     else
-      return_array = rates.collect{ |r| {"service_name" => "#{service_name} (#{r[:eta]})", 'service_code'=> r[:eta], 'total_price' => r[:price].to_f*100, 'currency' => "AUD"} }
+      return_array = rates.collect{ |r| {"service_name" => "#{service_name} (#{r[:eta]})", 'service_code'=> r[:eta], 'total_price' => r[:price].to_f*100*quan.to_f, 'currency' => "AUD"} }
     end
     puts("return_array is #{return_array.to_s}") if Rails.env.test?
     
