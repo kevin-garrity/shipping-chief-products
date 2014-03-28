@@ -38,8 +38,9 @@ module Carriers
           service_list[1]['service'].each do |service|
             code = service['code']            
             price_to_charge = service['price'].to_f * 100 #convert to cents
-            shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]
+            shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]                        
             
+            next !is_aus_post_service_allowed(shipping_methods, code)
             shipping_name = "Australia Post (#{shipping_name})"
             if (final_list.empty?)
               list << { "service_name"=> shipping_name,
@@ -73,6 +74,16 @@ module Carriers
         final_list
       end
       
+      def is_aus_post_service_allowed(allowed_methods, service_name)
+          
+        if (allowed_methods[service_name])
+          return true
+        else
+          #see if this is a recognized service, if not, allow this to be displayed to the user
+          return Preference.AusPostParcelServiceListInt[service_name] == nil && Preference.AusPostParcelServiceListDom[service_name] == nil
+        end
+        
+      end
       
       def fetch_rates
         @carrier_preference = ChiefProductsPreference.find_by_shop_url(@preference.shop_url)
