@@ -41,6 +41,8 @@ class EgoApiWrapper
       response = http.request(request)            
       
       ret = parse_response(response.body)
+      
+      ret[:price] = ret[:price] * quan
       rates << ret unless ret.nil?
     end
     
@@ -50,7 +52,7 @@ class EgoApiWrapper
     if (rates.empty?)
       return_array = [{"service_name" => "ERROR getting rates from e-go",  'service_code'=> "E-go", 'total_price' => 0.0, 'currency' => "AUD"}]
     else
-      return_array = rates.collect{ |r| {"service_name" => "#{service_name} (#{r[:eta]})", 'service_code'=> r[:eta], 'total_price' => r[:price].to_f*100*quan.to_f, 'currency' => "AUD"} }
+      return_array = rates.collect{ |r| {"service_name" => "#{service_name} (#{r[:eta]})", 'service_code'=> r[:eta], 'total_price' => r[:price].to_f*100, 'currency' => "AUD"} }
     end
     puts("return_array is #{return_array.to_s}") if Rails.env.test?
     

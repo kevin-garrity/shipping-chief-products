@@ -75,7 +75,7 @@ module Carriers
       end
       
       def is_aus_post_service_allowed(allowed_methods, service_name)
-          
+        puts("allowed_methods is #{allowed_methods.to_s}")
         if (allowed_methods[service_name])
           return true
         else
