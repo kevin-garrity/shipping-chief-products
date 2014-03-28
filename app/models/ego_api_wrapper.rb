@@ -42,7 +42,7 @@ class EgoApiWrapper
       
       ret = parse_response(response.body)
       
-      ret[:price] = ret[:price] * quan
+      ret[:price] = ret[:price] * quan unless ret.nil?
       rates << ret unless ret.nil?
     end
     
