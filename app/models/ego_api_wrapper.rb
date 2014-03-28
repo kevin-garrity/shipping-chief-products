@@ -21,7 +21,7 @@ class EgoApiWrapper
       height=item[:height]
       length=item[:length]
       weight_grams=item[:grams].to_i
-      weight_kg = weight_grams.to_f / 1000
+      weight_kg = (weight_grams.to_f / 1000).ceil
       quan = item[:quantity]
       
       #only get rate for one box
