@@ -12,7 +12,7 @@ module Carriers
          
          new_items.each do |item|
            quan = item[:quantity].to_i               
-           weight = item[:grams].to_i * quan
+           weight = item[:grams].to_i
            
            weight_kg = weight.to_f / 1000
            @australia_post_api_connection = AustraliaPostApiConnection.new({:weight=> weight_kg,
@@ -34,28 +34,27 @@ module Carriers
           service_list = @australia_post_api_connection.data_oriented_methods(:service) # get the service list          
           #service_list[1]['service'] is array of hashes
           
-          puts("service_list is #{service_list.to_s}")
           list = Array.new
           service_list[1]['service'].each do |service|
             code = service['code']            
-            price_to_charge = service['price'].to_f * 100
+            price_to_charge = service['price'].to_f * 100 #convert to cents
             shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]
             
             shipping_name = "Australia Post (#{shipping_name})"
             if (final_list.empty?)
               list << { "service_name"=> shipping_name,
                           "service_code"=> code,
-                          "total_price"=> price_to_charge,
+                          "total_price"=> price_to_charge * quan.to_f,
                           "currency"=> "AUD"}
             else
               list << { "service_name"=> shipping_name,
                           "service_code"=> code,
-                          "total_price"=> price_to_charge,
+                          "total_price"=> price_to_charge * quan.to_f,
                           "currency"=> "AUD"}
               #try to merge with the rates in final_list
               #find service in final_list using service code
               index = final_list.find_index {|item| item['service_code'] == code}
-              final_list[index]['total_price'] =  final_list[index]['total_price'].to_f +  price_to_charge unless (index.nil?)
+              final_list[index]['total_price'] =  final_list[index]['total_price'].to_f +  price_to_charge * quan.to_f unless (index.nil?)
             end
           end          
           

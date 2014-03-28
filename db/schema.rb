@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140320002626) do
+ActiveRecord::Schema.define(:version => 20140328053850) do
 
   create_table "cached_products", :force => true do |t|
     t.integer "product_id"
@@ -21,6 +21,13 @@ ActiveRecord::Schema.define(:version => 20140320002626) do
     t.integer "width"
     t.integer "length"
     t.string  "product_name"
+  end
+
+  create_table "carruth_studio_preference", :force => true do |t|
+    t.string  "shop_url"
+    t.decimal "flat_retail_shipping"
+    t.decimal "charge_per_additional_item"
+    t.string  "wholesaler_shipping_message"
   end
 
   create_table "chief_products_preference", :force => true do |t|
@@ -48,14 +55,14 @@ ActiveRecord::Schema.define(:version => 20140320002626) do
     t.string  "shop_url"
     t.string  "origin_postal_code"
     t.string  "default_weight"
-    t.decimal "height",                       :precision => 10, :scale => 2
-    t.decimal "width",                        :precision => 10, :scale => 2
-    t.decimal "length",                       :precision => 10, :scale => 2
+    t.decimal "height",                         :precision => 10, :scale => 2
+    t.decimal "width",                          :precision => 10, :scale => 2
+    t.decimal "length",                         :precision => 10, :scale => 2
     t.float   "surcharge_percentage"
     t.integer "items_per_box"
-    t.decimal "default_charge",               :precision => 10, :scale => 2
+    t.decimal "default_charge",                 :precision => 10, :scale => 2
     t.text    "shipping_methods_allowed_int"
-    t.decimal "container_weight",             :precision => 10, :scale => 2
+    t.decimal "container_weight",               :precision => 10, :scale => 2
     t.text    "shipping_methods_allowed_dom"
     t.integer "default_box_size"
     t.text    "shipping_methods_desc_int"
@@ -69,6 +76,8 @@ ActiveRecord::Schema.define(:version => 20140320002626) do
     t.decimal "under_weight"
     t.decimal "flat_rate"
     t.boolean "free_shipping_by_collection"
+    t.text    "shipping_methods_long_desc_int"
+    t.text    "shipping_methods_long_desc_dom"
   end
 
   create_table "ridgewood_preference", :force => true do |t|

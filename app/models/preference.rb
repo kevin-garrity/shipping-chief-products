@@ -3,11 +3,13 @@ class Preference < ActiveRecord::Base
 
   self.table_name = 'preference'
   attr_accessible :origin_postal_code, :default_weight, :surcharge_percentage, :surcharge_amount, :height, :width, :length, :items_per_box, :default_charge, :shipping_methods_allowed_dom, :default_box_size,
-    :shipping_methods_allowed_int, :container_weight, :shipping_methods_desc_int, :shipping_methods_desc_dom, :shop_url, :carrier, :free_shipping_option, :free_shipping_description, :offers_flat_rate, :under_weight, :flat_rate,:free_shipping_by_collection
+    :shipping_methods_allowed_int, :container_weight, :shipping_methods_desc_int, :shipping_methods_desc_dom,:shipping_methods_long_desc_int, :shipping_methods_long_desc_dom, :shop_url, :carrier, :free_shipping_option, :free_shipping_description, :offers_flat_rate, :under_weight, :flat_rate,:free_shipping_by_collection
   serialize   :shipping_methods_allowed_int, Hash
   serialize   :shipping_methods_allowed_dom, Hash
   serialize   :shipping_methods_desc_int, Hash
   serialize   :shipping_methods_desc_dom, Hash
+  serialize   :shipping_methods_long_desc_int, Hash
+  serialize   :shipping_methods_long_desc_dom, Hash
 
   validates :origin_postal_code, :length => { :is => 4 }, :unless => :shopify_pro_shop
   validates :origin_postal_code, :numericality  => { :only_integer => true }, :unless => :shopify_pro_shop

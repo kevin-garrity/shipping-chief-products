@@ -177,9 +177,6 @@ table .header {
 }
 
 
-
-
-
 #preference_surcharge_percentage, #preference_default_weight, #preference_items_per_box,#preference_default_charge,
 #preference_container_weight, #preference_flat_rate  {
   display:inline;
@@ -212,5 +209,8 @@ table .header {
   width: 20px;
 }
 
+.top-bar-section {
+  width: 1030px; 
+}
 
 

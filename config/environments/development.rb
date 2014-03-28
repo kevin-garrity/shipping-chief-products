@@ -31,7 +31,7 @@ WorldShippingCalculator::Application.configure do
     password: ENV["GMAIL_PASSWORD"]
   }
   
-  config.cache_store = :memory_store
+ # config.cache_store = :memory_store
 
   config.log_level = :debug
 
@@ -49,11 +49,9 @@ WorldShippingCalculator::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  # Do not compress assets
-  config.assets.compress = false
 
-  # Expands the lines which load the assets
-  config.assets.debug = true
+
+  
   
    # Shopify API connection credentials:
   config.shopify.api_key = '8eca7ab7c1c9209d1a78baa3f28363c8'

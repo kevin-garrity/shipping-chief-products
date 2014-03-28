@@ -1,12 +1,11 @@
 <%= form_tag load_new_products_cached_product_index_path do %>
-  <label>Load new products from Shopify</label>
   <%= submit_tag "Get New Products" %>
 <% end %>
 
 <%= form_tag update_all_cached_product_index_path do %>
   <% @cached_products.each_with_index do |cached_product,i| %> 
   <h2>
-    Product Title: <%=cached_product.product_name%>
+    <%=cached_product.product_name%>
   </h2>
     <%= fields_for "cached_products[#{i}]", cached_product do |pf| %>
        <%= pf.hidden_field :id %>

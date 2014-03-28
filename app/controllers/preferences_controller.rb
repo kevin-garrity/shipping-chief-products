@@ -4,12 +4,18 @@ class PreferencesController < ApplicationController
 
   around_filter :shopify_session
   before_filter :check_payment
+  layout "application-no-left"
 
   def show
     @preference = get_preference
     @carrier_preference = get_carrier_preference(@preference.carrier)
     @free_shipping_options = get_collection_shipping_options
-
+    
+    if (@preference.carrier == "chief_products")
+      @hide_carrier_setting = true
+    else
+       @hide_carrier_setting = false
+    end
     Rails.logger.info("session[:shopify].url: #{session[:shopify].url.inspect}")
     respond_to do |format|
       format.html { render :action => "edit"}
@@ -23,6 +29,11 @@ class PreferencesController < ApplicationController
     @carrier_preference = get_carrier_preference(@preference.carrier)
     
     @free_shipping_options = get_collection_shipping_options
+    if (@preference.carrier == "chief_products")
+      @hide_carrier_setting = true
+    else
+       @hide_carrier_setting = false
+    end
     
   end
 

@@ -1,10 +1,8 @@
 %nav.top-bar
-  %ul.title-area
-    %li.name
-      = link_to 'Home', '/', :class => 'brand'
+
   %section.top-bar-section
     - if shop_session
-      %ul.right
+      %ul
         %li= link_to("Preferences", preferences_url)      
         %li= link_to("Product Dimensions", cached_product_index_url)
         %li= link_to shop_session.url, "http://"+shop_session.url, :target => 'blank'
