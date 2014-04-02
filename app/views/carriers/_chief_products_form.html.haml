@@ -4,7 +4,7 @@
   = label_tag :off_ego, "Offer E-Go rates", :id=>"off_ego_label"
   %div{:class=>"ego_options"}
     = label_tag :ego_depot_option, "EGO depot option"
-    = select :carrier_preference, :ego_depot_option, options_for_select([['None',''],['depot2door','depot2door']])
+    = select :carrier_preference, :ego_depot_option, options_for_select([['door2door',''],['depot2door','depot2door']])
     %br
     = label_tag :ego_explanation, "Tooltip text for E-Go delivery options" 
     = text_area :carrier_preference, :ego_explanation

@@ -12,14 +12,15 @@
        <%= pf.hidden_field :product_id %>
        <%= pf.hidden_field :shop_id %>
        <div>
-       <label>Height(cm):</label> <%= pf.text_field :height%>
+       <label>Height(cm):</label> <%= pf.text_field :height, :value => (number_with_precision(pf.object.height, :precision => 2) || 0) %>
        </div>
        <div>
-       <label>Width(cm): </label> <%= pf.text_field :width%>
+       <label>Width(cm): </label> <%= pf.text_field :width, :value => (number_with_precision(pf.object.width, :precision => 2) || 0) %>
        </div>
        <div>
-       <label>Length(cm): </label><%= pf.text_field :length%>       
+       <label>Length(cm): </label><%= pf.text_field :length, :value => (number_with_precision(pf.object.length, :precision => 2) || 0)%>       
        </div>
+       
     <% end %>
     <hr/>
   <% end %>

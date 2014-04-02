@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140328053850) do
+ActiveRecord::Schema.define(:version => 20140401060021) do
 
   create_table "cached_products", :force => true do |t|
     t.integer "product_id"
@@ -28,6 +28,9 @@ ActiveRecord::Schema.define(:version => 20140328053850) do
     t.decimal "flat_retail_shipping"
     t.decimal "charge_per_additional_item"
     t.string  "wholesaler_shipping_message"
+    t.string  "regular_shipping_description"
+    t.string  "expedited_shipping_description"
+    t.decimal "expedited_shipping_rate"
   end
 
   create_table "chief_products_preference", :force => true do |t|
@@ -38,6 +41,7 @@ ActiveRecord::Schema.define(:version => 20140328053850) do
     t.string  "ego_depot_option"
     t.string  "aus_post_explanation"
     t.string  "ego_explanation"
+    t.string  "rate_lookup_error"
   end
 
   create_table "postal_code_range_preference", :force => true do |t|

@@ -40,7 +40,7 @@ module Carriers
             price_to_charge = service['price'].to_f * 100 #convert to cents
             shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]                        
             
-            next unless is_aus_post_service_allowed(shipping_methods, code)
+            next unless is_aus_post_service_allowed(shipping_methods, code, weight_kg)
             shipping_name = "Australia Post (#{shipping_name})"
             if (final_list.empty?)
               list << { "service_name"=> shipping_name,
@@ -53,8 +53,8 @@ module Carriers
                           "total_price"=> price_to_charge * quan.to_f,
                           "currency"=> "AUD"}
               #try to merge with the rates in final_list
-              #find service in final_list using service code
-              index = final_list.find_index {|item| item['service_code'] == code}
+              #find service in final_list using service name
+              index = final_list.find_index {|item| item['service_name'] == code}
               final_list[index]['total_price'] =  final_list[index]['total_price'].to_f +  price_to_charge * quan.to_f unless (index.nil?)
             end
           end          
@@ -74,17 +74,26 @@ module Carriers
         final_list
       end
       
-      def is_aus_post_service_allowed(allowed_methods, service_name)
-        puts("allowed_methods is #{allowed_methods.to_s}")
-        
-        puts("allowed_methods[service_name] is #{allowed_methods[service_name]}")
+      # item_weight should be in kg
+      def is_aus_post_service_allowed(allowed_methods, service_name, item_weight)
+
         
         if (allowed_methods[service_name] == 1)
-          return true
+          return true if item_weight > 5.0
+          #will fit in prepad satchel]
+          if (item_weight > 3.0) # 3 to 5
+            return true if service_name.include? ("SATCHEL_5KG")
+          elsif (item_weight > 0.5) #0.5 to 3
+            return true if service_name.include? ("SATCHEL_3KG")
+          else
+            return true if service_name.include? ("SATCHEL_500G")            
+          end           
         else
           #see if this is a recognized service, if not, allow this to be displayed to the user
           return Preference.AusPostParcelServiceListInt[service_name] == nil && Preference.AusPostParcelServiceListDom[service_name] == nil
         end
+        
+        return false
         
       end
       

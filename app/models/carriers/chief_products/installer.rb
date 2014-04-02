@@ -1,6 +1,20 @@
 module Carriers
   module ChiefProducts
     class Installer < ::Carriers::Installer
+      
+      def find_or_create_metafield(shopify_api_shop, key_name, field_value)
+        found = shopify_api_shop.metafields.select {|m| m.key == key_name}            
+        if (found.length > 0)
+          if (found[0].value.to_s != field_value)
+            found[0].value = field_value
+            found[0].save!
+          end                       
+        else
+          field = ShopifyAPI::Metafield.new({:namespace =>'chief_products',:key=>key_name, :value=>field_value, :value_type=>'string' })
+          shopify_api_shop.add_metafield(field)
+        end
+      end
+      
       def configure(params)
           @preference.shipping_methods_allowed_int = params[:shipping_methods_int]
           @preference.shipping_methods_allowed_dom = params[:shipping_methods_dom]
@@ -12,56 +26,23 @@ module Carriers
            
           withShopify do
             shopify_api_shop = ShopifyAPI::Shop.current
-            field = ShopifyAPI::Metafield.new({:namespace =>'chief_products',:key=>'ego_explanation', :value=>params[:carrier_preference][:ego_explanation].to_s, :value_type=>'string' })
-            shopify_api_shop.add_metafield(field)
             
-            field = ShopifyAPI::Metafield.new({:namespace =>'chief_products',:key=>'aus_post_explanation', :value=>params[:carrier_preference][:aus_post_explanation].to_s, :value_type=>'string' })
-            shopify_api_shop.add_metafield(field)
+            find_or_create_metafield(shopify_api_shop, 'ego_explanation', params[:carrier_preference][:ego_explanation].to_s)
+            find_or_create_metafield(shopify_api_shop, 'aus_post_explanation', params[:carrier_preference][:aus_post_explanation].to_s)
+            find_or_create_metafield(shopify_api_shop, 'rate_lookup_error', params[:carrier_preference][:rate_lookup_error].to_s)
+                                     
             
-            @preference.shipping_methods_long_desc_int.each do |method_name, value|
-              
-              m = find_metafield(shopify_api_shop, method_name)                          
-            
-              if m.nil? #not found                
-                field = ShopifyAPI::Metafield.new({:namespace =>'chief_products',:key=>method_name, :value=>value.to_s, :value_type=>'string' })
-                shopify_api_shop.add_metafield(field)
-              else
-                if m.value != value
-                  m.value = value
-                  m.save!
-                end
-              end
+            @preference.shipping_methods_long_desc_int.each do |method_name, value|              
+              find_or_create_metafield(shopify_api_shop, method_name, value.to_s)                       
             end
             
             @preference.shipping_methods_long_desc_dom.each do |method_name, value|
-              
-              m = find_metafield(shopify_api_shop, method_name)
-                          
-              if m.nil? #not found                
-                field = ShopifyAPI::Metafield.new({:namespace =>'chief_products',:key=>method_name, :value=>value.to_s, :value_type=>'string' })
-                shopify_api_shop.add_metafield(field)
-              else
-                if m.value != value
-                  m.value = value
-                  m.save!
-                end
-              end
+              find_or_create_metafield(shopify_api_shop, method_name, value.to_s)                         
             end
                         
           end #end withShopify
           
-      end
-      
-      def find_metafield(shopify_api_shop, method_name)
-        shopify_api_shop.metafields.each do |metafield|
-          if metafield.key.to_s.include?(method_name)
-            m = metafield
-            return m         
-          end                  
-        end
-        
-        return nil          
-      end
+      end            
 
       def install
         Rails.logger.info("#{self.class.name}#install")
