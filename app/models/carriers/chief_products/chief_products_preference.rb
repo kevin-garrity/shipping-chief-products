@@ -2,7 +2,7 @@ module Carriers
   module ChiefProducts
     class ChiefProductsPreference < ActiveRecord::Base
       
-      attr_accessible :offer_australia_post, :offer_e_go, :ego_depot_option, :aus_post_explanation, :ego_explanation
+      attr_accessible :offer_australia_post, :offer_e_go, :ego_depot_option, :aus_post_explanation, :ego_explanation, :rate_lookup_error
 
       
       class UnknownShopError < StandardError; end

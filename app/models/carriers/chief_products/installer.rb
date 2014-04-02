@@ -6,8 +6,9 @@ module Carriers
         found = shopify_api_shop.metafields.select {|m| m.key == key_name}            
         if (found.length > 0)
           if (found[0].value.to_s != field_value)
-            found[0].value = field_value
-            found[0].save!
+            puts("found[0] is #{found[0]}")
+            found[0].value = field_value    
+            shopify_api_shop.add_metafield(found[0])            
           end                       
         else
           field = ShopifyAPI::Metafield.new({:namespace =>'chief_products',:key=>key_name, :value=>field_value, :value_type=>'string' })

@@ -1,7 +1,15 @@
 module Carriers
   module ChiefProducts
     class Service < ::Carriers::Service
-
+      
+      def get_aus_post_final_code(code)
+        if (code.include?("SATCHEL"))
+          return "AUS_PARCEL_REGULAR" if code.include?("REGULAR_")
+          return "AUS_PARCEL_EXPRESS" if code.include?("EXPRESS_")       
+        end
+        return code
+      end
+      
       def get_aus_post_rates
          preference = @preference 
 
@@ -42,6 +50,8 @@ module Carriers
             
             next unless is_aus_post_service_allowed(shipping_methods, code, weight_kg)
             shipping_name = "Australia Post (#{shipping_name})"
+            
+            #code = get_aus_post_final_code(code)
             if (final_list.empty?)
               list << { "service_name"=> shipping_name,
                           "service_code"=> code,
@@ -69,7 +79,13 @@ module Carriers
           end
                                                                                       
          end #end each
-#        puts("final_array is " + final_list.to_s)
+       
+         #remove items that have duplicate service_name
+         final_list.each do |l|
+           final_list.each do |m|
+             final_list.delete(l) if (m != l && m['service_name'] == l['service_name'] && m['total_price'].to_f < l['total_price'].to_f)
+           end
+         end 
 
         final_list
       end

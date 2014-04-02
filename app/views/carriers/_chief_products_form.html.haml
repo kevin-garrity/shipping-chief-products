@@ -1,5 +1,8 @@
 %h3 SHIPPING PROVIDERS
 %div{:class=>"ego_container panel"}
+  = label_tag :rate_lookup_error, "Error to display when there is a problem looking up rates", style: "width:100%;"
+  = text_area :carrier_preference, :rate_lookup_error
+%div{:class=>"ego_container panel"}
   = check_box :carrier_preference, :offer_e_go
   = label_tag :off_ego, "Offer E-Go rates", :id=>"off_ego_label"
   %div{:class=>"ego_options"}
@@ -34,7 +37,7 @@
         %td
           = text_field_tag("shipping_methods_desc_int[#{key}]", @preference.shipping_methods_desc_int[key.to_s].nil? ? method_name : @preference.shipping_methods_desc_int[key.to_s])    
         %td
-          = text_field_tag("shipping_methods_long_desc_int[#{key}]", @preference.shipping_methods_long_desc_int[key.to_s].nil? ? method_name : @preference.shipping_methods_long_desc_int[key.to_s])                      
+          = text_area_tag("shipping_methods_long_desc_int[#{key}]", @preference.shipping_methods_long_desc_int[key.to_s].nil? ? method_name : @preference.shipping_methods_long_desc_int[key.to_s])                      
        
       -}    
     %br 
@@ -59,7 +62,7 @@
         %td
           = text_field_tag("shipping_methods_desc_dom[#{key}]", @preference.shipping_methods_desc_dom[key.to_s].nil? ? method_name : @preference.shipping_methods_desc_dom[key.to_s])   
         %td
-          = text_field_tag("shipping_methods_long_desc_dom[#{key}]", @preference.shipping_methods_long_desc_dom[key.to_s].nil? ? method_name : @preference.shipping_methods_long_desc_dom[key.to_s])           
+          = text_area_tag("shipping_methods_long_desc_dom[#{key}]", @preference.shipping_methods_long_desc_dom[key.to_s].nil? ? method_name : @preference.shipping_methods_long_desc_dom[key.to_s])           
       -}
 %hr  
 .actions
