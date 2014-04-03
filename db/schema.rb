@@ -11,16 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140401060021) do
+ActiveRecord::Schema.define(:version => 20140403212018) do
 
   create_table "cached_products", :force => true do |t|
     t.integer "product_id"
     t.integer "shop_id"
     t.string  "sku"
-    t.integer "height"
-    t.integer "width"
-    t.integer "length"
+    t.decimal "height"
+    t.decimal "width"
+    t.decimal "length"
     t.string  "product_name"
+    t.decimal "regular_flat_rate"
+    t.decimal "express_flat_rate"
   end
 
   create_table "carruth_studio_preference", :force => true do |t|
