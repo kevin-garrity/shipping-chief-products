@@ -17,9 +17,9 @@ class EgoApiWrapper
         
     rates = Array.new
     items.each do |item|
-      width=item[:width]
-      height=item[:height]
-      length=item[:length]
+      width=item[:width].to_f.round(0).to_i
+      height=item[:height].to_f.round(0).to_i
+      length=item[:length].to_f.round(0).to_i
       weight_grams=item[:grams].to_i
       weight_kg = (weight_grams.to_f / 1000).ceil
       quan = item[:quantity]
