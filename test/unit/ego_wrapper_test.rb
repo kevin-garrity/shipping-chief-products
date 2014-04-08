@@ -5,7 +5,7 @@ class EgoWrapperTest < ActiveSupport::TestCase
   
   def setup
     @origin = {country: "AU",
-               postal_code: "2148",
+               postal_code: "4213",
                province: "ON",
                city: "Ottawa",
                name: "",
@@ -35,15 +35,15 @@ class EgoWrapperTest < ActiveSupport::TestCase
               { name: "My Product 3",
                   sku: "",
                   quantity: 1,
-                  grams:  1000,
+                  grams:  7400,
                   price: 2000,
                   vendor: "TestVendor",
                   requires_shipping: true,
                   taxable: true,
                   fulfillment_service: "manual",
-                  height: 10,
-                  width: 10,
-                  length: 10
+                  height: 19,
+                  width: 37,
+                  length: 7
               }
             ]
             
@@ -57,7 +57,7 @@ class EgoWrapperTest < ActiveSupport::TestCase
                   requires_shipping: true,
                   taxable: true,
                   fulfillment_service: "manual",
-                  height: 10,
+                  height: 18,
                   width: 10,
                   length: 10
               },

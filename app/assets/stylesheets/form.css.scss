@@ -1,0 +1,41 @@
+body {
+  font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+}
+
+.ego_options {
+  margin-left:15px;
+}
+
+.aus_post_options textarea, .ego_options textarea {
+  width:350px;
+}
+
+#off_ego_label, #off_aus_label {
+  float:none;
+  padding-left:10px;
+}
+
+.panel.ego_container, .panel.aus_post_options {
+  background: #D6E8F2;
+}
+
+.top-bar-section {
+  margin: 0 auto;
+}
+
+
+.panel.ego_container table, .panel.aus_post_options table 
+{
+  width:100%;
+}
+
+.top-bar-section ul li{
+  text-transform:uppercase;
+  margin-right:2px;
+  a {
+   background-color: #444 !important;
+  }
+  a:hover, a.active {
+   background-color: #01415D !important;
+  }
+}

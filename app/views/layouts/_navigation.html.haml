@@ -1,10 +1,10 @@
 %nav.top-bar
-
   %section.top-bar-section
     - if shop_session
       %ul
-        %li= link_to("Preferences", preferences_url)      
-        %li= link_to("Product Dimensions", cached_product_index_url)
-        %li= link_to shop_session.url, "http://"+shop_session.url, :target => 'blank'
-        %li= link_to raw('Shopify Admin'), "http://"+shop_session.url+"/admin", :target => 'blank'
+        %li= link_to("Settings", preferences_url, :class => "#{request.url.include?(preferences_url)?'active' : ''}")      
+        %li= link_to("Products", cached_product_index_url, :class => "#{request.url.include?(cached_product_index_url)?'active' : ''}")
+      %ul{:style=>"float:right"}
+        %li= link_to "Website", "http://"+shop_session.url, :target => 'blank'
+        %li= link_to raw('Website Admin'), "http://"+shop_session.url+"/admin", :target => 'blank'
         %li= link_to raw('Logout'), logout_path, :method => :delete

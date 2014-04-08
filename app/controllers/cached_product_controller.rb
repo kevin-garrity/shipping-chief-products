@@ -10,7 +10,7 @@ class CachedProductController < ApplicationController
     
     @shop = current_shop
     
-    @cached_products = CachedProduct.find_all_by_shop_id(@shop.id, order: "product_id")
+    @cached_products = CachedProduct.find_all_by_shop_id(@shop.id, order: "LOWER(product_name)")
     
     size = 0 if @cached_products.nil?
     size = @cached_products.length unless @cached_products.nil?

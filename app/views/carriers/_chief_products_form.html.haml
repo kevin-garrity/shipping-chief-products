@@ -1,19 +1,20 @@
-%h3 SHIPPING PROVIDERS
+%h3 GENERAL
 %div{:class=>"ego_container panel"}
-  = label_tag :rate_lookup_error, "Error to display when there is a problem looking up rates", style: "width:100%;"
+  = label_tag :rate_lookup_error, "General Error Message", style: "width:100%;"
   = text_area :carrier_preference, :rate_lookup_error
+%h3 SHIPPING PROVIDERS  
 %div{:class=>"ego_container panel"}
   = check_box :carrier_preference, :offer_e_go
-  = label_tag :off_ego, "Offer E-Go rates", :id=>"off_ego_label"
+  = label_tag :off_ego, "E-Go", :id=>"off_ego_label"
   %div{:class=>"ego_options"}
-    = label_tag :ego_depot_option, "EGO depot option"
+    = label_tag :ego_depot_option, "Depot Option"
     = select :carrier_preference, :ego_depot_option, options_for_select([['door2door',''],['depot2door','depot2door']])
     %br
-    = label_tag :ego_explanation, "Tooltip text for E-Go delivery options" 
+    = label_tag :ego_explanation, "Shipping Method Description" 
     = text_area :carrier_preference, :ego_explanation
 %div{:class=>"ego_container panel"}
   = check_box :carrier_preference, :offer_australia_post
-  = label_tag :off_aus_post, "Offer Australia Post Rates", :id=>"off_aus_label"
+  = label_tag :off_aus_post, "Australia Post", :id=>"off_aus_label"
   %br
   %div{:class=>"aus_post_options"}
     %div International
@@ -51,8 +52,8 @@
 
         %td 
         %td Shipping Method
-        %td Method Name
-        %td Method Description        
+        %td Shipping Method Name
+        %td Shipping Method Description        
       - Preference.AusPostParcelServiceListDom.each {|key, method_name|
       %tr 
         %td
@@ -67,7 +68,7 @@
 %hr  
 .actions
   = submit_tag 'Save', :class=>"button"
-  = link_to 'Cancel', preferences_path
+  = link_to 'Cancel', preferences_path, :class=>"button", :style=>"padding-top:16px;height:49px"
 
 :javascript
 $(document).ready( function() {
