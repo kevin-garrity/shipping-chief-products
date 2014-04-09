@@ -83,7 +83,7 @@ module Carriers
          #remove items that have duplicate service_name
          final_list.each do |l|
            final_list.each do |m|
-             final_list.delete(l) if (m != l && m['service_name'] == l['service_name'] && !m['service_code'].to_s.include?("SATCHEL"))
+             final_list.delete(l) if (m != l && m['service_name'] == l['service_name'] && m['service_code'].to_s.include?("SATCHEL"))
            end
          end 
 
