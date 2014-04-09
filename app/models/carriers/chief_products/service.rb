@@ -81,7 +81,8 @@ module Carriers
           if (final_list.empty?)
             final_list = list 
           else
-            #see if any of the rates current in final_list needs to be removed if they are not found within the current array
+            #see if any of the rates current in final_list needs to be removed if they are not found within the current array as we have to combine the rates for multiple items
+            # based on a common code
             final_list.each do |l|
               final_list.delete(l) if (list.find_index {|item| item['service_code'] == l['service_code']}).nil?
             end            
