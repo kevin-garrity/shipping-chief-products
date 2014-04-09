@@ -43,19 +43,23 @@ module Carriers
           #service_list[1]['service'] is array of hashes
           
           list = Array.new
+          
+          puts "service_list[1] is #{service_list[1]}"
           service_list[1]['service'].each do |service|
             code = service['code']   
 
             
             price_to_charge = service['price'].to_f * 100 #convert to cents
             shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]                        
-            
+            puts("________")    
+            puts("code is #{code}")    
+            puts("skipping ") unless is_aus_post_service_allowed(shipping_methods, code, weight_kg)
             next unless is_aus_post_service_allowed(shipping_methods, code, weight_kg)
             shipping_name = "Australia Post (#{shipping_name})"
             
             #code = "AUS_PARCEL_REGULAR" if code.include?("SATCHEL") && code.include?("REGULAR")
             #code = "AUS_PARCEL_EXPRESS" if code.include?("SATCHEL") && code.include?("EXPRESS")
-            puts("code is #{code}")         
+    
             
             code = get_aus_post_final_code(code)
             
