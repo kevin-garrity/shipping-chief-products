@@ -121,15 +121,15 @@ module Carriers
           if (item_weight.to_f > 3.0) # 3 to 5
             puts(" 3 to 5")          
             
-            return service_name.include? ("SATCHEL_5KG")
+            return service_code.include? ("SATCHEL_5KG")
           elsif (item_weight.to_f > 0.5) #0.5 to 3
             puts(" 0.5 to 3")          
             
-            return service_name.include? ("SATCHEL_3KG")
+            return service_code.include? ("SATCHEL_3KG")
           else
             puts(" 0.5")          
             
-            return service_name.include? ("SATCHEL_500G")            
+            return service_code.include? ("SATCHEL_500G")            
           end           
         else
           #see if this is a recognized service, if not, allow this to be displayed to the user
