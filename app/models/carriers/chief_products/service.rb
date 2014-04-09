@@ -113,7 +113,7 @@ module Carriers
 
         puts("checking code #{service_code} weight #{item_weight}")
         puts("allowed_methods[service_code]  is #{allowed_methods[service_code].class} and #{allowed_methods[service_code].to_s}")
-        if (allowed_methods[service_code] == "1")
+        if (allowed_methods[service_code].to_s == "1")
           
           puts(" #{service_code} is allowed by user")          
           return true if item_weight.to_f > 5.0
