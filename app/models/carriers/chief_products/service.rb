@@ -44,19 +44,19 @@ module Carriers
           
           list = Array.new
           
-          puts "service_list[1] is #{service_list[1]}"
+          Rails.logger.debug "service_list[1] is #{service_list[1]}"
           service_list[1]['service'].each do |service|
             code = service['code']   
 
             
             price_to_charge = service['price'].to_f * 100 #convert to cents
             shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]                        
-            puts("________")    
-            puts("code is #{code}")    
-            puts("skipping ") unless is_aus_post_service_allowed(shipping_methods, code, weight_kg)
+            Rails.logger.debug("________")    
+            Rails.logger.debug("code is #{code}")    
+            Rails.logger.debug("skipping ") unless is_aus_post_service_allowed(shipping_methods, code, weight_kg)
             next unless is_aus_post_service_allowed(shipping_methods, code, weight_kg)
             
-            puts("allowed")    
+            Rails.logger.debug("allowed")    
             
             shipping_name = "Australia Post (#{shipping_name})"
             
@@ -66,8 +66,8 @@ module Carriers
             
             code = get_aus_post_final_code(code)
             
-            puts("shipping_name is #{shipping_name}")         
-            puts("total_price is #{price_to_charge}")         
+            Rails.logger.debug("shipping_name is #{shipping_name}")         
+            Rails.logger.debug("total_price is #{price_to_charge}")         
             
             if (final_list.empty?)
               list << { "service_name"=> shipping_name,
@@ -111,23 +111,23 @@ module Carriers
       # item_weight should be in kg
       def is_aus_post_service_allowed(allowed_methods, service_code, item_weight)
 
-        puts("checking code #{service_code} weight #{item_weight}")
-        puts("allowed_methods[service_code]  is #{allowed_methods[service_code].class} and #{allowed_methods[service_code].to_s}")
+        Rails.logger.debug("checking code #{service_code} weight #{item_weight}")
+        Rails.logger.debug("allowed_methods[service_code]  is #{allowed_methods[service_code].class} and #{allowed_methods[service_code].to_s}")
         if (allowed_methods[service_code].to_s == "1")
           
-          puts(" #{service_code} is allowed by user")          
+          Rails.logger.debug(" #{service_code} is allowed by user")          
           return true if item_weight.to_f > 5.0
           #will fit in prepad satchel]
           if (item_weight.to_f > 3.0) # 3 to 5
-            puts(" 3 to 5")          
+            Rails.logger.debug(" 3 to 5")          
             
             return service_code.include? ("SATCHEL_5KG")
           elsif (item_weight.to_f > 0.5) #0.5 to 3
-            puts(" 0.5 to 3")          
+            Rails.logger.debug(" 0.5 to 3")          
             
             return service_code.include? ("SATCHEL_3KG")
           else
-            puts(" 0.5")          
+            Rails.logger.debug(" 0.5")          
             
             return service_code.include? ("SATCHEL_500G")            
           end           
@@ -158,7 +158,7 @@ module Carriers
         end
                  
         list = ego_service_list.concat(aus_post_service_list)
-        puts("consoidated list is #{list}")
+        Rails.logger.debug("consoidated list is #{list}")
         
         return list
       end
