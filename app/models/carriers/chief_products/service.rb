@@ -45,17 +45,22 @@ module Carriers
           list = Array.new
           service_list[1]['service'].each do |service|
             code = service['code']   
-            puts("code is #{code}")         
+
+            
             price_to_charge = service['price'].to_f * 100 #convert to cents
             shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]                        
             
             next unless is_aus_post_service_allowed(shipping_methods, code, weight_kg)
             shipping_name = "Australia Post (#{shipping_name})"
             
-            code = "AUS_PARCEL_REGULAR" if code.include?("SATCHEL") && code.include?("REGULAR")
-            code = "AUS_PARCEL_EXPRESS" if code.include?("SATCHEL") && code.include?("EXPRESS")
+            #code = "AUS_PARCEL_REGULAR" if code.include?("SATCHEL") && code.include?("REGULAR")
+            #code = "AUS_PARCEL_EXPRESS" if code.include?("SATCHEL") && code.include?("EXPRESS")
             
-            #code = get_aus_post_final_code(code)
+            code = get_aus_post_final_code(code)
+            
+            puts("code is #{code}")         
+            puts("shipping_name is #{code}")         
+            
             if (final_list.empty?)
               list << { "service_name"=> shipping_name,
                           "service_code"=> code,
@@ -87,7 +92,7 @@ module Carriers
          #remove items that have duplicate service_name
          final_list.each do |l|
            final_list.each do |m|
-      #       final_list.delete(l) if (m != l && m['service_name'] == l['service_name'] && m['service_code'].to_s.include?("SATCHEL"))
+             final_list.delete(l) if (m != l && m['service_name'] == l['service_name'] && m['service_code'].to_s.include?("SATCHEL"))
            end
          end 
 
@@ -102,11 +107,11 @@ module Carriers
           return true if item_weight > 5.0
           #will fit in prepad satchel]
           if (item_weight > 3.0) # 3 to 5
-            return true if service_name.include? ("SATCHEL_5KG")
+            return service_name.include? ("SATCHEL_5KG")
           elsif (item_weight > 0.5) #0.5 to 3
-            return true if service_name.include? ("SATCHEL_3KG")
+            return service_name.include? ("SATCHEL_3KG")
           else
-            return true if service_name.include? ("SATCHEL_500G")            
+            return service_name.include? ("SATCHEL_500G")            
           end           
         else
           #see if this is a recognized service, if not, allow this to be displayed to the user
