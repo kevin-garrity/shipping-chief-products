@@ -3,14 +3,14 @@ product_1:
   product_id: 1
   shop_id: 1
   sku: 1233
-  height: 23
-  width: 3
-  length: 12
+  height: 103
+  width: 58
+  length: 10.5
 product_2:
   id: 2
   product_id: 2
   shop_id: 1
   sku: 1233
-  height: 23
-  width: 32
-  length: 12
+  height: 4
+  width: 5
+  length: 5

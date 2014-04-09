@@ -9,7 +9,7 @@ class RatesControllerTest < ActionController::TestCase
     @rates_hash =  {
            origin: {
                country: "AUS",
-               postal_code: "2148",
+               postal_code: "4213",
                province: "ON",
                city: "Ottawa",
                name: "",
@@ -41,7 +41,7 @@ class RatesControllerTest < ActionController::TestCase
                    product_id: 1,
                    sku: "",
                    quantity: 1,
-                   grams: 1000,
+                   grams: 15700,
                    price: 2000,
                    vendor: "TestVendor",
                    requires_shipping: true,
@@ -49,17 +49,17 @@ class RatesControllerTest < ActionController::TestCase
                    fulfillment_service: "manual"
                },
                {
-                    name: "My Product 2",
-                    product_id: 2,
-                    sku: "",
-                    quantity: 1,
-                    grams: 1000,
-                    price: 2000,
-                    vendor: "TestVendor",
-                    requires_shipping: true,
-                    taxable: true,
-                    fulfillment_service: "manual"
-                }
+                   name: "My Product 2",
+                   product_id: 2,
+                   sku: "",
+                   quantity: 1,
+                   grams: 2000,
+                   price: 2000,
+                   vendor: "TestVendor",
+                   requires_shipping: true,
+                   taxable: true,
+                   fulfillment_service: "manual"
+               }
            ],
            currency: "AUD"
        }
