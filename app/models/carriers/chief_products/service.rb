@@ -55,6 +55,9 @@ module Carriers
             puts("code is #{code}")    
             puts("skipping ") unless is_aus_post_service_allowed(shipping_methods, code, weight_kg)
             next unless is_aus_post_service_allowed(shipping_methods, code, weight_kg)
+            
+            puts("allowed")    
+            
             shipping_name = "Australia Post (#{shipping_name})"
             
             #code = "AUS_PARCEL_REGULAR" if code.include?("SATCHEL") && code.include?("REGULAR")
@@ -106,10 +109,10 @@ module Carriers
       end
       
       # item_weight should be in kg
-      def is_aus_post_service_allowed(allowed_methods, service_name, item_weight)
+      def is_aus_post_service_allowed(allowed_methods, service_code, item_weight)
 
-        
-        if (allowed_methods[service_name] == 1)
+        puts("checking code #{service_code} weight #{item_weight}")
+        if (allowed_methods[service_code] == 1)
           return true if item_weight > 5.0
           #will fit in prepad satchel]
           if (item_weight > 3.0) # 3 to 5
@@ -121,7 +124,7 @@ module Carriers
           end           
         else
           #see if this is a recognized service, if not, allow this to be displayed to the user
-          return Preference.AusPostParcelServiceListInt[service_name] == nil && Preference.AusPostParcelServiceListDom[service_name] == nil
+          return Preference.AusPostParcelServiceListInt[service_code] == nil && Preference.AusPostParcelServiceListDom[service_code] == nil
         end
         
         return false
