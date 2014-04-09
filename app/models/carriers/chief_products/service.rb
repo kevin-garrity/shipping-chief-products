@@ -112,6 +112,7 @@ module Carriers
       def is_aus_post_service_allowed(allowed_methods, service_code, item_weight)
 
         puts("checking code #{service_code} weight #{item_weight}")
+        puts("allowed_methods[service_code]  is #{allowed_methods[service_code].class} and #{allowed_methods[service_code].to_s}")
         if (allowed_methods[service_code] == 1)
           
           puts(" #{service_code} is allowed by user")          
