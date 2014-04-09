@@ -113,13 +113,21 @@ module Carriers
 
         puts("checking code #{service_code} weight #{item_weight}")
         if (allowed_methods[service_code] == 1)
-          return true if item_weight > 5.0
+          
+          puts(" #{service_code} is allowed by user")          
+          return true if item_weight.to_f > 5.0
           #will fit in prepad satchel]
-          if (item_weight > 3.0) # 3 to 5
+          if (item_weight.to_f > 3.0) # 3 to 5
+            puts(" 3 to 5")          
+            
             return service_name.include? ("SATCHEL_5KG")
-          elsif (item_weight > 0.5) #0.5 to 3
+          elsif (item_weight.to_f > 0.5) #0.5 to 3
+            puts(" 0.5 to 3")          
+            
             return service_name.include? ("SATCHEL_3KG")
           else
+            puts(" 0.5")          
+            
             return service_name.include? ("SATCHEL_500G")            
           end           
         else
