@@ -22,7 +22,7 @@ class EgoApiWrapper
       length=item[:length].to_f.round(0).to_i
       weight_grams=item[:grams].to_i
       weight_kg = (weight_grams.to_f / 1000).ceil
-      quan = item[:quantity]
+      quan = item[:quantity].to_i
       
       #only get rate for one box
       query = "#{base_url}?pickup=#{pickup}&delivery=#{delivery}&type=Carton&width=#{width}&height=#{height}&depth=#{length}&weight=#{weight_kg.to_s}&items=1"
@@ -42,7 +42,7 @@ class EgoApiWrapper
       
       ret = parse_response(response.body)
       
-      ret[:price] = ret[:price] * quan unless ret.nil?
+      ret[:price] = ret[:price].to_f * quan unless ret.nil?
       rates << ret unless ret.nil?
     end
     
@@ -60,6 +60,7 @@ class EgoApiWrapper
   end
   
   def parse_response(body)
+    puts("body is #{body.to_s}")
     m = /(error=)(.+)/.match(body)
         
     return nil if m.nil?
