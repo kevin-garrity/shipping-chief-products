@@ -68,7 +68,7 @@ module Carriers
                           "currency"=> "AUD"}
               #try to merge with the rates in final_list
               #find service in final_list using service name
-              index = final_list.find_index {|item| item['service_name'] == shipping_name}
+              index = final_list.find_index {|item| item['service_code'] == code}
               final_list[index]['total_price'] =  final_list[index]['total_price'].to_f +  price_to_charge * quan.to_f unless (index.nil?)
             end
           end          
@@ -78,7 +78,7 @@ module Carriers
           else
             #see if any of the rates current in final_list needs to be removed if they are not found within the current array
             final_list.each do |l|
-              final_list.delete(l) if (list.find_index {|item| item['service_name'] == l['service_name']}).nil?
+              final_list.delete(l) if (list.find_index {|item| item['service_code'] == l['service_code']}).nil?
             end            
           end
                                                                                       
@@ -87,7 +87,7 @@ module Carriers
          #remove items that have duplicate service_name
          final_list.each do |l|
            final_list.each do |m|
-             final_list.delete(l) if (m != l && m['service_name'] == l['service_name'] && m['service_code'].to_s.include?("SATCHEL"))
+      #       final_list.delete(l) if (m != l && m['service_name'] == l['service_name'] && m['service_code'].to_s.include?("SATCHEL"))
            end
          end 
 
