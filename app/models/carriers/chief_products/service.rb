@@ -55,11 +55,12 @@ module Carriers
             
             #code = "AUS_PARCEL_REGULAR" if code.include?("SATCHEL") && code.include?("REGULAR")
             #code = "AUS_PARCEL_EXPRESS" if code.include?("SATCHEL") && code.include?("EXPRESS")
+            puts("code is #{code}")         
             
             code = get_aus_post_final_code(code)
             
-            puts("code is #{code}")         
-            puts("shipping_name is #{code}")         
+            puts("shipping_name is #{shipping_name}")         
+            puts("total_price is #{price_to_charge}")         
             
             if (final_list.empty?)
               list << { "service_name"=> shipping_name,
