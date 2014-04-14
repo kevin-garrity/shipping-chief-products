@@ -132,6 +132,7 @@ class AustraliaPostApiConnection
     # the weight of the container
     # the difference
     api_max_weight = 20
+    apx_max_weight = 22 if self.domestic
     container_weight = self.attributes[:container_weight]
     container_weight = 0 if container_weight.nil?
     contents_weight = api_max_weight - container_weight

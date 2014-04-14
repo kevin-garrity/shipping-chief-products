@@ -45,16 +45,24 @@ module Carriers
           list = Array.new
           
           Rails.logger.debug "service_list[1] is #{service_list[1]}"
-          service_list[1]['service'].each do |service|
+          
+          aus_list = service_list[1]['service']
+          
+          has_satchel = false
+          
+          aus_list.each do |l|
+            has_satchel = l['code'].include? ("SATCHEL_") || has_satchel         
+          end
+          
+          aus_list.each do |service|
             code = service['code']   
-
             
             price_to_charge = service['price'].to_f * 100 #convert to cents
             shipping_name = shipping_desc[code].blank? ? service['name'] : shipping_desc[code]                        
             Rails.logger.debug("________")    
             Rails.logger.debug("code is #{code}")    
-            Rails.logger.debug("skipping ") unless is_aus_post_service_allowed(shipping_methods, code, weight_kg)
-            next unless is_aus_post_service_allowed(shipping_methods, code, weight_kg)
+            Rails.logger.debug("skipping ") unless is_aus_post_service_allowed(shipping_methods, code, weight_kg, has_satchel)
+            next unless is_aus_post_service_allowed(shipping_methods, code, weight_kg, has_satchel)
             
             Rails.logger.debug("allowed")    
             
@@ -109,27 +117,38 @@ module Carriers
       end
       
       # item_weight should be in kg
-      def is_aus_post_service_allowed(allowed_methods, service_code, item_weight)
+      def is_aus_post_service_allowed(allowed_methods, service_code, item_weight, has_satchel)
 
         Rails.logger.debug("checking code #{service_code} weight #{item_weight}")
         Rails.logger.debug("allowed_methods[service_code]  is #{allowed_methods[service_code].class} and #{allowed_methods[service_code].to_s}")
         if (allowed_methods[service_code].to_s == "1")
           
-          Rails.logger.debug(" #{service_code} is allowed by user")          
+          Rails.logger.debug(" #{service_code} is allowed by user")    
+                
           return true if item_weight.to_f > 5.0
           #will fit in prepad satchel]
           if (item_weight.to_f > 3.0) # 3 to 5
             Rails.logger.debug(" 3 to 5")          
+            if has_satchel
+              return service_code.include? ("SATCHEL_5KG")
+            else
+              return true
+            end
             
-            return service_code.include? ("SATCHEL_5KG")
           elsif (item_weight.to_f > 0.5) #0.5 to 3
             Rails.logger.debug(" 0.5 to 3")          
-            
-            return service_code.include? ("SATCHEL_3KG")
+            if has_satchel
+              return service_code.include? ("SATCHEL_3KG")
+            else
+              return true
+            end
           else
             Rails.logger.debug(" 0.5")          
-            
-            return service_code.include? ("SATCHEL_500G")            
+            if has_satchel            
+              return service_code.include? ("SATCHEL_500G")            
+            else
+              return true
+            end            
           end           
         else
           #see if this is a recognized service, if not, allow this to be displayed to the user
