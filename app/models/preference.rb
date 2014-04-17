@@ -63,6 +63,8 @@ class Preference < ActiveRecord::Base
     {:INTL_SERVICE_ECI_M =>"Express Courier International Merchandise",
       :INTL_SERVICE_ECI_D => "Express Courier International Documents",
       :INTL_SERVICE_EPI => "Express Post International",
+      :INTL_SERVICE_PTI => "Pack and Track International",
+      :INTL_SERVICE_RPI => "Registered Post International",
       :INTL_SERVICE_AIR_MAIL => "Air Mail",
       :INTL_SERVICE_SEA_MAIL => "Sea Mail"}
   end
@@ -70,16 +72,12 @@ class Preference < ActiveRecord::Base
   def self.AusPostParcelServiceListDom
     {:AUS_PARCEL_REGULAR =>"Regular Parcel",
       :AUS_PARCEL_EXPRESS => "Express Post Parcel",
-      :AUS_PARCEL_PLATINUM => "Express Post Platinum Parcel",
       :AUS_PARCEL_REGULAR_SATCHEL_500G => "Prepaid Parcel Post Plus 500g Satchel",
       :AUS_PARCEL_EXPRESS_SATCHEL_500G => "Express Post 500g Satchel",
-      :US_PARCEL_PLATINUM_SATCHEL_500G => "Express Post Platinum 500g Satchel",
       :AUS_PARCEL_REGULAR_SATCHEL_3KG => "Prepaid Parcel Post Plus 3kg Satchel",
       :AUS_PARCEL_EXPRESS_SATCHEL_3KG => "Express Post 3kg Satchel",
-      :US_PARCEL_PLATINUM_SATCHEL_3KG => "Express Post Platinum 3kg Satchel",
       :AUS_PARCEL_REGULAR_SATCHEL_5KG => "Prepaid Parcel Post Plus 5kg Satchel",
       :AUS_PARCEL_EXPRESS_SATCHEL_5KG => "Express Post 5kg Satchel",
-      :US_PARCEL_PLATINUM_SATCHEL_5KG => "Express Post Platinum 5kg Satchel"
     }
   end
 

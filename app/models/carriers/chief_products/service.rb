@@ -151,8 +151,15 @@ module Carriers
             end            
           end           
         else
+          return false
+          #Rails.logger.debug("not an allowed shipping method")
+          #Rails.logger.debug "Preference.AusPostParcelServiceListInt[service_code]  is" + Preference.AusPostParcelServiceListInt[service_code.to_sym].blank?.to_s
+          #Rails.logger.debug "Preference.AusPostParcelServiceListDom[service_code]  is" + Preference.AusPostParcelServiceListDom[service_code.to_sym].blank?.to_s
+          
           #see if this is a recognized service, if not, allow this to be displayed to the user
-          return Preference.AusPostParcelServiceListInt[service_code] == nil && Preference.AusPostParcelServiceListDom[service_code] == nil
+          #value =  Preference.AusPostParcelServiceListInt[service_code.to_sym].blank? && Preference.AusPostParcelServiceListDom[service_code.to_sym].blank?
+          #Rails.logger.debug "value is #{value.to_s}"
+          #return value
         end
         
         return false

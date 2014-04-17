@@ -65,6 +65,66 @@ class RatesControllerTest < ActionController::TestCase
   end
   
   
+  def test_chief_products_rates_intl
+    
+    intl_rates_hash =  {
+           origin: {
+               country: "AUS",
+               postal_code: "4213",
+               province: "ON",
+               city: "Ottawa",
+               name: "",
+               address1: "520 Cambridge Street South",
+               address2: "",
+               address3: "",
+               phone: "",
+               fax: "",
+               address_type: "",
+               company_name: ""
+           },
+           destination: {
+               country: "US",
+               postal_code: "90210",
+               province: "CA",
+               city: "LA",
+               name: "Jason Normore",
+               address1: "520 Cambridge Street South Apt. 5",
+               address2: "",
+               address3: "",
+               phone: "7097433959",
+               fax: "",
+               address_type: "",
+               company_name: ""
+           },
+           items: [
+               {
+                   name: "My Product 1",
+                   product_id: 1,
+                   sku: "",
+                   quantity: 1,
+                   grams: 1900,
+                   price: 2000,
+                   vendor: "TestVendor",
+                   requires_shipping: true,
+                   taxable: true,
+                   fulfillment_service: "manual"
+               }
+           ],
+           currency: "AUD"
+       }
+       
+    @request.env["HTTP_X_SHOPIFY_SHOP_DOMAIN"] = shops(:chief_products_test_shop).domain
+    
+    post :shipping_rates, {:rate=>intl_rates_hash}
+    json = ActiveSupport::JSON.decode @response.body
+    puts("response json #{json}")
+    
+    assert_response :success
+
+  end
+  
+  
+  
   def test_purolator_rates
      @request.env["HTTP_X_SHOPIFY_SHOP_DOMAIN"] = shops(:chief_products_test_shop).domain
 

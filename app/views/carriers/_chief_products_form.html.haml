@@ -17,6 +17,29 @@
   = label_tag :off_aus_post, "Australia Post", :id=>"off_aus_label"
   %br
   %div{:class=>"aus_post_options"}
+    - service_list_aus = {:AUS_PARCEL_REGULAR =>"Regular Parcel",
+                          :AUS_PARCEL_EXPRESS => "Express Post Parcel",
+                          :AUS_PARCEL_PLATINUM => "Express Post Platinum Parcel"}
+    %div Domestic
+    %br
+    %table(class="twelve")
+      %tr(class="header") 
+
+        %td 
+        %td Shipping Method
+        %td Shipping Method Name
+        %td Shipping Method Description        
+      - Preference.AusPostParcelServiceListDom.each {|key, method_name|
+      %tr 
+        %td
+          = check_box_tag("shipping_methods_dom[#{key}]", value="1", @preference.shipping_methods_allowed_dom[key.to_s])      
+        %td 
+          = method_name
+        %td
+          = text_field_tag("shipping_methods_desc_dom[#{key}]", @preference.shipping_methods_desc_dom[key.to_s].nil? ? method_name : @preference.shipping_methods_desc_dom[key.to_s])   
+        %td
+          = text_area_tag("shipping_methods_long_desc_dom[#{key}]", @preference.shipping_methods_long_desc_dom[key.to_s].nil? ? method_name : @preference.shipping_methods_long_desc_dom[key.to_s])           
+      -}  
     %div International
     %br
     %table
@@ -42,29 +65,6 @@
        
       -}    
     %br 
-    - service_list_aus = {:AUS_PARCEL_REGULAR =>"Regular Parcel",
-                          :AUS_PARCEL_EXPRESS => "Express Post Parcel",
-                          :AUS_PARCEL_PLATINUM => "Express Post Platinum Parcel"}
-    %div Domestic
-    %br
-    %table(class="twelve")
-      %tr(class="header") 
-
-        %td 
-        %td Shipping Method
-        %td Shipping Method Name
-        %td Shipping Method Description        
-      - Preference.AusPostParcelServiceListDom.each {|key, method_name|
-      %tr 
-        %td
-          = check_box_tag("shipping_methods_dom[#{key}]", value="1", @preference.shipping_methods_allowed_dom[key.to_s])      
-        %td 
-          = method_name
-        %td
-          = text_field_tag("shipping_methods_desc_dom[#{key}]", @preference.shipping_methods_desc_dom[key.to_s].nil? ? method_name : @preference.shipping_methods_desc_dom[key.to_s])   
-        %td
-          = text_area_tag("shipping_methods_long_desc_dom[#{key}]", @preference.shipping_methods_long_desc_dom[key.to_s].nil? ? method_name : @preference.shipping_methods_long_desc_dom[key.to_s])           
-      -}
 %hr  
 .actions
   = submit_tag 'Save', :class=>"button"
