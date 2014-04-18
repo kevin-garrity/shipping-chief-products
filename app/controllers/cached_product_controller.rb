@@ -7,6 +7,7 @@ class CachedProductController < ApplicationController
   layout "application-no-left"
   
   def index
+    @page_title = "Settings - Chief Products Shipping Calculator"
     
     @shop = current_shop
     

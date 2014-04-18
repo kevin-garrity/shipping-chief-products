@@ -93,4 +93,18 @@ clients:
     carriers:
     - :chief_products
     service_host: shipping-chief-products.herokuapp.com
+  chief-products.myshopify.com:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :chief_products
+    service_host: shipping-chief-products.herokuapp.com
+  www.chiefproducts.com.au:
+    access: 
+      all_except: []
+    menus: []
+    carriers:
+    - :chief_products
+    service_host: shipping-chief-products.herokuapp.com        
     

@@ -7,6 +7,8 @@ class PreferencesController < ApplicationController
   layout "application-no-left"
 
   def show
+    @page_title = "Settings - Chief Products Shipping Calculator"
+    
     @preference = get_preference
     @carrier_preference = get_carrier_preference(@preference.carrier)
     @free_shipping_options = get_collection_shipping_options
@@ -25,6 +27,8 @@ class PreferencesController < ApplicationController
 
   # GET /preference/edit
   def edit
+    
+    @page_title = "Settings - Chief Products Shipping Calculator"
     @preference = get_preference
     @carrier_preference = get_carrier_preference(@preference.carrier)
     

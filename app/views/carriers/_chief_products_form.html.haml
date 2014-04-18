@@ -36,9 +36,25 @@
         %td 
           = method_name
         %td
-          = text_field_tag("shipping_methods_desc_dom[#{key}]", @preference.shipping_methods_desc_dom[key.to_s].nil? ? method_name : @preference.shipping_methods_desc_dom[key.to_s])   
+          -disabled = true
+          -if key == :AUS_PARCEL_REGULAR_SATCHEL_500G
+            -method_key = :AUS_PARCEL_REGULAR
+          -elsif  key == :AUS_PARCEL_EXPRESS_SATCHEL_500G
+            -method_key = :AUS_PARCEL_EXPRESS          
+          - elsif  key == :AUS_PARCEL_REGULAR_SATCHEL_3KG
+            -method_key = :AUS_PARCEL_REGULAR          
+          - elsif  key == :AUS_PARCEL_EXPRESS_SATCHEL_3KG
+            -method_key = :AUS_PARCEL_EXPRESS          
+          - elsif  key == :AUS_PARCEL_REGULAR_SATCHEL_5KG
+            -method_key = :AUS_PARCEL_REGULAR          
+          - elsif  key == :AUS_PARCEL_EXPRESS_SATCHEL_5KG
+            -method_key = :AUS_PARCEL_EXPRESS                    
+          - else
+            -disabled = false          
+            -method_key = key
+          = text_field_tag("shipping_methods_desc_dom[#{key}]", @preference.shipping_methods_desc_dom[method_key.to_s].nil? ? method_name : @preference.shipping_methods_desc_dom[method_key.to_s], :disabled =>disabled)   
         %td
-          = text_area_tag("shipping_methods_long_desc_dom[#{key}]", @preference.shipping_methods_long_desc_dom[key.to_s].nil? ? method_name : @preference.shipping_methods_long_desc_dom[key.to_s])           
+          = text_area_tag("shipping_methods_long_desc_dom[#{key}]", @preference.shipping_methods_long_desc_dom[method_key.to_s].nil? ? method_name : @preference.shipping_methods_long_desc_dom[method_key.to_s], :disabled => disabled)
       -}  
     %div International
     %br
@@ -46,8 +62,8 @@
       %tr(class="header") 
         %td 
         %td Shipping Method
-        %td Method Name
-        %td Method Description  
+        %td Shipping Method Name
+        %td Shipping Method Description  
       
       - service_list_int =  {:INTL_SERVICE_ECI_M =>"Express Courier International Merchandise",
         :INTL_SERVICE_EPI => "Express Post International",
@@ -68,7 +84,7 @@
 %hr  
 .actions
   = submit_tag 'Save', :class=>"button"
-  = link_to 'Cancel', preferences_path, :class=>"button", :style=>"padding-top:16px;height:49px"
+  = link_to 'Cancel', preferences_path, :class=>"button  white", :style=>""
 
 :javascript
 $(document).ready( function() {

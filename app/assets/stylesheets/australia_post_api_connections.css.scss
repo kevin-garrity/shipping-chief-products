@@ -213,4 +213,60 @@ table .header {
   width: 1000px; 
 }
 
+/*/////////////////////////////////////////////////
+//////////////////////////////////////////////////*/
+/* ADDITIONAL STYLES (START) */
 
+h1 {
+	font-size: 28px;
+	margin-top: 24px;
+	margin-bottom: 18px;
+}
+
+h3 {
+	font-size: 14px;
+	margin-top: 0px !important;
+	margin-bottom: 0px !important;
+	color: #555;
+}
+
+label {
+	margin: 0px !important;
+}
+
+#off_ego_label, #off_aus_label {
+	font-size: 20px;
+	font-weight: 700;
+	color: #000;
+}
+
+input[type="text"], input[type="checkbox"] {
+	margin: 0 !important;
+}
+
+.button, a.button {
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+}
+
+a.button {
+	background-color: #999999;
+	border-color: #777777;
+}
+
+.top-bar {
+	height: 38px;
+	font-family: "Helvetica", Helvetica, Arial, sans-serif;
+}
+
+/* CHANGES
+	1.	REMOVE a.button height
+	2.	ADD a.button:hover
+	3.	Centre #off_ego_label, #off_aus_label vertically with checkbox
+	4.	ADD identifier to Domestic & International text --- REMOVE <br> after
+	5.	Change buttons on PRODUCTS section to match SETTINGS page, (i.e. Get New Products & Save)
+*/ 
+
+/* ADDITIONAL STYLES (END) */
+/*/////////////////////////////////////////////////
+//////////////////////////////////////////////////*/
