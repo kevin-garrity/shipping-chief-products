@@ -258,14 +258,19 @@ input[type="text"], input[type="checkbox"] {
 	padding-bottom: 11px !important;
 }
 
-a.button, .button.white {
+a.button, .button.grey {
 	background-color: #999999;
 	border-color: #777777;
 }
 
-a.button:hover, .button.white:hover {
+a.button:hover, .button.grey:hover {
 	background-color: #777;
 	border-color: #555;
+}
+
+.button .white {
+	margin-top: 5px;
+	margin-bottom: 10px;
 }
 
 .top-bar {
