@@ -3,214 +3,208 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 body{ 
-  color: $text_color_light;
-  background-color: $background_color_light;
-  font-family:$serif_font;
+	color: $text_color_light;
+	background-color: $background_color_light;
+	font-family: $sanserif_font;
 }
 
-@media only screen and (min-device-width: 481px){
+@media only screen and (min-device-width: 481px) {
 
-  .shadowed {
-    -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 2px;
-    -moz-box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 2px;
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 2px;
-  }
+	.shadowed {
+		-webkit-box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 2px;
+		-moz-box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 2px;
+		box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 2px;
+	}
 
-  .rounded-top-corners {
-    @include border-top-radius(5px);
-  }
+	.rounded-top-corners {
+		@include border-top-radius(5px);
+	}
 
-  .rounded-bottom-corners {
-    @include border-bottom-radius(5px);
-  }
+	.rounded-bottom-corners {
+		@include border-bottom-radius(5px);
+	}
 
-  .rounded-corners {
-    @include border-radius(5px);
-  }
+	.rounded-corners {
+		@include border-radius(5px);
+	}
 }
 
 .top-bar {
-  margin-bottom: 0px;
-  font-family: $sanserif_font;
+	margin-bottom: 0px;
+	font-family: $sanserif_font;
 }
 
 .alert-box {
-  margin:15px 0px;
+	margin: 15px 0px;
 }
 
 .row {
-  background-color: #FEFEFE;
+	background-color: #fefefe;
 }
 
 footer.row {
-  background-color: $background_color_light;
-  margin-top: 20px;
+	background-color: $background_color_light;
+	margin-top: 20px;
 }
 
 
 
 
 h1 {
- font-size:24px;
+	font-size: 24px;
 }
 
 h2 {
-  font-size:18px;
+	font-size: 18px;
 }
 
 h3 {
-  font-size:16px;
+	font-size: 16px;
 }
+
+
 
 
 form fieldset {
-  margin-top:0px;
+	margin-top: 0px;
 }
 
 form label {
-  display:inline;
-  float:left;
-  width:250px;
-  line-height:20px;
-  margin-right:20px;
-  font-weight:400;
+	display: inline;
+	float: left;
+	width: 250px;
+	line-height: 20px;
+	margin-right: 20px;
+	font-weight: 400;
 }
+
 form input[type=text] {
-  width:190px;
+	width: 190px;
 }
 
 
 form select {
- width:200px;
- margin-bottom:10px;
+	width: 200px;
+	margin-bottom:10px;
 }
+
 form span.has-tip {
-  margin-left:10px;
+	margin-left:10px;
 }
 
 #preference_carrier {
-  width:80%;
+	width: 80%;
 }
 
 .left-panel {
-  min-height:800px;
+	min-height: 800px;
 }
 
 .actions {
-  margin-top:70px;
-  margin-left:380px;
+	margin-top: 70px;
+	margin-left: 380px;
 }
 
-.actions input[type=submit]{
-  margin-right:15px;
+.actions input[type=submit] {
+	margin-right:15px;
 }
 
 #error_explanation h2 {
-  font-size:18px;
+	font-size: 18px;
 }
 
 #error_explanation ul {
-  margin-left:30px;
-
+	margin-left:30px;
 }
 
 #error_explanation ul li {
-  font-weight:bold;
+	font-weight: bold;
 }
 
 #preference_origin_postal_code {
-  width:70px;
+	width: 70px;
 }
 
-#preference_height, #preference_width, #preference_length,#carrier_preference_height_2, #carrier_preference_width_2, #carrier_preference_length_2,#carrier_preference_height_3, #carrier_preference_width_3, #carrier_preference_length_3 {
-  width:50px;
-  display:inline;
+#preference_height, #preference_width, #preference_length, #carrier_preference_height_2, #carrier_preference_width_2, #carrier_preference_length_2, #carrier_preference_height_3, #carrier_preference_width_3, #carrier_preference_length_3 {
+	width: 50px;
+	display: inline;
 }
 
 form .field_with_errors {
-  display:inline;
+	display:inline;
 }
 
 form .field_with_errors input {
-  border:1px solid red;
+	border: 1px solid red;
 }
 
 form .postfix {
-  display:inline;
-  background:#fff;
-  border:0px;
-  margin-left:3px;
+	display: inline;
+	background: #fff;
+	border: 0px;
+	margin-left: 3px;
 }
 
 .hidden-prefix {
-  visibility:hidden;
+	visibility: hidden;
 }
 
 form .prefix {
-  display:inline;
-  background:#fff;
-  border:0px;
-  margin-right:3px;
+	display: inline;
+	background: #fff;
+	border: 0px;
+	margin-right: 3px;
 }
 
 .edit_preference .prefix {
-  width:15px;
+	width: 15px;
 }
 
 .edit_preference form .field_with_errors{
-  display:inline;
+	display: inline;
 }
-
 
 #shop-url-text {
-  width:400px;
-  display:inline;
+	width: 400px;
+	display: inline;
 }
 
-
 #more-carriers {
-  text-align:right;
+	text-align: right;
 }
 
 table .header {
-  background-color: #E6E6E6;
+	background-color: #E6E6E6;
 }
 
-
-#preference_surcharge_percentage, #preference_default_weight, #preference_items_per_box,#preference_default_charge,
-#preference_container_weight, #preference_flat_rate  {
-  display:inline;
-  width:70px;
+#preference_surcharge_percentage, #preference_default_weight, #preference_items_per_box,#preference_default_charge, #preference_container_weight, #preference_flat_rate {
+	display: inline;
+	width: 70px;
 }
-
 
 .welcome_note {
-  padding:10px;
-  height:auto!important;
-  font-size: 0.9em;
+	padding: 10px;
+	height: auto !important;
+	font-size: 0.9em;
 }
-
 
 #preference_flat_rate {
-  margin-top:8px;
+	margin-top: 8px;
 }
 
-
-
 #preference_under_weight {
- display:inline;
- margin:0;
-
- width:50px;
+	display: inline;
+	margin: 0;
+	width: 50px;
 }
 
 #flat_rate_kg {
-  margin-top:8px;
-  width: 20px;
+	margin-top: 8px;
+	width: 20px;
 }
 
 .top-bar-section {
-  width: 1000px; 
+	width: 1000px; 
 }
 
 /*/////////////////////////////////////////////////
@@ -240,13 +234,28 @@ label {
 	color: #000;
 }
 
+input #carrier_preference_offer_e_go, input #carrier_preference_offer_australia_post {
+	vertical-align: bottom;
+	position: relative;
+	top: -3px;
+}
+
 input[type="text"], input[type="checkbox"] {
 	margin: 0 !important;
 }
 
+.product input[type="text"] {
+	width: 100px;
+	margin-bottom: 5px !important;
+}
+
+.product label {
+	margin-top: 5px;
+}
+
 .button, a.button {
-	padding-top: 0px !important;
-	padding-bottom: 0px !important;
+	padding-top: 8px !important;
+	padding-bottom: 11px !important;
 }
 
 a.button {
@@ -254,17 +263,27 @@ a.button {
 	border-color: #777777;
 }
 
+a.button:hover {
+	background-color: #888;
+	border-color: #666;
+}
+
 .top-bar {
 	height: 38px;
 	font-family: "Helvetica", Helvetica, Arial, sans-serif;
 }
 
+.carrier-section {
+	margin-top: 20px;
+	font-size: 12px !important;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #005673;
+}
+
 /* CHANGES
-	1.	REMOVE a.button height
-	2.	ADD a.button:hover
-	3.	Centre #off_ego_label, #off_aus_label vertically with checkbox
-	4.	ADD identifier to Domestic & International text --- REMOVE <br> after
-	5.	Change buttons on PRODUCTS section to match SETTINGS page, (i.e. Get New Products & Save)
+	1.	Centre #off_ego_label, #off_aus_label vertically with checkbox
+	2.	Change buttons on PRODUCTS section to match SETTINGS page, (i.e. Get New Products & Save)
 */ 
 
 /* ADDITIONAL STYLES (END) */
