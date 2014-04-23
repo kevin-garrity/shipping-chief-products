@@ -234,7 +234,7 @@ label {
 	color: #000;
 }
 
-input #carrier_preference_offer_e_go, input #carrier_preference_offer_australia_post {
+#carrier_preference_offer_e_go, #carrier_preference_offer_australia_post {
 	vertical-align: bottom;
 	position: relative;
 	top: -3px;
@@ -250,7 +250,7 @@ input[type="text"], input[type="checkbox"] {
 }
 
 .product label {
-	margin-top: 5px;
+	margin-top: 5px !important;
 }
 
 .button, a.button {
@@ -264,8 +264,8 @@ a.button {
 }
 
 a.button:hover {
-	background-color: #888;
-	border-color: #666;
+	background-color: #777;
+	border-color: #555;
 }
 
 .top-bar {
@@ -273,18 +273,18 @@ a.button:hover {
 	font-family: "Helvetica", Helvetica, Arial, sans-serif;
 }
 
+.actions {
+	margin-top: 56px !important;
+}
+
 .carrier-section {
 	margin-top: 20px;
+	margin-bottom: 5px;
 	font-size: 12px !important;
 	font-weight: bold;
 	text-transform: uppercase;
 	color: #005673;
 }
-
-/* CHANGES
-	1.	Centre #off_ego_label, #off_aus_label vertically with checkbox
-	2.	Change buttons on PRODUCTS section to match SETTINGS page, (i.e. Get New Products & Save)
-*/ 
 
 /* ADDITIONAL STYLES (END) */
 /*/////////////////////////////////////////////////
