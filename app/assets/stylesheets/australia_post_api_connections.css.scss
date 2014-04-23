@@ -258,12 +258,12 @@ input[type="text"], input[type="checkbox"] {
 	padding-bottom: 11px !important;
 }
 
-a.button {
+a.button, .button.white {
 	background-color: #999999;
 	border-color: #777777;
 }
 
-a.button:hover {
+a.button:hover, .button.white:hover {
 	background-color: #777;
 	border-color: #555;
 }
