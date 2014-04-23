@@ -4,26 +4,26 @@
 
 <%= form_tag update_all_cached_product_index_path do %>
   <% @cached_products.each_with_index do |cached_product,i| %> 
+  <div class="product">  
   <h2>
     <%=cached_product.product_name%>
   </h2>
     <%= fields_for "cached_products[#{i}]", cached_product do |pf| %>
-      <div class="product">
-         <%= pf.hidden_field :id %>
-         <%= pf.hidden_field :product_id %>
-         <%= pf.hidden_field :shop_id %>
-         <div>
-         <label>Height(cm):</label> <%= pf.text_field :height, :value => (number_with_precision(pf.object.height, :precision => 1) || 0) %>
-         </div>
-         <div>
-         <label>Width(cm): </label> <%= pf.text_field :width, :value => (number_with_precision(pf.object.width, :precision => 1) || 0) %>
-         </div>
-         <div>
-         <label>Length(cm): </label><%= pf.text_field :length, :value => (number_with_precision(pf.object.length, :precision => 1) || 0)%>       
-         </div>
-      </div>
+     <%= pf.hidden_field :id %>
+     <%= pf.hidden_field :product_id %>
+     <%= pf.hidden_field :shop_id %>
+     <div>
+     <label>Height(cm):</label> <%= pf.text_field :height, :value => (number_with_precision(pf.object.height, :precision => 1) || 0) %>
+     </div>
+     <div>
+     <label>Width(cm): </label> <%= pf.text_field :width, :value => (number_with_precision(pf.object.width, :precision => 1) || 0) %>
+     </div>
+     <div>
+     <label>Length(cm): </label><%= pf.text_field :length, :value => (number_with_precision(pf.object.length, :precision => 1) || 0)%>       
+     </div>
     <% end %>
     <hr/>
+  </div>    
   <% end %>
   <%= submit_tag %>
   
