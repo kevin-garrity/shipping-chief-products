@@ -84,7 +84,7 @@ class RatesControllerTest < ActionController::TestCase
            },
            destination: {
                country: "US",
-               postal_code: "90210",
+               postal_code: "90254",
                province: "CA",
                city: "LA",
                name: "Jason Normore",
