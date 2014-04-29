@@ -40,6 +40,17 @@ class CachedProductController < ApplicationController
         p.save!
       end
     end
+    
+    #see if there is any product to delete
+    products = CachedProduct.find(:all)
+    
+    products.each do |sp|
+      found = false
+      @shopify_products.each do |p|
+        found = true if p.id == sp.product_id
+      end
+      sp.destroy unless found
+    end
     flash[:notice] = "saved"
     redirect_to :action=> :index
   end
