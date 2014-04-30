@@ -196,6 +196,7 @@ module Carriers
       def add_dimension_to_items
         new_items = Array.new
         items.each do |i|
+          puts("i[:product_id] is #{i[:product_id]}")
           p = CachedProduct.find_by_product_id(i[:product_id])
           i = i.merge({:height=>p.height, :width=>p.width, :length =>p.length})
           new_items << i
