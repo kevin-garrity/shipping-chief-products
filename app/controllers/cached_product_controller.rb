@@ -38,7 +38,13 @@ class CachedProductController < ApplicationController
       if cp.nil?
         p = CachedProduct.new(product_id: sp.id, shop_id:current_shop.id,product_name: sp.title)
         p.save!
+      else#check if name has changed
+        if (cp.product_name!= sp.title)
+          cp.product_name = sp.title
+          cp.save
+        end
       end
+    
     end
     
     #see if there is any product to delete
