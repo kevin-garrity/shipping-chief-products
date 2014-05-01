@@ -44,7 +44,7 @@ module Carriers
           
           list = Array.new
           
-          Rails.logger.debug "service_list[1] is #{service_list[1]}"
+          puts "service_list[1] is #{service_list[1]}"
           puts "service_list[1] is #{service_list[1]}"
           
           aus_list = service_list[1]['service']
@@ -59,12 +59,12 @@ module Carriers
             code = service['code']   
             
             price_to_charge = service['price'].to_f * 100 #convert to cents
-            Rails.logger.debug("________")    
+            puts("________")    
             puts("code is #{code}")    
             puts("skipping ") unless is_aus_post_service_allowed(shipping_methods, code, weight_kg, has_satchel)
             next unless is_aus_post_service_allowed(shipping_methods, code, weight_kg, has_satchel)
             
-            puts("allowed")    
+            puts("#{code} allowed")    
             
             
             #code = "AUS_PARCEL_REGULAR" if code.include?("SATCHEL") && code.include?("REGULAR")
@@ -78,8 +78,8 @@ module Carriers
             
             shipping_name = "Australia Post (#{shipping_name})"
             
-            Rails.logger.debug("shipping_name is #{shipping_name}")         
-            Rails.logger.debug("total_price is #{price_to_charge}")         
+            puts("shipping_name is #{shipping_name}")         
+            puts("total_price is #{price_to_charge}")         
             
             if (final_list.empty?)
               list << { "service_name"=> shipping_name,
@@ -132,7 +132,7 @@ module Carriers
           return true if item_weight.to_f > 5.0
           #will fit in prepad satchel]
           if (item_weight.to_f > 3.0) # 3 to 5
-            Rails.logger.debug(" 3 to 5")          
+            puts(" 3 to 5")          
             if has_satchel
               return service_code.include? ("SATCHEL_5KG")
             else
@@ -140,14 +140,14 @@ module Carriers
             end
             
           elsif (item_weight.to_f > 0.5) #0.5 to 3
-            Rails.logger.debug(" 0.5 to 3")          
+            puts(" 0.5 to 3")          
             if has_satchel
               return service_code.include? ("SATCHEL_3KG")
             else
               return true
             end
           else
-            Rails.logger.debug(" 0.5")          
+            puts(" 0.5")          
             if has_satchel            
               return service_code.include? ("SATCHEL_500G")            
             else
@@ -156,13 +156,13 @@ module Carriers
           end           
         else
           return false
-          #Rails.logger.debug("not an allowed shipping method")
-          #Rails.logger.debug "Preference.AusPostParcelServiceListInt[service_code]  is" + Preference.AusPostParcelServiceListInt[service_code.to_sym].blank?.to_s
-          #Rails.logger.debug "Preference.AusPostParcelServiceListDom[service_code]  is" + Preference.AusPostParcelServiceListDom[service_code.to_sym].blank?.to_s
+          #puts("not an allowed shipping method")
+          #puts "Preference.AusPostParcelServiceListInt[service_code]  is" + Preference.AusPostParcelServiceListInt[service_code.to_sym].blank?.to_s
+          #puts "Preference.AusPostParcelServiceListDom[service_code]  is" + Preference.AusPostParcelServiceListDom[service_code.to_sym].blank?.to_s
           
           #see if this is a recognized service, if not, allow this to be displayed to the user
           #value =  Preference.AusPostParcelServiceListInt[service_code.to_sym].blank? && Preference.AusPostParcelServiceListDom[service_code.to_sym].blank?
-          #Rails.logger.debug "value is #{value.to_s}"
+          #puts "value is #{value.to_s}"
           #return value
         end
         
@@ -172,7 +172,7 @@ module Carriers
       
       def fetch_rates
         @carrier_preference = ChiefProductsPreference.find_by_shop_url(@preference.shop_url)
-        Rails.logger.debug("#{self.class.name}#fetch_rates")
+        puts("#{self.class.name}#fetch_rates")
         new_items = add_dimension_to_items()
         ego_service_list = Array.new
         aus_post_service_list = Array.new
@@ -188,7 +188,7 @@ module Carriers
         end
                  
         list = ego_service_list.concat(aus_post_service_list)
-        Rails.logger.debug("consoidated list is #{list}")
+        puts("consoidated list is #{list}")
         
         return list
       end
