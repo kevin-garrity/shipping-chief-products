@@ -123,11 +123,11 @@ module Carriers
       # item_weight should be in kg
       def is_aus_post_service_allowed(allowed_methods, service_code, item_weight, has_satchel)
 
-        Rails.logger.debug("checking code #{service_code} weight #{item_weight}")
-        Rails.logger.debug("allowed_methods[service_code]  is #{allowed_methods[service_code].class} and #{allowed_methods[service_code].to_s}")
+       puts("checking code #{service_code} weight #{item_weight}")
+       puts("allowed_methods[service_code]  is #{allowed_methods[service_code].class} and #{allowed_methods[service_code].to_s}")
         if (allowed_methods[service_code].to_s == "1")
           
-          Rails.logger.debug(" #{service_code} is allowed by user")    
+          puts(" #{service_code} is allowed by user")    
                 
           return true if item_weight.to_f > 5.0
           #will fit in prepad satchel]
