@@ -60,11 +60,11 @@ module Carriers
             
             price_to_charge = service['price'].to_f * 100 #convert to cents
             Rails.logger.debug("________")    
-            Rails.logger.debug("code is #{code}")    
-            Rails.logger.debug("skipping ") unless is_aus_post_service_allowed(shipping_methods, code, weight_kg, has_satchel)
+            puts("code is #{code}")    
+            puts("skipping ") unless is_aus_post_service_allowed(shipping_methods, code, weight_kg, has_satchel)
             next unless is_aus_post_service_allowed(shipping_methods, code, weight_kg, has_satchel)
             
-            Rails.logger.debug("allowed")    
+            puts("allowed")    
             
             
             #code = "AUS_PARCEL_REGULAR" if code.include?("SATCHEL") && code.include?("REGULAR")
