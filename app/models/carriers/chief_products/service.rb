@@ -132,9 +132,9 @@ module Carriers
           return true if item_weight.to_f > 5.0
           #will fit in prepad satchel]
           if (item_weight.to_f > 3.0) # 3 to 5
-            puts(" 3 to 5")          
+            puts(" 3 to 5")
             if has_satchel
-              return service_code.include? ("SATCHEL_5KG")
+              return service_code.include? ("SATCHEL")
             else
               return true
             end
@@ -142,15 +142,18 @@ module Carriers
           elsif (item_weight.to_f > 0.5) #0.5 to 3
             puts(" 0.5 to 3")          
             if has_satchel
-              return service_code.include? ("SATCHEL_3KG")
+              return service_code.include? ("SATCHEL")
             else
               return true
             end
           else
             puts(" 0.5")          
             if has_satchel            
-              return service_code.include? ("SATCHEL_500G")            
+              puts(" service_code.include? ('SATCHEL_500G') #{ service_code.include? ('SATCHEL_500G')}")          
+              
+              return service_code.include? ("SATCHEL")            
             else
+               puts("return true")
               return true
             end            
           end           
