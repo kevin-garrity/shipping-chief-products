@@ -45,6 +45,7 @@ module Carriers
           list = Array.new
           
           Rails.logger.debug "service_list[1] is #{service_list[1]}"
+          puts "service_list[1] is #{service_list[1]}"
           
           aus_list = service_list[1]['service']
           
