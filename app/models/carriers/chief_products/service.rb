@@ -44,8 +44,8 @@ module Carriers
           
           list = Array.new
           
-          puts "service_list[1] is #{service_list[1]}"
-          puts "service_list[1] is #{service_list[1]}"
+          Rails.logger.debug "service_list[1] is #{service_list[1]}"
+          Rails.logger.debug "service_list[1] is #{service_list[1]}"
           
           aus_list = service_list[1]['service']
           
@@ -59,12 +59,12 @@ module Carriers
             code = service['code']   
             
             price_to_charge = service['price'].to_f * 100 #convert to cents
-            puts("________")    
-            puts("code is #{code}")    
-            puts("skipping ") unless is_aus_post_service_allowed(shipping_methods, code, weight_kg, has_satchel)
+            Rails.logger.debug("________")    
+            Rails.logger.debug("code is #{code}")    
+            Rails.logger.debug("skipping ") unless is_aus_post_service_allowed(shipping_methods, code, weight_kg, has_satchel)
             next unless is_aus_post_service_allowed(shipping_methods, code, weight_kg, has_satchel)
             
-            puts("#{code} allowed")    
+            Rails.logger.debug("#{code} allowed")    
             
             
             #code = "AUS_PARCEL_REGULAR" if code.include?("SATCHEL") && code.include?("REGULAR")
@@ -78,8 +78,8 @@ module Carriers
             
             shipping_name = "Australia Post (#{shipping_name})"
             
-            puts("shipping_name is #{shipping_name}")         
-            puts("total_price is #{price_to_charge}")         
+            Rails.logger.debug("shipping_name is #{shipping_name}")         
+            Rails.logger.debug("total_price is #{price_to_charge}")         
             
             if (final_list.empty?)
               list << { "service_name"=> shipping_name,
@@ -123,16 +123,16 @@ module Carriers
       # item_weight should be in kg
       def is_aus_post_service_allowed(allowed_methods, service_code, item_weight, has_satchel)
 
-       puts("checking code #{service_code} weight #{item_weight}")
-       puts("allowed_methods[service_code]  is #{allowed_methods[service_code].class} and #{allowed_methods[service_code].to_s}")
+       Rails.logger.debug("checking code #{service_code} weight #{item_weight}")
+       Rails.logger.debug("allowed_methods[service_code]  is #{allowed_methods[service_code].class} and #{allowed_methods[service_code].to_s}")
         if (allowed_methods[service_code].to_s == "1")
           
-          puts(" #{service_code} is allowed by user")    
+          Rails.logger.debug(" #{service_code} is allowed by user")    
                 
           return true if item_weight.to_f > 5.0
           #will fit in prepad satchel]
           if (item_weight.to_f > 3.0) # 3 to 5
-            puts(" 3 to 5")
+            Rails.logger.debug(" 3 to 5")
             if has_satchel
               return service_code.include? ("SATCHEL")
             else
@@ -140,32 +140,32 @@ module Carriers
             end
             
           elsif (item_weight.to_f > 0.5) #0.5 to 3
-            puts(" 0.5 to 3")          
+            Rails.logger.debug(" 0.5 to 3")          
             if has_satchel
               return service_code.include? ("SATCHEL")
             else
               return true
             end
           else
-            puts(" 0.5")          
+            Rails.logger.debug(" 0.5")          
             if has_satchel            
-              puts(" service_code.include? ('SATCHEL_500G') #{ service_code.include? ('SATCHEL_500G')}")          
+              Rails.logger.debug(" service_code.include? ('SATCHEL_500G') #{ service_code.include? ('SATCHEL_500G')}")          
               
               return service_code.include? ("SATCHEL")            
             else
-               puts("return true")
+               Rails.logger.debug("return true")
               return true
             end            
           end           
         else
           return false
-          #puts("not an allowed shipping method")
-          #puts "Preference.AusPostParcelServiceListInt[service_code]  is" + Preference.AusPostParcelServiceListInt[service_code.to_sym].blank?.to_s
-          #puts "Preference.AusPostParcelServiceListDom[service_code]  is" + Preference.AusPostParcelServiceListDom[service_code.to_sym].blank?.to_s
+          #Rails.logger.debug("not an allowed shipping method")
+          #Rails.logger.debug "Preference.AusPostParcelServiceListInt[service_code]  is" + Preference.AusPostParcelServiceListInt[service_code.to_sym].blank?.to_s
+          #Rails.logger.debug "Preference.AusPostParcelServiceListDom[service_code]  is" + Preference.AusPostParcelServiceListDom[service_code.to_sym].blank?.to_s
           
           #see if this is a recognized service, if not, allow this to be displayed to the user
           #value =  Preference.AusPostParcelServiceListInt[service_code.to_sym].blank? && Preference.AusPostParcelServiceListDom[service_code.to_sym].blank?
-          #puts "value is #{value.to_s}"
+          #Rails.logger.debug "value is #{value.to_s}"
           #return value
         end
         
@@ -175,7 +175,7 @@ module Carriers
       
       def fetch_rates
         @carrier_preference = ChiefProductsPreference.find_by_shop_url(@preference.shop_url)
-        puts("#{self.class.name}#fetch_rates")
+        Rails.logger.debug("#{self.class.name}#fetch_rates")
         new_items = add_dimension_to_items()
         ego_service_list = Array.new
         aus_post_service_list = Array.new
@@ -191,7 +191,7 @@ module Carriers
         end
                  
         list = ego_service_list.concat(aus_post_service_list)
-        puts("consoidated list is #{list}")
+        Rails.logger.debug("consoidated list is #{list}")
         
         return list
       end
@@ -200,7 +200,7 @@ module Carriers
       def add_dimension_to_items
         new_items = Array.new
         items.each do |i|
-          puts("i[:product_id] is #{i[:product_id]}")
+          Rails.logger.debug("i[:product_id] is #{i[:product_id]}")
           p = CachedProduct.find_by_product_id(i[:product_id])
           i = i.merge({:height=>p.height, :width=>p.width, :length =>p.length})
           new_items << i
